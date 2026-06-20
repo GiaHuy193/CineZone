@@ -1,0 +1,107 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var email = currentUser?.Email ?? User.Identity?.Name ?? "Tài khoản";
+    var displayName = email.Contains("@") ? email.Split('@')[0] : email;
+
+    <div class="dropdown cz-account-dropdown">
+        <button class="cz-account-btn dropdown-toggle"
+                type="button"
+                id="accountDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+
+            <span class="cz-account-avatar">
+                <span class="material-symbols-outlined">person</span>
+            </span>
+
+            <span class="cz-account-name d-none d-xl-inline">
+                @displayName
+            </span>
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-end cz-account-menu"
+            aria-labelledby="accountDropdown">
+
+            <li class="cz-account-menu-head">
+                <div class="cz-account-menu-avatar">
+                    <span class="material-symbols-outlined">person</span>
+                </div>
+
+                <div>
+                    <strong>@displayName</strong>
+                    <small>@email</small>
+                </div>
+            </li>
+
+            <li>
+                <hr class="dropdown-divider" />
+            </li>
+
+            <li>
+                <a class="dropdown-item cz-account-item"
+                   asp-area="Identity"
+                   asp-page="/Account/Manage/Index">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    Hồ sơ tài khoản
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item cz-account-item"
+                   asp-area="Identity"
+                   asp-page="/Account/Manage/ChangePassword">
+                    <span class="material-symbols-outlined">lock_reset</span>
+                    Đổi mật khẩu
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item cz-account-item"
+                   asp-controller="Bookings"
+                   asp-action="MyTickets">
+                    <span class="material-symbols-outlined">confirmation_number</span>
+                    Vé của tôi
+                </a>
+            </li>
+
+            <li>
+                <hr class="dropdown-divider" />
+            </li>
+
+            <li>
+                <form class="m-0"
+                      asp-area="Identity"
+                      asp-page="/Account/Logout"
+                      asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"
+                      method="post">
+
+                    <button type="submit" class="dropdown-item cz-account-item cz-logout-item">
+                        <span class="material-symbols-outlined">logout</span>
+                        Đăng xuất
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+}
+else
+{
+    <div class="cz-auth-links">
+        <a class="cz-register-link"
+           asp-area="Identity"
+           asp-page="/Account/Register">
+            Đăng ký
+        </a>
+
+        <a class="cz-login-link"
+           asp-area="Identity"
+           asp-page="/Account/Login">
+            Đăng nhập
+        </a>
+    </div>
+}

@@ -1,0 +1,284 @@
+﻿:root {
+    /* Primary palette (legacy) */
+    --netflix-red: #E50914;
+    --bg-dark: #141414;
+    --bg-light-dark: #222222;
+    --text-muted: #aaaaaa;
+
+    /* Cine theme (used across views) */
+    --bs-body-bg: #131313;
+    --bs-body-color: #e5e2e1;
+    --cine-red: #e50914;
+    --cine-surface: #1c1b1b;
+    --cine-surface-high: #2a2a2a;
+}
+
+body {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    font-family: 'Manrope', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Ghi đè màu nền mặc định của ASP.NET Core */
+.container-fluid {
+    background-color: var(--bg-dark);
+}
+
+/* Nút bấm Custom */
+.btn-netflix {
+    background-color: var(--netflix-red);
+    color: white;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+    .btn-netflix:hover {
+        background-color: #f40612;
+        color: white;
+    }
+
+.btn-outline-light {
+    border-radius: 4px;
+}
+
+/* Section Hero (Phim nổi bật nhất) */
+.hero-section {
+    height: 75vh;
+    /* Dùng ảnh placeholder tạm thời, sau này bạn gọi từ Database */
+    background: linear-gradient(to top, var(--bg-dark) 0%, rgba(20,20,20,0.4) 50%, transparent 100%), url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2094&auto=format&fit=crop') center/cover no-repeat;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 60px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+/* Thẻ Phim (Movie Cards) */
+.movie-card {
+    background-color: transparent;
+    border: none;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+    .movie-card:hover {
+        transform: scale(1.05); /* Hiệu ứng phình to giống Netflix */
+    }
+
+.movie-poster {
+    border-radius: 8px;
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+}
+
+.movie-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 2px;
+}
+
+.movie-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Shared brand/font utilities */
+.brand-font { font-family: 'Be Vietnam Pro', sans-serif; font-weight: 800; letter-spacing: 0.5px; }
+
+/* Material symbols fallback sizing */
+.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+
+/* Glass navbar used in layout / index */
+.glass-nav { background: rgba(19,19,19,0.85); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+/* Cine gradient button */
+.btn-gradient { background: linear-gradient(135deg, #ffb4aa 0%, var(--cine-red) 100%); color: white; border: none; }
+.btn-gradient:hover { transform: scale(1.02); box-shadow: 0 8px 16px rgba(229,9,20,0.18); color: white; }
+
+/* Hero section from Index */
+.hero-section { height: 100vh; position: relative; }
+.hero-bg { position: absolute; inset: 0; background-color: #222; z-index: 0; }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to right, #131313 10%, rgba(19,19,19,0.5) 60%, transparent 100%), linear-gradient(to top, #131313 0%, transparent 30%); z-index:1; }
+.hero-content { position: relative; z-index: 2; }
+
+/* Poster placeholder / cards */
+.poster-placeholder { background-color: var(--cine-surface-high); border: 1px solid #333; color: #777; display:flex; align-items:center; justify-content:center; font-weight:bold; }
+.horizontal-scroll { display:flex; gap:1.5rem; overflow-x:auto; padding-bottom:1rem; -ms-overflow-style:none; scrollbar-width:none; }
+.horizontal-scroll::-webkit-scrollbar { display:none; }
+.movie-card { width:260px; flex-shrink:0; cursor:pointer; }
+.hover-zoom { overflow:hidden; border-radius:12px; transition:transform .3s ease; position:relative; }
+.hover-zoom .poster-placeholder { transition: transform .5s ease; width:100%; height:100%; }
+.hover-zoom:hover { transform: scale(1.05); z-index:10; box-shadow:0 15px 30px rgba(0,0,0,0.5); }
+.hover-zoom:hover .poster-placeholder { transform: scale(1.1); }
+.aspect-2-3 { aspect-ratio: 2 / 3; }
+.rating-badge { position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.7); backdrop-filter: blur(5px); padding:4px 8px; border-radius:8px; font-size:.8rem; font-weight:bold; }
+
+/* Bento grid */
+.bento-section { background-color: var(--cine-surface); }
+.bento-box { position: relative; border-radius:16px; overflow:hidden; background-color: var(--cine-surface-high); cursor:pointer; }
+.bento-box .bento-overlay { position:absolute; bottom:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 80%); display:flex; flex-direction:column; justify-content:flex-end; padding:1.5rem; transition: background .3s ease; }
+.bento-box:hover .bento-overlay { background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.3) 100%); }
+
+/* Utility: hide scrollbar */
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.hide-scrollbar::-webkit-scrollbar { display:none; }
+
+/* Movie create/edit helpers used by views */
+.page-card { background-color: var(--cine-surface); color: var(--bs-body-color); border:1px solid rgba(255,255,255,0.06); }
+.input-surface { background-color: rgba(255,255,255,0.02); color: var(--bs-body-color); border:1px solid rgba(255,255,255,0.06); }
+.preview-container { aspect-ratio:2/3; width:100%; max-width:280px; margin:0 auto; position:relative; min-height:200px; background-color: var(--cine-surface-high); border:1px solid rgba(255,255,255,0.06); overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.preview-placeholder { color: rgba(229,229,229,0.45); text-align:center; padding:1rem; }
+.preview-placeholder .material-symbols-outlined { font-size:3.2rem; color: rgba(229,229,229,0.35); }
+
+/* Movie form (Create / Edit) shared styles */
+.movie-form .card,
+.movie-form .row,
+.movie-form .col-md-8,
+.movie-form .col-md-4 {
+    border: none !important;
+}
+
+.movie-form .custom-input {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: var(--bs-body-color) !important;
+}
+
+.movie-form .custom-input:focus {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: #00d4ff !important;
+    box-shadow: none !important;
+}
+
+/* Ensure brand font is not forced uppercase globally */
+.brand-font { text-transform: none; }
+
+/* Bento Box - Exclusive Experiences */
+.experience-card {
+    background-color: var(--bg-light-dark);
+    border-radius: 12px;
+    padding: 20px;
+    height: 100%;
+    background-blend-mode: overlay;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Nav Pills Custom cho phần Now Showing */
+.nav-pills .nav-link {
+    color: white;
+    border: 1px solid var(--text-muted);
+    border-radius: 20px;
+    padding: 5px 15px;
+    margin-right: 10px;
+}
+
+    .nav-pills .nav-link.active {
+        background-color: var(--netflix-red);
+        border-color: var(--netflix-red);
+    }
+
+/* Movie Details specific styles */
+.details-page {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    min-height: 100vh;
+}
+
+.movie-banner-wrapper {
+    position: relative;
+    height: 400px;
+    width: 100%;
+    overflow: hidden;
+    background-color: #000;
+}
+
+.movie-banner-blur {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(40px) brightness(0.3);
+    transform: scale(1.1);
+}
+
+.details-content { margin-top: -220px; position: relative; z-index: 10; }
+
+.poster-box {
+    width: 100%; max-width: 280px; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); aspect-ratio: 2/3;
+}
+.poster-box img { width: 100%; height: 100%; object-fit: cover; }
+
+.info-card {
+    background: rgba(255,255,255,0.03);
+    padding: 15px; border-radius: 10px; border-left: 3px solid var(--cine-red); margin-bottom: 15px;
+}
+
+.label-text { color: #888; font-size: 0.75rem; text-transform: uppercase; display: block; }
+.value-text { font-size: 1rem; color: #fff; font-weight: 500; }
+
+/* Details buttons */
+.details-page .btn-danger { background-color: var(--cine-red); border-color: var(--cine-red); }
+
+/* Trailer hero & modal (Movie Details) */
+.trailer-hero {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    background: #000;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.trailer-hero iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 56.25vw; /* 16:9 ratio relative to viewport width */
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.trailer-clickable-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, var(--bs-body-bg) 0%, transparent 60%);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+.trailer-hero:hover .trailer-clickable-overlay { background: rgba(0,0,0,0.3); }
+
+.play-hint { opacity: 0; transform: scale(0.8); transition: all 0.3s; text-align: center; }
+.trailer-hero:hover .play-hint { opacity: 1; transform: scale(1); }
+
+.modal-content { background: #000; border: none; }
+.modal-header { border: none; padding: 0.5rem 1rem; }
+.btn-close { filter: invert(1); }
+.ratio-16x9 { background: #000; }
+
+/* Details content adjustments */
+.details-content { margin-top: -150px; position: relative; z-index: 10; }
+.poster-box { width: 100%; max-width: 280px; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1); }
+.poster-box img { width: 100%; height: 100%; object-fit: cover; }
+.info-card { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border-left: 4px solid var(--cine-red); margin-bottom: 1rem; }
+
+/* Movies index table tweaks */
+.movies-table .table-black { background-color: #000 !important; color: #fff !important; }
+.movies-table .table-hover tbody tr:hover { background-color: rgba(255,255,255,0.05) !important; }
+.movies-table .object-fit-cover { object-fit: cover; }
+.movies-table td { border-bottom: 1px solid #2a2a2a !important; padding-top: 15px !important; padding-bottom: 15px !important; }

@@ -1,0 +1,944 @@
+﻿@model IEnumerable<WebMTB.Models.Showtime>
+
+@{
+    ViewData["Title"] = "Quản lý suất chiếu";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var showtimes = Model?.ToList() ?? new List<WebMTB.Models.Showtime>();
+
+    int totalShowtimes = showtimes.Count;
+    int totalMovies = showtimes
+        .Where(s => s.Movie != null)
+        .Select(s => s.Movie!.Id)
+        .Distinct()
+        .Count();
+
+    int totalRooms = showtimes
+        .Where(s => s.Room != null)
+        .Select(s => s.Room!.Id)
+        .Distinct()
+        .Count();
+
+    int holidayShowtimes = showtimes.Count(s => s.IsHoliday);
+
+    decimal avgPrice = showtimes.Any()
+        ? showtimes.Average(s => s.BasePrice)
+        : 0;
+
+    var today = DateTime.Today;
+
+    var todayShowtimes = showtimes
+        .Where(s => s.StartTime.Date == today)
+        .OrderBy(s => s.StartTime)
+        .ToList();
+
+    var upcomingShowtimes = showtimes
+        .Where(s => s.StartTime >= DateTime.Now)
+        .OrderBy(s => s.StartTime)
+        .ToList();
+
+    var groupedByRoom = showtimes
+        .OrderBy(s => s.Room?.Name)
+        .ThenBy(s => s.StartTime)
+        .GroupBy(s => s.Room?.Name ?? "Chưa có phòng")
+        .ToList();
+
+    var hours = Enumerable.Range(8, 17).ToList(); // 08:00 -> 24:00
+}
+
+<div class="showtime-admin-page">
+    <div class="showtime-hero mb-4">
+        <div>
+            <div class="showtime-eyebrow">
+                <span class="material-symbols-outlined">schedule</span>
+                CineZone Admin
+            </div>
+
+            <h1>Quản lý suất chiếu</h1>
+            <p>
+                Tạo và quản lý lịch chiếu theo phim, phòng chiếu, thời gian, giá vé và ngày lễ.
+            </p>
+        </div>
+
+        <a asp-action="Create" class="btn create-showtime-btn">
+            <span class="material-symbols-outlined">add</span>
+            Tạo suất chiếu
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success admin-alert">
+            <span class="material-symbols-outlined">check_circle</span>
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger admin-alert">
+            <span class="material-symbols-outlined">warning</span>
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="showtime-stats-grid mb-4">
+        <div class="showtime-stat-card highlight">
+            <span class="material-symbols-outlined">event_available</span>
+            <p>Tổng suất chiếu</p>
+            <h3>@totalShowtimes</h3>
+        </div>
+
+        <div class="showtime-stat-card">
+            <span class="material-symbols-outlined">movie</span>
+            <p>Phim đang chiếu</p>
+            <h3>@totalMovies</h3>
+        </div>
+
+        <div class="showtime-stat-card">
+            <span class="material-symbols-outlined">meeting_room</span>
+            <p>Phòng sử dụng</p>
+            <h3>@totalRooms</h3>
+        </div>
+
+        <div class="showtime-stat-card money">
+            <span class="material-symbols-outlined">payments</span>
+            <p>Giá vé TB</p>
+            <h3>@avgPrice.ToString("N0")</h3>
+            <small>VNĐ</small>
+        </div>
+    </div>
+
+    <div class="showtime-layout">
+        <aside class="showtime-sidebar">
+            <div class="side-panel mb-4">
+                <div class="side-panel-header">
+                    <div>
+                        <h5>Lịch hôm nay</h5>
+                        <p>@today.ToString("dd/MM/yyyy")</p>
+                    </div>
+
+                    <span class="material-symbols-outlined">today</span>
+                </div>
+
+                <div class="today-list">
+                    @if (todayShowtimes.Any())
+                    {
+                        foreach (var item in todayShowtimes.Take(6))
+                        {
+                            <div class="today-item">
+                                <div class="today-time">
+                                    @item.StartTime.ToString("HH:mm")
+                                </div>
+
+                                <div>
+                                    <h6>@(item.Movie?.Title ?? "Chưa có phim")</h6>
+                                    <p>@(item.Room?.Name ?? "Chưa có phòng")</p>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-side">
+                            <span class="material-symbols-outlined">event_busy</span>
+                            <p>Hôm nay chưa có suất chiếu.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="side-panel">
+                <div class="side-panel-header">
+                    <div>
+                        <h5>Phân loại</h5>
+                        <p>Tổng quan lịch chiếu.</p>
+                    </div>
+
+                    <span class="material-symbols-outlined">analytics</span>
+                </div>
+
+                <div class="quick-info-list">
+                    <div>
+                        <span class="material-symbols-outlined">event_available</span>
+                        <div>
+                            <small>Sắp chiếu</small>
+                            <strong>@upcomingShowtimes.Count suất</strong>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="material-symbols-outlined">celebration</span>
+                        <div>
+                            <small>Ngày lễ</small>
+                            <strong>@holidayShowtimes suất</strong>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="material-symbols-outlined">calendar_month</span>
+                        <div>
+                            <small>Hôm nay</small>
+                            <strong>@todayShowtimes.Count suất</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="showtime-main">
+            <div class="showtime-panel mb-4">
+                <div class="showtime-panel-header">
+                    <div>
+                        <h4>Timeline suất chiếu</h4>
+                        <p>Xem nhanh lịch chiếu theo từng phòng trong ngày.</p>
+                    </div>
+
+                    <span class="material-symbols-outlined">timeline</span>
+                </div>
+
+                @if (groupedByRoom.Any())
+                {
+                    <div class="timeline-wrap">
+                        <div class="timeline-header">
+                            <div class="room-head">Phòng</div>
+
+                            @foreach (var hour in hours)
+                            {
+                                <div class="hour-head">@hour.ToString("00"):00</div>
+                            }
+                        </div>
+
+                        @foreach (var group in groupedByRoom)
+                        {
+                            <div class="timeline-row">
+                                <div class="room-cell">
+                                    <strong>@group.Key</strong>
+                                    <small>@group.Count() suất</small>
+                                </div>
+
+                                <div class="timeline-track">
+                                    @foreach (var item in group)
+                                    {
+                                        int startHour = item.StartTime.Hour;
+                                        int startMinute = item.StartTime.Minute;
+
+                                        int offset = ((startHour - 8) * 80) + (int)(startMinute / 60.0 * 80);
+                                        if (offset < 0) offset = 0;
+
+                                        string movieTitle = item.Movie?.Title ?? "Phim";
+                                        string timeText = item.StartTime.ToString("HH:mm");
+                                        string itemClass = item.IsHoliday ? "holiday" : "normal";
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="timeline-block @itemClass"
+                                           style="left:@(offset)px">
+                                            <strong>@movieTitle</strong>
+                                            <span>@timeText · @item.BasePrice.ToString("N0") VNĐ</span>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-showtime">
+                        <span class="material-symbols-outlined">event_busy</span>
+                        <h5>Chưa có timeline suất chiếu</h5>
+                        <p>Hãy tạo suất chiếu đầu tiên để hiển thị lịch theo phòng.</p>
+                    </div>
+                }
+            </div>
+
+            <div class="showtime-panel">
+                <div class="showtime-panel-header">
+                    <div>
+                        <h4>Danh sách suất chiếu</h4>
+                        <p>Quản lý chi tiết từng suất chiếu trong hệ thống.</p>
+                    </div>
+
+                    <span class="material-symbols-outlined">movie_filter</span>
+                </div>
+
+                @if (showtimes.Any())
+                {
+                    <div class="showtime-card-list">
+                        @foreach (var item in showtimes.OrderByDescending(s => s.StartTime))
+                        {
+                            bool isPast = item.StartTime < DateTime.Now;
+                            string statusClass = isPast ? "past" : "upcoming";
+                            string statusText = isPast ? "Đã qua" : "Sắp chiếu";
+
+                            <article class="showtime-card">
+                                <div class="movie-icon">
+                                    <span class="material-symbols-outlined">movie</span>
+                                </div>
+
+                                <div class="showtime-info">
+                                    <div class="showtime-title-line">
+                                        <h5>@(item.Movie?.Title ?? "Chưa có phim")</h5>
+
+                                        <span class="status-badge @statusClass">
+                                            @statusText
+                                        </span>
+
+                                        @if (item.IsHoliday)
+                                        {
+                                            <span class="holiday-badge">
+                                                <span class="material-symbols-outlined">celebration</span>
+                                                Ngày lễ
+                                            </span>
+                                        }
+                                    </div>
+
+                                    <div class="showtime-meta">
+                                        <span>
+                                            <span class="material-symbols-outlined">meeting_room</span>
+                                            @(item.Room?.Name ?? "Chưa có phòng")
+                                        </span>
+
+                                        <span>
+                                            <span class="material-symbols-outlined">schedule</span>
+                                            @item.StartTime.ToString("HH:mm - dd/MM/yyyy")
+                                        </span>
+
+                                        <span>
+                                            <span class="material-symbols-outlined">payments</span>
+                                            @item.BasePrice.ToString("N0") VNĐ
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="showtime-actions">
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn action-btn edit-btn"
+                                       title="Sửa suất chiếu">
+                                        <span class="material-symbols-outlined">edit</span>
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn action-btn delete-btn"
+                                       title="Xóa suất chiếu">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </a>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-showtime">
+                        <span class="material-symbols-outlined">event_busy</span>
+                        <h5>Chưa có suất chiếu nào</h5>
+                        <p>Tạo suất chiếu cho phim để khách có thể chọn lịch và đặt vé.</p>
+
+                        <a asp-action="Create" class="btn create-showtime-btn">
+                            <span class="material-symbols-outlined">add</span>
+                            Tạo suất chiếu đầu tiên
+                        </a>
+                    </div>
+                }
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+    .showtime-admin-page {
+        color: #fff;
+        min-height: 100vh;
+        padding: 28px;
+        background: radial-gradient(circle at 5% 5%, rgba(229, 9, 20, 0.16), transparent 26%), radial-gradient(circle at 95% 15%, rgba(255,255,255,0.05), transparent 24%), #101012;
+    }
+
+    .showtime-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 30px;
+        border-radius: 30px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: linear-gradient(90deg, rgba(0,0,0,0.84), rgba(0,0,0,0.48)), radial-gradient(circle at top right, rgba(229,9,20,0.35), transparent 34%), linear-gradient(135deg, #1b1b20, #09090b);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.35);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 22px;
+    }
+
+    .showtime-eyebrow {
+        color: #ff5964;
+        font-size: 0.78rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 12px;
+    }
+
+    .showtime-hero h1 {
+        font-size: clamp(2.2rem, 5vw, 4.1rem);
+        font-weight: 950;
+        letter-spacing: -0.065em;
+        line-height: 1;
+        margin-bottom: 12px;
+    }
+
+    .showtime-hero p {
+        color: #aaa;
+        max-width: 780px;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .create-showtime-btn {
+        min-height: 48px;
+        padding: 0 22px;
+        border-radius: 999px;
+        color: #fff;
+        border: none;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+        box-shadow: 0 14px 32px rgba(229,9,20,0.28);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 950;
+        white-space: nowrap;
+    }
+
+        .create-showtime-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 18px 42px rgba(229,9,20,0.38);
+        }
+
+    .admin-alert {
+        border-radius: 18px;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 750;
+    }
+
+    .showtime-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .showtime-stat-card {
+        position: relative;
+        overflow: hidden;
+        padding: 20px;
+        border-radius: 24px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(22,22,27,0.92);
+        box-shadow: 0 18px 46px rgba(0,0,0,0.26);
+    }
+
+        .showtime-stat-card.highlight {
+            border-left: 4px solid #e50914;
+        }
+
+        .showtime-stat-card::after {
+            content: "";
+            position: absolute;
+            right: -34px;
+            top: -34px;
+            width: 96px;
+            height: 96px;
+            border-radius: 999px;
+            background: rgba(229,9,20,0.10);
+        }
+
+        .showtime-stat-card > span {
+            color: #ff5964;
+            font-size: 32px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .showtime-stat-card p {
+            color: #aaa;
+            font-size: 0.76rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin: 0 0 6px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .showtime-stat-card h3 {
+            font-size: 1.9rem;
+            font-weight: 950;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .showtime-stat-card.money h3 {
+            color: #ffc94a;
+        }
+
+        .showtime-stat-card small {
+            color: #999;
+            font-weight: 800;
+        }
+
+    .showtime-layout {
+        display: grid;
+        grid-template-columns: 310px minmax(0, 1fr);
+        gap: 22px;
+        align-items: start;
+    }
+
+    .showtime-sidebar {
+        position: sticky;
+        top: 90px;
+    }
+
+    .side-panel,
+    .showtime-panel {
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(18,18,22,0.94);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.30);
+        overflow: hidden;
+    }
+
+    .side-panel-header,
+    .showtime-panel-header {
+        padding: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+        .side-panel-header h5,
+        .showtime-panel-header h4 {
+            font-weight: 950;
+            margin-bottom: 4px;
+        }
+
+        .side-panel-header p,
+        .showtime-panel-header p {
+            color: #999;
+            margin: 0;
+            font-size: 0.86rem;
+        }
+
+        .side-panel-header > span,
+        .showtime-panel-header > span {
+            color: #ff5964;
+            font-size: 30px;
+        }
+
+    .today-list,
+    .quick-info-list {
+        padding: 16px;
+    }
+
+    .today-item {
+        padding: 12px;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.065);
+        display: flex;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+
+    .today-time {
+        min-width: 58px;
+        height: 38px;
+        border-radius: 13px;
+        color: #fff;
+        background: rgba(229,9,20,0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 950;
+    }
+
+    .today-item h6 {
+        font-weight: 950;
+        margin-bottom: 3px;
+        font-size: 0.9rem;
+    }
+
+    .today-item p {
+        color: #999;
+        margin: 0;
+        font-size: 0.78rem;
+    }
+
+    .quick-info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .quick-info-list > div {
+            padding: 12px;
+            border-radius: 16px;
+            background: rgba(0,0,0,0.22);
+            border: 1px solid rgba(255,255,255,0.065);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .quick-info-list > div > span {
+                color: #ff5964;
+                font-size: 24px;
+            }
+
+        .quick-info-list small {
+            color: #888;
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .quick-info-list strong {
+            color: #fff;
+            font-weight: 900;
+        }
+
+    .timeline-wrap {
+        overflow-x: auto;
+        padding-bottom: 8px;
+    }
+
+    .timeline-header {
+        min-width: 1480px;
+        display: grid;
+        grid-template-columns: 150px repeat(17, 80px);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.025);
+    }
+
+    .room-head,
+    .hour-head {
+        min-height: 50px;
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        border-right: 1px solid rgba(255,255,255,0.055);
+    }
+
+    .room-head {
+        color: #fff;
+        background: rgba(229,9,20,0.12);
+    }
+
+    .timeline-row {
+        min-width: 1480px;
+        display: grid;
+        grid-template-columns: 150px 1360px;
+        min-height: 92px;
+        border-bottom: 1px solid rgba(255,255,255,0.065);
+    }
+
+    .room-cell {
+        padding: 16px;
+        background: rgba(255,255,255,0.035);
+        border-right: 1px solid rgba(255,255,255,0.065);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+        .room-cell strong {
+            color: #fff;
+            font-weight: 950;
+        }
+
+        .room-cell small {
+            color: #999;
+            font-weight: 800;
+        }
+
+    .timeline-track {
+        position: relative;
+        min-height: 92px;
+        background: repeating-linear-gradient( 90deg, rgba(255,255,255,0.035) 0, rgba(255,255,255,0.035) 1px, transparent 1px, transparent 80px );
+    }
+
+    .timeline-block {
+        position: absolute;
+        top: 12px;
+        width: 190px;
+        height: 68px;
+        padding: 10px 12px;
+        border-radius: 16px;
+        color: #fff;
+        text-decoration: none;
+        background: rgba(255,255,255,0.08);
+        border-left: 4px solid #ff5964;
+        box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+        transition: all 0.18s ease;
+        overflow: hidden;
+    }
+
+        .timeline-block:hover {
+            color: #fff;
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.12);
+        }
+
+        .timeline-block strong {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 950;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .timeline-block span {
+            color: #ddd;
+            display: block;
+            margin-top: 4px;
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+
+        .timeline-block.holiday {
+            border-left-color: #ffc94a;
+            background: radial-gradient(circle at right, rgba(255,201,74,0.13), transparent 35%), rgba(255,255,255,0.08);
+        }
+
+    .showtime-card-list {
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .showtime-card {
+        padding: 16px;
+        border-radius: 22px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.075);
+        display: grid;
+        grid-template-columns: 54px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 14px;
+        transition: all 0.18s ease;
+    }
+
+        .showtime-card:hover {
+            background: rgba(255,255,255,0.07);
+            transform: translateY(-2px);
+        }
+
+    .movie-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 18px;
+        background: rgba(229,9,20,0.16);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .movie-icon span {
+            font-size: 32px;
+        }
+
+    .showtime-title-line {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+    }
+
+        .showtime-title-line h5 {
+            font-weight: 950;
+            margin: 0;
+            font-size: 1.05rem;
+        }
+
+    .showtime-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+    }
+
+        .showtime-meta > span {
+            color: #aaa;
+            font-size: 0.82rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .showtime-meta .material-symbols-outlined {
+            color: #ff5964;
+            font-size: 18px;
+        }
+
+    .status-badge,
+    .holiday-badge {
+        min-height: 27px;
+        padding: 4px 9px;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+        .status-badge.upcoming {
+            color: #37d67a;
+            background: rgba(25,135,84,0.14);
+        }
+
+        .status-badge.past {
+            color: #999;
+            background: rgba(255,255,255,0.08);
+        }
+
+    .holiday-badge {
+        color: #ffc94a;
+        background: rgba(255,193,7,0.13);
+    }
+
+        .holiday-badge span {
+            font-size: 16px;
+        }
+
+    .showtime-actions {
+        display: inline-flex;
+        gap: 8px;
+    }
+
+    .action-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 14px;
+        color: #ddd;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.055);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .action-btn span {
+            font-size: 20px;
+        }
+
+    .edit-btn:hover {
+        color: #fff;
+        background: rgba(255,193,7,0.16);
+        border-color: rgba(255,193,7,0.35);
+        transform: translateY(-2px);
+    }
+
+    .delete-btn:hover {
+        color: #fff;
+        background: rgba(229,9,20,0.18);
+        border-color: rgba(229,9,20,0.38);
+        transform: translateY(-2px);
+    }
+
+    .empty-showtime,
+    .empty-side {
+        padding: 54px 20px;
+        text-align: center;
+        color: #999;
+    }
+
+        .empty-showtime > span,
+        .empty-side > span {
+            color: #ff5964;
+            font-size: 52px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .empty-showtime h5 {
+            color: #fff;
+            font-weight: 950;
+        }
+
+        .empty-showtime p {
+            margin-bottom: 18px;
+        }
+
+    @@media (max-width: 1199.98px) {
+        .showtime-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .showtime-sidebar {
+            position: static;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .showtime-stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .showtime-admin-page {
+            padding: 18px;
+        }
+
+        .showtime-hero {
+            flex-direction: column;
+            padding: 24px;
+        }
+
+        .create-showtime-btn {
+            width: 100%;
+        }
+
+        .showtime-stats-grid,
+        .showtime-sidebar {
+            grid-template-columns: 1fr;
+        }
+
+        .showtime-card {
+            grid-template-columns: 1fr;
+        }
+
+        .showtime-actions {
+            width: 100%;
+        }
+
+        .action-btn {
+            flex: 1;
+        }
+    }
+</style>

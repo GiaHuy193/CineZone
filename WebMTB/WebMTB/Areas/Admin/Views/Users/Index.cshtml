@@ -1,0 +1,935 @@
+﻿@model IEnumerable<WebMTB.Areas.Admin.Controllers.AdminUserViewModel>
+
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var users = Model?.ToList() ?? new List<WebMTB.Areas.Admin.Controllers.AdminUserViewModel>();
+
+    int totalUsers = ViewBag.TotalUsers != null ? (int)ViewBag.TotalUsers : users.Count;
+    int confirmedUsers = ViewBag.ConfirmedUsers != null ? (int)ViewBag.ConfirmedUsers : users.Count(u => u.EmailConfirmed);
+    int lockedUsers = ViewBag.LockedUsers != null ? (int)ViewBag.LockedUsers : users.Count(u => u.LockoutEnd != null && u.LockoutEnd > DateTimeOffset.Now);
+    decimal totalCustomerRevenue = ViewBag.TotalCustomerRevenue != null ? (decimal)ViewBag.TotalCustomerRevenue : users.Sum(u => u.TotalSpent);
+
+    int activeUsers = totalUsers - lockedUsers;
+    int notConfirmedUsers = totalUsers - confirmedUsers;
+}
+
+<div class="user-admin-page">
+    <div class="user-hero mb-4">
+        <div>
+            <div class="user-eyebrow">
+                <span class="material-symbols-outlined">group</span>
+                CineZone User Management
+            </div>
+
+            <h1>Quản lý người dùng</h1>
+            <p>
+                Theo dõi tài khoản khách hàng, trạng thái xác thực email, số lượng booking và tổng doanh thu từ từng người dùng.
+            </p>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="Dashboard"
+           asp-action="Index"
+           class="btn dashboard-btn">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success admin-alert">
+            <span class="material-symbols-outlined">check_circle</span>
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger admin-alert">
+            <span class="material-symbols-outlined">warning</span>
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="user-stats-grid mb-4">
+        <div class="user-stat-card highlight">
+            <span class="material-symbols-outlined">groups</span>
+            <p>Tổng người dùng</p>
+            <h3>@totalUsers</h3>
+        </div>
+
+        <div class="user-stat-card success">
+            <span class="material-symbols-outlined">verified_user</span>
+            <p>Đã xác thực</p>
+            <h3>@confirmedUsers</h3>
+        </div>
+
+        <div class="user-stat-card danger">
+            <span class="material-symbols-outlined">lock</span>
+            <p>Bị khóa</p>
+            <h3>@lockedUsers</h3>
+        </div>
+
+        <div class="user-stat-card revenue">
+            <span class="material-symbols-outlined">payments</span>
+            <p>Doanh thu user</p>
+            <h3>@totalCustomerRevenue.ToString("N0")</h3>
+            <small>VNĐ</small>
+        </div>
+    </div>
+
+    <div class="user-layout">
+        <aside class="user-sidebar">
+            <div class="side-panel mb-4">
+                <div class="side-panel-header">
+                    <div>
+                        <h5>Tổng quan tài khoản</h5>
+                        <p>Tình trạng người dùng hiện tại.</p>
+                    </div>
+
+                    <span class="material-symbols-outlined">analytics</span>
+                </div>
+
+                <div class="quick-info-list">
+                    <div>
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <div>
+                            <small>Đang hoạt động</small>
+                            <strong>@activeUsers tài khoản</strong>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="material-symbols-outlined">mark_email_unread</span>
+                        <div>
+                            <small>Chưa xác thực</small>
+                            <strong>@notConfirmedUsers tài khoản</strong>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="material-symbols-outlined">confirmation_number</span>
+                        <div>
+                            <small>Tổng booking</small>
+                            <strong>@users.Sum(u => u.BookingCount) booking</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-panel">
+                <div class="side-panel-header">
+                    <div>
+                        <h5>Gợi ý quản trị</h5>
+                        <p>Quy tắc xử lý nhanh.</p>
+                    </div>
+
+                    <span class="material-symbols-outlined">tips_and_updates</span>
+                </div>
+
+                <div class="admin-note-list">
+                    <div>
+                        <span class="material-symbols-outlined">shield</span>
+                        <p>Chỉ khóa tài khoản khi có dấu hiệu đặt vé bất thường hoặc spam.</p>
+                    </div>
+
+                    <div>
+                        <span class="material-symbols-outlined">mail</span>
+                        <p>User chưa xác thực email có thể gặp lỗi khi đăng nhập hoặc nhận thông báo.</p>
+                    </div>
+
+                    <div>
+                        <span class="material-symbols-outlined">receipt_long</span>
+                        <p>Tổng chi tiêu chỉ tính các booking đã thanh toán thành công.</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="user-main">
+            <div class="user-panel">
+                <div class="user-panel-header">
+                    <div>
+                        <h4>Danh sách người dùng</h4>
+                        <p>Theo dõi thông tin tài khoản, booking và trạng thái khóa/mở khóa.</p>
+                    </div>
+
+                    <div class="panel-actions">
+                        <span class="material-symbols-outlined">manage_accounts</span>
+                    </div>
+                </div>
+
+                @if (users.Any())
+                {
+                    <div class="user-table-wrap">
+                        <table class="table user-table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Người dùng</th>
+                                    <th class="text-center">Xác thực</th>
+                                    <th class="text-center">Booking</th>
+                                    <th class="text-end">Đã chi tiêu</th>
+                                    <th class="text-center">Trạng thái</th>
+                                    <th class="text-end">Thao tác</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var user in users)
+                                {
+                                    bool isLocked = user.LockoutEnd != null && user.LockoutEnd > DateTimeOffset.Now;
+
+                                    string email = user.Email ?? "no-email";
+                                    string username = user.UserName ?? email;
+                                    string avatarText = string.IsNullOrWhiteSpace(email) ? "U" : email.Substring(0, 1).ToUpper();
+
+                                    string memberClass = user.TotalSpent >= 1000000 ? "gold"
+                                        : user.TotalSpent >= 300000 ? "silver"
+                                        : "bronze";
+
+                                    string memberText = user.TotalSpent >= 1000000 ? "Gold"
+                                        : user.TotalSpent >= 300000 ? "Silver"
+                                        : "Bronze";
+
+                                    <tr>
+                                        <td>
+                                            <div class="user-cell">
+                                                <div class="user-avatar @memberClass">
+                                                    @avatarText
+                                                </div>
+
+                                                <div>
+                                                    <strong>@email</strong>
+                                                    <small>@username</small>
+
+                                                    <span class="member-badge @memberClass">
+                                                        @memberText Member
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td class="text-center">
+                                            @if (user.EmailConfirmed)
+                                            {
+                                                <span class="status-badge success">
+                                                    <span class="material-symbols-outlined">verified</span>
+                                                    Confirmed
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="status-badge warning">
+                                                    <span class="material-symbols-outlined">mark_email_unread</span>
+                                                    Not confirmed
+                                                </span>
+                                            }
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span class="booking-count-pill">
+                                                <span class="material-symbols-outlined">confirmation_number</span>
+                                                @user.BookingCount
+                                            </span>
+                                        </td>
+
+                                        <td class="text-end">
+                                            <div class="spent-cell">
+                                                <strong>@user.TotalSpent.ToString("N0")</strong>
+                                                <small>VNĐ</small>
+                                            </div>
+                                        </td>
+
+                                        <td class="text-center">
+                                            @if (isLocked)
+                                            {
+                                                <span class="account-status locked">
+                                                    <span class="material-symbols-outlined">lock</span>
+                                                    Locked
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="account-status active">
+                                                    <span class="material-symbols-outlined">check_circle</span>
+                                                    Active
+                                                </span>
+                                            }
+                                        </td>
+
+                                        <td class="text-end">
+                                            <div class="user-actions">
+                                                @if (isLocked)
+                                                {
+                                                    <form asp-action="Unlock" method="post" class="d-inline">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="id" value="@user.Id" />
+
+                                                        <button type="submit"
+                                                                class="btn action-btn unlock-btn"
+                                                                title="Mở khóa tài khoản">
+                                                            <span class="material-symbols-outlined">lock_open</span>
+                                                        </button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <form asp-action="Lock" method="post" class="d-inline">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="id" value="@user.Id" />
+
+                                                        <button type="submit"
+                                                                class="btn action-btn lock-btn"
+                                                                title="Khóa tài khoản">
+                                                            <span class="material-symbols-outlined">block</span>
+                                                        </button>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="user-footer">
+                        <span>Đang hiển thị @users.Count người dùng trong hệ thống.</span>
+
+                        <div class="footer-pills">
+                            <span class="footer-pill success">Confirmed @confirmedUsers</span>
+                            <span class="footer-pill warning">Unconfirmed @notConfirmedUsers</span>
+                            <span class="footer-pill danger">Locked @lockedUsers</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-user-box">
+                        <div class="empty-icon">
+                            <span class="material-symbols-outlined">person_off</span>
+                        </div>
+
+                        <h4>Chưa có người dùng</h4>
+                        <p>Khi khách đăng ký tài khoản, thông tin sẽ xuất hiện tại đây.</p>
+                    </div>
+                }
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+    .user-admin-page {
+        color: #fff;
+        min-height: 100vh;
+        padding: 28px;
+        background: radial-gradient(circle at 5% 5%, rgba(229, 9, 20, 0.16), transparent 26%), radial-gradient(circle at 95% 15%, rgba(255,255,255,0.05), transparent 24%), #101012;
+    }
+
+    .user-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 30px;
+        border-radius: 30px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: linear-gradient(90deg, rgba(0,0,0,0.84), rgba(0,0,0,0.48)), radial-gradient(circle at top right, rgba(229,9,20,0.35), transparent 34%), linear-gradient(135deg, #1b1b20, #09090b);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.35);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 22px;
+    }
+
+    .user-eyebrow {
+        color: #ff5964;
+        font-size: 0.78rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 12px;
+    }
+
+    .user-hero h1 {
+        font-size: clamp(2.2rem, 5vw, 4.1rem);
+        font-weight: 950;
+        letter-spacing: -0.065em;
+        line-height: 1;
+        margin-bottom: 12px;
+    }
+
+    .user-hero p {
+        color: #aaa;
+        max-width: 780px;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .dashboard-btn {
+        min-height: 48px;
+        padding: 0 22px;
+        border-radius: 999px;
+        color: #fff;
+        border: none;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+        box-shadow: 0 14px 32px rgba(229,9,20,0.28);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 950;
+        white-space: nowrap;
+    }
+
+        .dashboard-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    .admin-alert {
+        border-radius: 18px;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 750;
+    }
+
+    .user-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .user-stat-card {
+        position: relative;
+        overflow: hidden;
+        padding: 20px;
+        border-radius: 24px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(22,22,27,0.92);
+        box-shadow: 0 18px 46px rgba(0,0,0,0.26);
+    }
+
+        .user-stat-card.highlight {
+            border-left: 4px solid #e50914;
+        }
+
+        .user-stat-card::after {
+            content: "";
+            position: absolute;
+            right: -34px;
+            top: -34px;
+            width: 96px;
+            height: 96px;
+            border-radius: 999px;
+            background: rgba(229,9,20,0.10);
+        }
+
+        .user-stat-card > span {
+            color: #ff5964;
+            font-size: 32px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .user-stat-card p {
+            color: #aaa;
+            font-size: 0.76rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin: 0 0 6px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .user-stat-card h3 {
+            font-size: 1.9rem;
+            font-weight: 950;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .user-stat-card.success h3 {
+            color: #37d67a;
+        }
+
+        .user-stat-card.danger h3 {
+            color: #ff5964;
+        }
+
+        .user-stat-card.revenue h3 {
+            color: #ff5964;
+            font-size: 1.45rem;
+        }
+
+        .user-stat-card small {
+            color: #999;
+            font-weight: 800;
+        }
+
+    .user-layout {
+        display: grid;
+        grid-template-columns: 310px minmax(0, 1fr);
+        gap: 22px;
+        align-items: start;
+    }
+
+    .user-sidebar {
+        position: sticky;
+        top: 90px;
+    }
+
+    .side-panel,
+    .user-panel {
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(18,18,22,0.94);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.30);
+        overflow: hidden;
+    }
+
+    .side-panel-header,
+    .user-panel-header {
+        padding: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+        .side-panel-header h5,
+        .user-panel-header h4 {
+            font-weight: 950;
+            margin-bottom: 4px;
+        }
+
+        .side-panel-header p,
+        .user-panel-header p {
+            color: #999;
+            margin: 0;
+            font-size: 0.86rem;
+        }
+
+        .side-panel-header > span {
+            color: #ff5964;
+            font-size: 30px;
+        }
+
+    .panel-actions {
+        width: 46px;
+        height: 46px;
+        border-radius: 16px;
+        background: rgba(229,9,20,0.14);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .panel-actions span {
+            font-size: 28px;
+        }
+
+    .quick-info-list,
+    .admin-note-list {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .quick-info-list > div,
+        .admin-note-list > div {
+            padding: 12px;
+            border-radius: 16px;
+            background: rgba(0,0,0,0.22);
+            border: 1px solid rgba(255,255,255,0.065);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+            .quick-info-list > div > span,
+            .admin-note-list > div > span {
+                color: #ff5964;
+                font-size: 24px;
+                flex-shrink: 0;
+            }
+
+        .quick-info-list small {
+            color: #888;
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .quick-info-list strong {
+            color: #fff;
+            font-weight: 900;
+            font-size: 0.88rem;
+        }
+
+        .admin-note-list p {
+            color: #aaa;
+            margin: 0;
+            font-size: 0.82rem;
+            line-height: 1.55;
+        }
+
+    .user-table-wrap {
+        overflow-x: auto;
+    }
+
+    .user-table {
+        color: #fff;
+        min-width: 1080px;
+    }
+
+        .user-table thead tr {
+            background: rgba(255,255,255,0.035);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .user-table th {
+            color: #9b9b9b;
+            padding: 18px 22px;
+            font-size: 0.72rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            border: none;
+        }
+
+        .user-table td {
+            padding: 20px 22px;
+            border-color: rgba(255,255,255,0.075);
+            vertical-align: middle;
+        }
+
+        .user-table tbody tr {
+            transition: all 0.18s ease;
+        }
+
+            .user-table tbody tr:hover {
+                background: rgba(255,255,255,0.045);
+            }
+
+    .user-cell {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        min-width: 270px;
+    }
+
+    .user-avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 16px;
+        background: rgba(229,9,20,0.16);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 950;
+        flex-shrink: 0;
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+        .user-avatar.gold {
+            background: rgba(255,193,7,0.15);
+            color: #ffc94a;
+        }
+
+        .user-avatar.silver {
+            background: rgba(180,180,190,0.14);
+            color: #ddd;
+        }
+
+        .user-avatar.bronze {
+            background: rgba(229,9,20,0.16);
+            color: #ff5964;
+        }
+
+    .user-cell strong {
+        display: block;
+        color: #fff;
+        font-weight: 950;
+        max-width: 310px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .user-cell small {
+        color: #888;
+        display: block;
+        margin-top: 3px;
+        font-size: 0.78rem;
+    }
+
+    .member-badge {
+        display: inline-flex;
+        margin-top: 7px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 0.66rem;
+        font-weight: 950;
+        text-transform: uppercase;
+    }
+
+        .member-badge.gold {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.13);
+            border: 1px solid rgba(255,193,7,0.18);
+        }
+
+        .member-badge.silver {
+            color: #ddd;
+            background: rgba(255,255,255,0.09);
+            border: 1px solid rgba(255,255,255,0.13);
+        }
+
+        .member-badge.bronze {
+            color: #ff5964;
+            background: rgba(229,9,20,0.13);
+            border: 1px solid rgba(229,9,20,0.18);
+        }
+
+    .status-badge,
+    .account-status {
+        min-height: 31px;
+        padding: 6px 11px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        white-space: nowrap;
+    }
+
+        .status-badge span,
+        .account-status span {
+            font-size: 17px;
+        }
+
+        .status-badge.success,
+        .account-status.active {
+            color: #37d67a;
+            background: rgba(25,135,84,0.14);
+            border: 1px solid rgba(25,135,84,0.20);
+        }
+
+        .status-badge.warning {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.12);
+            border: 1px solid rgba(255,193,7,0.18);
+        }
+
+        .account-status.locked {
+            color: #ff5964;
+            background: rgba(229,9,20,0.14);
+            border: 1px solid rgba(229,9,20,0.20);
+        }
+
+    .booking-count-pill {
+        min-height: 34px;
+        padding: 6px 11px;
+        border-radius: 999px;
+        color: #fff;
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.10);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-weight: 950;
+    }
+
+        .booking-count-pill span {
+            color: #ff5964;
+            font-size: 18px;
+        }
+
+    .spent-cell strong {
+        color: #ff5964;
+        display: block;
+        font-size: 1.05rem;
+        font-weight: 950;
+    }
+
+    .spent-cell small {
+        color: #999;
+        font-weight: 800;
+    }
+
+    .user-actions {
+        display: inline-flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .action-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 13px;
+        color: #ddd;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.055);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.18s ease;
+    }
+
+        .action-btn span {
+            font-size: 20px;
+        }
+
+    .unlock-btn:hover {
+        color: #fff;
+        background: rgba(25,135,84,0.18);
+        border-color: rgba(25,135,84,0.35);
+        transform: translateY(-2px);
+    }
+
+    .lock-btn:hover {
+        color: #fff;
+        background: rgba(229,9,20,0.18);
+        border-color: rgba(229,9,20,0.38);
+        transform: translateY(-2px);
+    }
+
+    .user-footer {
+        padding: 18px 22px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.025);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        color: #999;
+        font-weight: 750;
+    }
+
+    .footer-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+
+    .footer-pill {
+        border-radius: 999px;
+        padding: 5px 10px;
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+    }
+
+        .footer-pill.success {
+            color: #37d67a;
+            background: rgba(25,135,84,0.14);
+        }
+
+        .footer-pill.warning {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.12);
+        }
+
+        .footer-pill.danger {
+            color: #ff5964;
+            background: rgba(229,9,20,0.14);
+        }
+
+    .empty-user-box {
+        padding: 74px 20px;
+        text-align: center;
+    }
+
+    .empty-icon {
+        width: 88px;
+        height: 88px;
+        margin: 0 auto 18px;
+        border-radius: 28px;
+        background: rgba(229,9,20,0.16);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .empty-icon span {
+            font-size: 52px;
+        }
+
+    .empty-user-box h4 {
+        font-weight: 950;
+    }
+
+    .empty-user-box p {
+        color: #999;
+        margin: 0;
+    }
+
+    @@media (max-width: 1199.98px) {
+        .user-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .user-sidebar {
+            position: static;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .user-stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .user-admin-page {
+            padding: 18px;
+        }
+
+        .user-hero {
+            flex-direction: column;
+            padding: 24px;
+        }
+
+        .dashboard-btn {
+            width: 100%;
+        }
+
+        .user-stats-grid,
+        .user-sidebar {
+            grid-template-columns: 1fr;
+        }
+
+        .user-footer {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .footer-pills {
+            justify-content: flex-start;
+        }
+    }
+</style>

@@ -1,0 +1,111 @@
+﻿@model IEnumerable<WebMTB.Models.Movie>
+
+@{
+    ViewData["Title"] = "Quản Lý Phim";
+}
+
+<div class="container mt-5 pt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="text-white brand-font mb-0">Danh Sách Phim</h1>
+            <p class="text-secondary small">Quản lý nội dung phim hiển thị trên hệ thống</p>
+        </div>
+        <a asp-action="Create" class="btn btn-gradient px-4 py-2 rounded-pill d-flex align-items-center gap-2">
+            <span class="material-symbols-outlined">add_circle</span> Thêm Phim Mới
+        </a>
+    </div>
+
+    <div class="card page-card border-secondary shadow-lg movies-table">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead class="table-black">
+                    <tr>
+                        <th class="ps-4">Phim</th>
+                        <th>Đạo Diễn</th>
+                        <th>Thời Lượng</th>
+                        <th>Khởi Chiếu</th>
+                        <th class="text-center">Trạng Thái</th>
+                        <th class="text-center">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded overflow-hidden shadow-sm" style="width: 50px; height: 75px; background: #333;">
+                                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                        {
+                                            <img src="@item.ImageUrl" class="w-100 h-100 object-fit-cover" alt="Poster">
+                                        }
+                                        else
+                                        {
+                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center text-secondary" style="font-size: 10px;">No Image</div>
+                                        }
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-white">@item.Title</div>
+                                        <div class="text-secondary small">⭐ @item.Rating/10</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-secondary">@item.Director</td>
+                            <td class="text-secondary">@item.Duration phút</td>
+                            <td class="text-secondary">@item.ReleaseDate.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center">
+                                @if (item.IsHot)
+                                {
+                                    <span class="badge bg-danger bg-opacity-25 text-danger border border-danger mb-1">HOT</span>
+                                }
+                                @if (item.IsActive)
+                                {
+                                    <span class="badge bg-success bg-opacity-25 text-success border border-success">Đang Chiếu</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary bg-opacity-25 text-secondary border border-secondary">Tạm Dừng</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group gap-2">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info rounded-pill" title="Sửa">
+                                        <span class="material-symbols-outlined fs-6">edit</span>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-light rounded-pill" title="Chi tiết">
+                                        <span class="material-symbols-outlined fs-6">visibility</span>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill" title="Xóa">
+                                        <span class="material-symbols-outlined fs-6">delete</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Chỉnh một chút CSS cho bảng mượt hơn */
+    .table-black {
+        background-color: #000 !important;
+        color: #fff !important;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .object-fit-cover {
+        object-fit: cover;
+    }
+
+    td {
+        border-bottom: 1px solid #2a2a2a !important;
+        padding-top: 15px !important;
+        padding-bottom: 15px !important;
+    }
+</style>

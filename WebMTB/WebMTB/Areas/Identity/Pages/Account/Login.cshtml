@@ -1,0 +1,810 @@
+﻿@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<style>
+    .cz-login-float {
+        position: relative;
+        min-height: calc(100vh - 72px);
+        padding: 128px 18px 76px;
+        background: radial-gradient(circle at 18% 20%, rgba(229, 9, 20, 0.28), transparent 28%), radial-gradient(circle at 82% 12%, rgba(255,255,255,0.07), transparent 26%), linear-gradient(135deg, #070708 0%, #111114 48%, #050505 100%);
+        overflow: hidden;
+    }
+
+        .cz-login-float::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 46px 46px;
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+    .cz-login-glow {
+        position: absolute;
+        width: 420px;
+        height: 420px;
+        border-radius: 999px;
+        background: rgba(229, 9, 20, 0.18);
+        filter: blur(80px);
+        animation: glowMove 7s ease-in-out infinite alternate;
+        pointer-events: none;
+    }
+
+        .cz-login-glow.one {
+            top: 80px;
+            left: 9%;
+        }
+
+        .cz-login-glow.two {
+            right: 8%;
+            bottom: 40px;
+            background: rgba(255, 89, 100, 0.13);
+            animation-delay: 1.2s;
+        }
+
+    .cz-auth-shell-v3 {
+        position: relative;
+        z-index: 2;
+        width: min(1120px, 100%);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 30px;
+        align-items: center;
+    }
+
+    .cz-showcase {
+        position: relative;
+        min-height: 590px;
+        display: flex;
+        align-items: center;
+    }
+
+    .cz-showcase-content {
+        position: relative;
+        z-index: 4;
+        max-width: 520px;
+    }
+
+    .cz-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border-radius: 999px;
+        background: rgba(229, 9, 20, 0.16);
+        border: 1px solid rgba(229, 9, 20, 0.34);
+        color: #ff6871;
+        font-size: 0.76rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        margin-bottom: 18px;
+        animation: fadeUp 0.7s ease both;
+    }
+
+    .cz-showcase-title {
+        color: #fff;
+        font-size: clamp(3rem, 6vw, 6.4rem);
+        font-weight: 950;
+        line-height: 0.92;
+        letter-spacing: -0.085em;
+        margin-bottom: 22px;
+        animation: fadeUp 0.7s ease 0.08s both;
+    }
+
+        .cz-showcase-title span {
+            color: #ff2632;
+            text-shadow: 0 0 38px rgba(229, 9, 20, 0.38);
+        }
+
+    .cz-showcase-desc {
+        color: #b8b8b8;
+        line-height: 1.8;
+        max-width: 460px;
+        margin-bottom: 28px;
+        animation: fadeUp 0.7s ease 0.16s both;
+    }
+
+    .cz-showcase-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        animation: fadeUp 0.7s ease 0.24s both;
+    }
+
+        .cz-showcase-pills span {
+            padding: 10px 14px;
+            border-radius: 999px;
+            color: #fff;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.10);
+            font-size: 0.84rem;
+            font-weight: 850;
+            backdrop-filter: blur(10px);
+        }
+
+    .cz-floating-cards {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .movie-float-card {
+        position: absolute;
+        width: 132px;
+        height: 190px;
+        border-radius: 22px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.14);
+        box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+        background: #222;
+        opacity: 0.95;
+        animation: floatCard 4.8s ease-in-out infinite alternate;
+    }
+
+        .movie-float-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.82)), radial-gradient(circle at top, rgba(255,255,255,0.15), transparent 32%);
+        }
+
+        .movie-float-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: saturate(0.88) brightness(0.82);
+        }
+
+        .movie-float-card.card-1 {
+            top: 36px;
+            right: 48px;
+            transform: rotate(8deg);
+            animation-delay: 0s;
+        }
+
+        .movie-float-card.card-2 {
+            right: 170px;
+            bottom: 56px;
+            transform: rotate(-8deg);
+            animation-delay: 0.7s;
+        }
+
+        .movie-float-card.card-3 {
+            top: 265px;
+            right: 0;
+            transform: rotate(10deg);
+            animation-delay: 1.2s;
+        }
+
+        .movie-float-card.card-4 {
+            left: 28px;
+            bottom: 24px;
+            width: 118px;
+            height: 168px;
+            transform: rotate(6deg);
+            opacity: 0.55;
+            animation-delay: 1.7s;
+        }
+
+    .cz-form-panel-v3 {
+        position: relative;
+        min-height: 590px;
+        padding: 34px;
+        border-radius: 34px;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.20), transparent 32%), rgba(12,12,15,0.88);
+        backdrop-filter: blur(22px);
+        box-shadow: 0 28px 80px rgba(0,0,0,0.62);
+        display: flex;
+        align-items: center;
+        animation: slideInRight 0.75s ease both;
+        overflow: hidden;
+    }
+
+        .cz-form-panel-v3::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 34px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.20), rgba(229,9,20,0.38), rgba(255,255,255,0.04));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+    .cz-form-card-v3 {
+        width: 100%;
+        position: relative;
+        z-index: 2;
+    }
+
+    .cz-brand-v3 {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        color: #ff2632;
+        font-size: 2.55rem;
+        font-weight: 950;
+        letter-spacing: -0.065em;
+        margin-bottom: 8px;
+    }
+
+    .cz-form-card-v3 h2 {
+        color: #fff;
+        font-size: 2.05rem;
+        font-weight: 950;
+        letter-spacing: -0.045em;
+        margin-bottom: 8px;
+    }
+
+    .cz-form-card-v3 .cz-desc {
+        color: #999;
+        line-height: 1.65;
+        margin-bottom: 28px;
+    }
+
+    .cz-label {
+        color: #aaa;
+        font-size: 0.76rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 8px;
+    }
+
+    .cz-input {
+        min-height: 54px;
+        color: #fff !important;
+        background: rgba(255,255,255,0.075) !important;
+        border: 1px solid rgba(255,255,255,0.12) !important;
+        border-radius: 18px !important;
+        padding: 0 16px !important;
+        font-weight: 750;
+    }
+
+        .cz-input::placeholder {
+            color: #777;
+        }
+
+        .cz-input:focus {
+            background: rgba(255,255,255,0.105) !important;
+            border-color: rgba(229,9,20,0.58) !important;
+            box-shadow: 0 0 0 0.22rem rgba(229,9,20,0.16) !important;
+        }
+
+    .cz-password-wrap {
+        position: relative;
+    }
+
+        .cz-password-wrap .cz-input {
+            padding-right: 54px !important;
+        }
+
+    .cz-toggle-pass {
+        position: absolute;
+        top: 50%;
+        right: 14px;
+        transform: translateY(-50%);
+        width: 34px;
+        height: 34px;
+        border: none;
+        border-radius: 999px;
+        color: #aaa;
+        background: transparent;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+        .cz-toggle-pass:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .cz-toggle-pass .material-symbols-outlined {
+            font-size: 21px;
+        }
+
+    input[type="password"]::-ms-reveal,
+    input[type="password"]::-ms-clear {
+        display: none;
+    }
+
+    .cz-login-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin: 18px 0 24px;
+    }
+
+        .cz-login-options label {
+            color: #aaa;
+            font-size: 0.88rem;
+        }
+
+    .cz-forgot {
+        color: #ff5964;
+        font-size: 0.88rem;
+        font-weight: 850;
+        text-decoration: none;
+    }
+
+        .cz-forgot:hover {
+            color: #fff;
+        }
+
+    .cz-submit {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        min-height: 54px;
+        border: none;
+        border-radius: 18px;
+        color: #fff;
+        background: linear-gradient(135deg, #ff9f99 0%, #e50914 58%, #9f050d 100%);
+        font-weight: 950;
+        letter-spacing: 0.4px;
+        box-shadow: 0 18px 38px rgba(229,9,20,0.32);
+        transition: 0.2s ease;
+    }
+
+        .cz-submit::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -90px;
+            width: 70px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+            transform: skewX(-20deg);
+            animation: buttonShimmer 2.4s ease-in-out infinite;
+        }
+
+        .cz-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 22px 46px rgba(229,9,20,0.46);
+        }
+
+    .cz-switch {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255,255,255,0.10);
+        color: #aaa;
+        text-align: center;
+        font-size: 0.92rem;
+    }
+
+        .cz-switch a {
+            color: #fff;
+            font-weight: 950;
+            text-decoration: none;
+        }
+
+            .cz-switch a:hover {
+                color: #ff5964;
+            }
+
+    .cz-status-alert {
+        background: rgba(40, 167, 69, 0.16);
+        border: 1px solid rgba(40, 167, 69, 0.45);
+        color: #d4edda;
+        border-radius: 16px;
+        font-size: 0.9rem;
+    }
+
+    @@keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(18px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(28px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes floatCard {
+        from {
+            translate: 0 0;
+        }
+
+        to {
+            translate: 0 -18px;
+        }
+    }
+
+    @@keyframes glowMove {
+        from {
+            transform: translate(0, 0) scale(1);
+        }
+
+        to {
+            transform: translate(32px, 24px) scale(1.08);
+        }
+    }
+
+    @@keyframes buttonShimmer {
+        0% {
+            left: -90px;
+        }
+
+        45%, 100% {
+            left: calc(100% + 90px);
+        }
+    }
+
+    @@media (max-width: 991.98px) {
+        .cz-auth-shell-v3 {
+            grid-template-columns: 1fr;
+        }
+
+        .cz-showcase {
+            min-height: 420px;
+        }
+
+        .cz-form-panel-v3 {
+            min-height: auto;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .cz-login-float {
+            padding: 112px 14px 56px;
+        }
+
+        .cz-form-panel-v3 {
+            padding: 24px;
+            border-radius: 24px;
+        }
+
+        .cz-showcase {
+            min-height: 360px;
+        }
+
+        .movie-float-card {
+            width: 96px;
+            height: 140px;
+        }
+
+        .cz-login-options {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    /* FIX AUTH PAGE SCALE 100% */
+    .page-wrapper {
+        padding-top: 0 !important;
+    }
+
+    .cz-login-float {
+        min-height: 100svh;
+        padding: 92px 18px 48px !important;
+        display: flex;
+        align-items: center;
+    }
+
+    .cz-auth-shell-v3 {
+        width: min(1040px, 100%) !important;
+        grid-template-columns: 0.95fr 1fr !important;
+        gap: 24px !important;
+    }
+
+    .cz-showcase {
+        min-height: 500px !important;
+    }
+
+    .cz-form-panel-v3 {
+        min-height: auto !important;
+        padding: 30px !important;
+        align-self: center;
+    }
+
+    .cz-showcase-title {
+        font-size: clamp(2.7rem, 4.8vw, 5.1rem) !important;
+        line-height: 0.94 !important;
+        margin-bottom: 18px !important;
+    }
+
+    .cz-showcase-desc {
+        margin-bottom: 22px !important;
+    }
+
+    .movie-float-card {
+        width: 112px !important;
+        height: 160px !important;
+    }
+
+        .movie-float-card.card-1 {
+            top: 30px !important;
+            right: 46px !important;
+        }
+
+        .movie-float-card.card-2 {
+            right: 150px !important;
+            bottom: 52px !important;
+        }
+
+        .movie-float-card.card-3 {
+            top: 240px !important;
+            right: 0 !important;
+        }
+
+        .movie-float-card.card-4 {
+            left: 24px !important;
+            bottom: 22px !important;
+            width: 102px !important;
+            height: 146px !important;
+        }
+
+    .cz-brand-v3 {
+        font-size: 2.25rem !important;
+    }
+
+    .cz-form-card-v3 h2 {
+        font-size: 1.85rem !important;
+    }
+
+    .cz-input {
+        min-height: 50px !important;
+    }
+
+    .cz-submit {
+        min-height: 52px !important;
+    }
+
+    @@media (max-width: 991.98px) {
+        .cz-login-float {
+            padding: 96px 18px 52px !important;
+            display: block;
+        }
+
+        .cz-auth-shell-v3 {
+            grid-template-columns: 1fr !important;
+        }
+
+        .cz-showcase {
+            min-height: 360px !important;
+        }
+
+        .cz-form-panel-v3 {
+            width: min(560px, 100%);
+            margin: 0 auto;
+        }
+
+        .cz-showcase-title {
+            font-size: clamp(2.4rem, 8vw, 4rem) !important;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .cz-login-float {
+            padding: 88px 14px 42px !important;
+        }
+
+        .cz-showcase {
+            min-height: 310px !important;
+        }
+
+        .cz-showcase-title {
+            font-size: 2.45rem !important;
+        }
+
+        .cz-form-panel-v3 {
+            padding: 22px !important;
+            border-radius: 24px !important;
+        }
+
+        .movie-float-card {
+            width: 82px !important;
+            height: 118px !important;
+        }
+    }
+</style>
+
+<section class="cz-login-float">
+    <div class="cz-login-glow one"></div>
+    <div class="cz-login-glow two"></div>
+
+    <div class="cz-auth-shell-v3">
+        <aside class="cz-showcase">
+            <div class="cz-floating-cards">
+                <div class="movie-float-card card-1">
+                    <img src="https://m.media-amazon.com/images/I/81p+xe8cbnL._AC_UF1000,1000_QL80_.jpg" alt="Movie poster" />
+                </div>
+
+                <div class="movie-float-card card-2">
+                    <img src="https://m.media-amazon.com/images/I/91KkWf50SoL._AC_UF1000,1000_QL80_.jpg" alt="Movie poster" />
+                </div>
+
+                <div class="movie-float-card card-3">
+                    <img src="https://m.media-amazon.com/images/I/71niXI3lxlL._AC_UF1000,1000_QL80_.jpg" alt="Movie poster" />
+                </div>
+
+                <div class="movie-float-card card-4">
+                    <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=600&auto=format&fit=crop" alt="Movie poster" />
+                </div>
+            </div>
+
+            <div class="cz-showcase-content">
+                <div class="cz-kicker">
+                    <span class="material-symbols-outlined" style="font-size:18px;">movie</span>
+                    CineZone Experience
+                </div>
+
+                <h1 class="cz-showcase-title">
+                    Book your <span>movie night</span>.
+                </h1>
+
+                <p class="cz-showcase-desc">
+                    Đăng nhập để chọn ghế đẹp, thanh toán nhanh và lưu lại toàn bộ lịch sử đặt vé tại CineZone.
+                </p>
+
+                <div class="cz-showcase-pills">
+                    <span>Ghế VIP</span>
+                    <span>Thanh toán PayPal</span>
+                    <span>Đặt vé online</span>
+                </div>
+            </div>
+        </aside>
+
+        <section class="cz-form-panel-v3">
+            <div class="cz-form-card-v3">
+                <div class="cz-brand-v3">CineZone</div>
+                <h2>Đăng nhập</h2>
+                <p class="cz-desc">Chào mừng bạn quay trở lại. Hãy đăng nhập để tiếp tục trải nghiệm.</p>
+
+                @if (TempData["StatusMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show mb-4 cz-status-alert" role="alert">
+                        <span class="material-symbols-outlined align-middle me-1" style="font-size:18px;">check_circle</span>
+                        @TempData["StatusMessage"]
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <form id="account" method="post" autocomplete="on">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Email" class="cz-label">Địa chỉ email</label>
+
+                        <input asp-for="Input.Email"
+                               class="form-control cz-input"
+                               autocomplete="username"
+                               aria-required="true"
+                               placeholder="name@example.com" />
+
+                        <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Password" class="cz-label">Mật khẩu</label>
+
+                        <div class="cz-password-wrap">
+                            <input asp-for="Input.Password"
+                                   id="passwordInput"
+                                   class="form-control cz-input"
+                                   type="password"
+                                   autocomplete="current-password"
+                                   aria-required="true"
+                                   placeholder="••••••••" />
+
+                            <button type="button"
+                                    id="togglePassword"
+                                    class="cz-toggle-pass"
+                                    aria-label="Hiện hoặc ẩn mật khẩu">
+                                <span class="material-symbols-outlined eye-icon">visibility</span>
+                            </button>
+                        </div>
+
+                        <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="cz-login-options">
+                        <div class="form-check">
+                            <input class="form-check-input bg-dark border-secondary" asp-for="Input.RememberMe" />
+                            <label class="form-check-label" asp-for="Input.RememberMe">Ghi nhớ đăng nhập</label>
+                        </div>
+
+                        <a id="forgot-password" asp-page="./ForgotPassword" class="cz-forgot">
+                            Quên mật khẩu?
+                        </a>
+                    </div>
+
+                    <button id="login-submit" type="submit" class="cz-submit">
+                        ĐĂNG NHẬP
+                    </button>
+
+                    <div class="cz-switch">
+                        Chưa có tài khoản?
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">
+                            Đăng ký ngay
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // =========================
+            // 1. Hiện / ẩn mật khẩu
+            // =========================
+            const passwordInput = document.getElementById("passwordInput");
+            const togglePassword = document.getElementById("togglePassword");
+
+            if (passwordInput && togglePassword) {
+                const eyeIcon = togglePassword.querySelector(".eye-icon");
+
+                togglePassword.addEventListener("click", function () {
+                    const isHidden = passwordInput.type === "password";
+
+                    passwordInput.type = isHidden ? "text" : "password";
+
+                    if (eyeIcon) {
+                        eyeIcon.textContent = isHidden ? "visibility_off" : "visibility";
+                    }
+
+                    togglePassword.setAttribute(
+                        "aria-label",
+                        isHidden ? "Ẩn mật khẩu" : "Hiện mật khẩu"
+                    );
+                });
+            }
+
+            // =========================
+            // 2. Ghi nhớ email đăng nhập
+            // =========================
+            const emailInput = document.getElementById("Input_Email");
+            const rememberCheckbox = document.getElementById("Input_RememberMe");
+            const loginForm = document.getElementById("account");
+
+            if (!emailInput || !rememberCheckbox || !loginForm) {
+                return;
+            }
+
+            const savedEmail = localStorage.getItem("cinezone_saved_email");
+
+            if (savedEmail) {
+                emailInput.value = savedEmail;
+                rememberCheckbox.checked = true;
+            }
+
+            loginForm.addEventListener("submit", function () {
+                if (rememberCheckbox.checked) {
+                    localStorage.setItem("cinezone_saved_email", emailInput.value);
+                } else {
+                    localStorage.removeItem("cinezone_saved_email");
+                }
+            });
+        });
+    </script>
+}

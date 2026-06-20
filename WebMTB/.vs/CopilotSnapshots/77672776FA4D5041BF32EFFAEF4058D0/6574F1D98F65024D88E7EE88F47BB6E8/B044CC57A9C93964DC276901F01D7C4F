@@ -1,0 +1,195 @@
+﻿@{
+    ViewData["Title"] = "Trang Chủ";
+    // Layout = null; Tạm tắt Layout mặc định để test Full HD
+}
+
+<!DOCTYPE html>
+<html lang="vi" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebMTB | Đặt Vé Xem Phim</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top glass-nav py-3 px-4 px-lg-5">
+        <div class="container-fluid">
+            <a class="navbar-brand brand-font text-danger fs-3 fst-italic tracking-tight" href="#">CineZone</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="material-symbols-outlined text-white">menu</span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold brand-font">
+                    <li class="nav-item"><a class="nav-link text-white border-bottom border-danger border-2 px-3" href="#">Phim</a></li>
+                    <li class="nav-item"><a class="nav-link text-secondary px-3" href="#">Cụm Rạp</a></li>
+                    <li class="nav-item"><a class="nav-link text-secondary px-3" href="#">Khuyến Mãi</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <a href="#" class="text-secondary text-decoration-none fw-bold hover-white">Đăng nhập</a>
+                    <button class="btn btn-gradient rounded-pill px-4 py-2 fw-bold">Đăng ký</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section d-flex align-items-center px-4 px-lg-5">
+        <div class="hero-bg d-flex align-items-center justify-content-center text-secondary fs-1 fw-bold">
+            [Ảnh Cover Phim Hero]
+        </div>
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content w-100" style="max-width: 800px; margin-top: 50px;">
+            <span class="badge rounded-pill bg-danger bg-opacity-25 text-danger border border-danger mb-3 py-2 px-3">
+                <span class="material-symbols-outlined fs-6 me-1">stars</span> Phim Nổi Bật
+            </span>
+            <h1 class="display-2 fw-bolder text-white mb-3 lh-1">[TÊN PHIM HERO]</h1>
+            <p class="fs-5 text-secondary mb-5">
+                [Mô tả ngắn của bộ phim sẽ được load từ database. Giới hạn khoảng 150-200 ký tự để giao diện đẹp nhất. Paul Atreides unites with Chani and the Fremen...]
+            </p>
+            <div class="d-flex gap-3 flex-wrap">
+                <button class="btn btn-gradient rounded-pill px-5 py-3 fs-5 d-flex align-items-center gap-2">
+                    <span class="material-symbols-outlined">confirmation_number</span> Đặt Vé Ngay
+                </button>
+                <button class="btn btn-outline-light rounded-pill px-5 py-3 fs-5 d-flex align-items-center gap-2 border-secondary text-white">
+                    <span class="material-symbols-outlined">play_circle</span> Xem Trailer
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 px-4 px-lg-5">
+        <div class="d-flex justify-content-between align-items-end mb-4 mt-5">
+            <div>
+                <h2 class="text-white mb-0">Phim Đang Hot</h2>
+                <p class="text-secondary mb-0 mt-1">Những bộ phim được đặt vé nhiều nhất</p>
+            </div>
+        </div>
+
+        <div class="horizontal-scroll">
+            @for (int i = 1; i <= 6; i++)
+            {
+                <div class="movie-card">
+                    <div class="hover-zoom aspect-2-3 mb-3">
+                        <div class="poster-placeholder w-100 h-100">[Poster @i]</div>
+                        <div class="rating-badge text-white d-flex align-items-center gap-1">
+                            <span class="material-symbols-outlined text-warning fs-6">star</span> [9.0]
+                        </div>
+                    </div>
+                    <h5 class="text-white fw-bold mb-1">[Tên Phim @i]</h5>
+                    <p class="text-secondary small mb-0">[Thể loại] • [120] phút</p>
+                </div>
+            }
+        </div>
+    </section>
+
+    <section class="py-5 px-4 px-lg-5 mb-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 mt-4 gap-3">
+            <h2 class="text-white mb-0">Phim Đang Chiếu</h2>
+            <div class="d-flex gap-2 overflow-auto hide-scrollbar pb-2 pb-md-0">
+                <button class="btn btn-danger rounded-pill px-4 fw-bold">Tất Cả</button>
+                <button class="btn btn-dark rounded-pill px-4 text-secondary fw-bold hover-white border-0" style="background-color: var(--cine-surface-high);">Hành Động</button>
+                <button class="btn btn-dark rounded-pill px-4 text-secondary fw-bold hover-white border-0" style="background-color: var(--cine-surface-high);">Kinh Dị</button>
+                <button class="btn btn-dark rounded-pill px-4 text-secondary fw-bold hover-white border-0" style="background-color: var(--cine-surface-high);">Tình Cảm</button>
+            </div>
+        </div>
+
+        <div class="row row-cols-2 row-cols-md-4 row-cols-xl-6 g-4">
+            @for (int i = 1; i <= 12; i++)
+            {
+                <div class="col">
+                    <div class="movie-card w-100">
+                        <div class="hover-zoom aspect-2-3 mb-2">
+                            <div class="poster-placeholder w-100 h-100">[Poster @i]</div>
+                            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 opacity-0 transition-opacity" onmouseover="this.classList.remove('opacity-0')" onmouseout="this.classList.add('opacity-0')">
+                                <button class="btn btn-light rounded-circle shadow p-3 d-flex align-items-center justify-content-center">
+                                    <span class="material-symbols-outlined text-dark">play_arrow</span>
+                                </button>
+                            </div>
+                        </div>
+                        <h6 class="text-white fw-bold mb-1 text-truncate">[Tên Phim @i]</h6>
+                        <p class="text-secondary small mb-0" style="font-size: 0.8rem;">[Thể loại] • [120]m</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    <section class="bento-section py-5 px-4 px-lg-5">
+        <h2 class="text-white text-center mb-5 mt-4">Trải Nghiệm & Ưu Đãi</h2>
+
+        <div class="container-fluid p-0">
+            <div class="row g-4" style="min-height: 600px;">
+                <div class="col-lg-6 d-flex">
+                    <div class="bento-box w-100 d-flex align-items-center justify-content-center">
+                        <div class="poster-placeholder w-100 h-100 fs-3">[Ảnh Quảng Cáo IMAX Lớn]</div>
+                        <div class="bento-overlay">
+                            <span class="text-danger fw-bold tracking-widest text-uppercase small mb-2">Member Special</span>
+                            <h3 class="display-6 fw-bold text-white mb-3">[Tên Sự Kiện Lớn]</h3>
+                            <p class="text-light mb-4 w-75">[Mô tả sự kiện giảm giá 50% vé xem IMAX cho thành viên mới.]</p>
+                            <button class="btn btn-outline-danger rounded-pill fw-bold w-auto align-self-start px-4">Nhận Ưu Đãi</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 d-flex flex-column gap-4">
+                    <div class="bento-box flex-grow-1 d-flex align-items-center justify-content-center" style="min-height: 250px;">
+                        <div class="poster-placeholder w-100 h-100 fs-4">[Ảnh Combo Bắp Nước]</div>
+                        <div class="bento-overlay">
+                            <h4 class="fw-bold text-white mb-1">[Combo Siêu Tiết Kiệm]</h4>
+                            <p class="text-secondary small mb-0">Đặt trước combo qua web giảm 20%</p>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 flex-grow-1">
+                        <div class="col-6 d-flex">
+                            <div class="bento-box w-100 d-flex align-items-center justify-content-center" style="min-height: 200px;">
+                                <div class="poster-placeholder w-100 h-100 small">[Ảnh Phụ 1]</div>
+                                <div class="bento-overlay">
+                                    <h5 class="fw-bold text-white mb-0">[Sự Kiện 1]</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 d-flex">
+                            <div class="bento-box w-100 d-flex align-items-center justify-content-center">
+                                <div class="poster-placeholder w-100 h-100 small">[Ảnh Phụ 2]</div>
+                                <div class="bento-overlay">
+                                    <h5 class="fw-bold text-white mb-0">[Sự Kiện 2]</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-5 px-4 px-lg-5" style="background-color: #0e0e0e; border-top: 1px solid #222;">
+        <div class="container-fluid p-0 d-flex flex-column flex-md-row justify-content-between align-items-center gap-4">
+            <div>
+                <span class="fs-5 fw-bold text-white brand-font">CineZone</span>
+                <p class="text-secondary small mb-0 mt-2">© 2026 CineZone. Hệ thống đặt vé xem phim trực tuyến.</p>
+            </div>
+            <div class="d-flex gap-4">
+                <a href="#" class="text-secondary text-decoration-none hover-white">Điều khoản</a>
+                <a href="#" class="text-secondary text-decoration-none hover-white">Bảo mật</a>
+                <a href="#" class="text-secondary text-decoration-none hover-white">Liên hệ</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // CSS nhỏ để sửa màu text khi hover cho các nút phụ
+        document.querySelectorAll('.hover-white').forEach(el => {
+            el.addEventListener('mouseover', () => el.style.color = '#fff');
+            el.addEventListener('mouseout', () => el.style.color = '');
+        });
+    </script>
+</body>
+</html>

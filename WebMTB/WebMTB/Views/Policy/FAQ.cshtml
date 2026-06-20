@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Câu hỏi thường gặp";
+}
+
+<section class="cz-info-page">
+    <div class="cz-info-wrap">
+        <div class="cz-info-hero">
+            <span class="cz-info-kicker">
+                <span class="material-symbols-outlined">help</span>
+                Help Center
+            </span>
+            <h1>Câu hỏi thường gặp</h1>
+            <p>Các câu hỏi phổ biến khi đặt vé, thanh toán, chọn ghế và quản lý vé tại CineZone.</p>
+        </div>
+
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item cz-faq-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                        Tôi đặt vé như thế nào?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Bạn chọn phim, chọn suất chiếu, chọn ghế, kiểm tra thông tin và tiến hành thanh toán.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item cz-faq-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        Tôi có thể đổi ghế sau khi thanh toán không?
+                    </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Sau khi thanh toán thành công, ghế đã được ghi nhận trên hệ thống nên thường không thể đổi.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item cz-faq-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        Vé của tôi nằm ở đâu?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Vé được lưu trong tài khoản của bạn tại mục vé/booking sau khi thanh toán thành công.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

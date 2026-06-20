@@ -1,0 +1,148 @@
+﻿@model WebMTB.Models.Movie
+
+@{
+    ViewData["Title"] = "Thêm Phim Mới";
+}
+
+<div class="container mt-5 pt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white brand-font">Thêm Phim Mới</h1>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">
+            <span class="material-symbols-outlined fs-6">arrow_back</span> Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="card page-card text-white shadow-lg movie-form">
+        <div class="card-body p-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-bold">Tên Phim</label>
+                            <input asp-for="Title" class="form-control custom-input" placeholder="Nhập tên phim..." />
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-bold">Mô tả nội dung</label>
+                            <textarea asp-for="Description" class="form-control custom-input" rows="5" placeholder="Viết tóm tắt nội dung phim..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Director" class="form-label fw-bold">Đạo diễn</label>
+                                <input asp-for="Director" class="form-control custom-input" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Duration" class="form-label fw-bold">Thời lượng (Phút)</label>
+                                <input asp-for="Duration" class="form-control custom-input" type="number" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Cast" class="form-label fw-bold">Diễn viên chính</label>
+                            <input asp-for="Cast" class="form-control custom-input" placeholder="Cách nhau bằng dấu phẩy..." />
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label fw-bold">Đường dẫn ảnh Poster (URL)</label>
+                            <input asp-for="ImageUrl" id="imageInput" class="form-control custom-input" placeholder="https://..." />
+                            <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+
+                            <div class="mt-3 border border-secondary rounded overflow-hidden d-flex align-items-center justify-content-center bg-black bg-opacity-50 shadow-sm"
+                                 style="aspect-ratio: 2/3; width: 100%; max-width: 280px; margin: 0 auto; position: relative; min-height: 200px;">
+
+                                <img id="imagePreview" src="#" alt="Preview"
+                                     style="width: 100%; height: 100%; object-fit: cover; display: none;" />
+
+                                <div id="previewPlaceholder" class="text-center text-secondary p-3">
+                                    <span class="material-symbols-outlined d-block mb-2" style="font-size: 3.5rem;">image</span>
+                                    <p class="small m-0">Xem trước Poster</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TrailerUrl" class="form-label fw-bold">Đường dẫn Trailer (YouTube)</label>
+                            <input asp-for="TrailerUrl" class="form-control custom-input" placeholder="https://youtube.com/..." />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ReleaseDate" class="form-label fw-bold">Ngày khởi chiếu</label>
+                            <input asp-for="ReleaseDate" class="form-control custom-input" type="date" />
+                        </div>
+
+                        <div class="p-3 border border-secondary rounded mb-4" style="background-color: rgba(0,0,0,0.25);">
+                            <h6 class="text-secondary mb-3 border-bottom border-secondary pb-2">Trạng thái phim</h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" asp-for="IsHot" />
+                                <label class="form-check-label" asp-for="IsHot">🔥 Phim Hot (Hiện trang đầu)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" asp-for="IsActive" />
+                                <label class="form-check-label" asp-for="IsActive">🎬 Đang chiếu</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-gradient w-100 py-3 fw-bold fs-5 shadow">
+                            <span class="material-symbols-outlined align-middle">save</span> LƯU PHIM MỚI
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const $input = $('#imageInput');
+            const $preview = $('#imagePreview');
+            const $placeholder = $('#previewPlaceholder');
+
+            function updatePreview() {
+                const url = $input.val().trim();
+
+                if (url !== "") {
+                    // Thử gán src để kiểm tra ảnh
+                    $preview.attr('src', url);
+                    $preview.show();
+                    $placeholder.hide();
+                } else {
+                    $preview.hide();
+                    $placeholder.show();
+                }
+            }
+
+            // Xử lý khi nhập link
+            $input.on('input propertychange', function () {
+                updatePreview();
+            });
+
+            // Xử lý khi link ảnh bị hỏng hoặc không đúng định dạng
+            $preview.on('error', function () {
+                $(this).hide();
+                $placeholder.show().html(
+                    '<span class="material-symbols-outlined text-danger mb-2" style="font-size: 3.5rem;">broken_image</span>' +
+                    '<p class="text-danger small">Link ảnh không hợp lệ!</p>'
+                );
+            });
+
+            // Chạy kiểm tra ban đầu (cho trường hợp Edit)
+            if($input.val()) {
+                updatePreview();
+            }
+        });
+    </script>
+}

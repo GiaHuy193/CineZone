@@ -1,0 +1,114 @@
+﻿@model List<WebMTB.Models.Genre>
+
+@{
+    string keyword = Context.Request.Query["keyword"].ToString();
+    string selectedGenreId = Context.Request.Query["genreId"].ToString();
+
+    var selectedGenre = Model.FirstOrDefault(g => g.Id.ToString() == selectedGenreId);
+    string selectedGenreName = selectedGenre != null ? selectedGenre.Name : "Tất cả thể loại";
+}
+
+<form class="cz-movie-search"
+      asp-area=""
+      asp-controller="Home"
+      asp-action="Index"
+      method="get">
+
+    <div class="cz-search-box">
+
+        <div class="dropdown cz-genre-picker">
+            <input type="hidden"
+                   id="genreIdInput"
+                   name="genreId"
+                   value="@selectedGenreId" />
+
+            <button class="cz-genre-trigger"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-bs-auto-close="true"
+                    aria-expanded="false">
+
+                <span class="cz-genre-label">
+                    <span class="material-symbols-outlined">category</span>
+                    <span id="genreText">@selectedGenreName</span>
+                </span>
+
+                <span class="material-symbols-outlined cz-genre-arrow">
+                    expand_more
+                </span>
+            </button>
+
+            <ul class="dropdown-menu cz-genre-menu">
+                <li>
+                    <button type="button"
+                            class="dropdown-item cz-genre-item @(string.IsNullOrWhiteSpace(selectedGenreId) ? "active" : "")"
+                            data-genre-id=""
+                            data-genre-name="Tất cả thể loại">
+
+                        <span class="cz-genre-icon">
+                            <span class="material-symbols-outlined">apps</span>
+                        </span>
+
+                        <span>Tất cả thể loại</span>
+                    </button>
+                </li>
+
+                @foreach (var genre in Model)
+                {
+                    <li>
+                        <button type="button"
+                                class="dropdown-item cz-genre-item @(selectedGenreId == genre.Id.ToString() ? "active" : "")"
+                                data-genre-id="@genre.Id"
+                                data-genre-name="@genre.Name">
+
+                            <span class="cz-genre-icon">
+                                <span class="material-symbols-outlined">local_movies</span>
+                            </span>
+
+                            <span>@genre.Name</span>
+                        </button>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <input type="search"
+               name="keyword"
+               value="@keyword"
+               class="cz-search-input"
+               placeholder="Tìm phim..."
+               autocomplete="off" />
+
+        <button type="submit" class="cz-search-btn" aria-label="Tìm kiếm phim">
+            <span class="material-symbols-outlined">search</span>
+        </button>
+    </div>
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const genreInput = document.getElementById("genreIdInput");
+        const genreText = document.getElementById("genreText");
+
+        document.querySelectorAll(".cz-genre-item").forEach(function (item) {
+            item.addEventListener("click", function () {
+                const genreId = this.dataset.genreId || "";
+                const genreName = this.dataset.genreName || "Tất cả thể loại";
+
+                if (genreInput) {
+                    genreInput.value = genreId;
+                }
+
+                if (genreText) {
+                    genreText.textContent = genreName;
+                }
+
+                document.querySelectorAll(".cz-genre-item").forEach(function (x) {
+                    x.classList.remove("active");
+                });
+
+                this.classList.add("active");
+            });
+        });
+    });
+</script>

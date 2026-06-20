@@ -1,0 +1,129 @@
+﻿@model WebMTB.Models.Movie
+
+@{
+    ViewData["Title"] = "Chi tiết phim " + Model.Title;
+}
+
+<style>
+    :root {
+        --cine-red: #e50914;
+        --cine-dark: #131313;
+        --cine-surface: #1c1b1b;
+        --cine-text: #e5e2e1;
+    }
+
+    .details-page {
+        background-color: var(--cine-dark);
+        color: var(--cine-text);
+        min-height: 100vh;
+        margin-top: -50px; /* Bù trừ khoảng cách với navbar nếu có */
+    }
+
+    .movie-banner-wrapper {
+        position: relative;
+        height: 400px;
+        width: 100%;
+        overflow: hidden;
+        background-color: #000;
+    }
+
+    .movie-banner-blur {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-size: cover;
+        background-position: center;
+        filter: blur(40px) brightness(0.3);
+        transform: scale(1.1);
+    }
+
+    .details-content {
+        margin-top: -220px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .poster-box {
+        width: 100%;
+        max-width: 280px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+        border: 1px solid rgba(255,255,255,0.1);
+        aspect-ratio: 2/3;
+    }
+
+    .poster-box img { width: 100%; height: 100%; object-fit: cover; }
+
+    .info-card {
+        background: rgba(255,255,255,0.05);
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 3px solid var(--cine-red);
+        margin-bottom: 15px;
+    }
+
+    .label-text { color: #888; font-size: 0.75rem; text-transform: uppercase; display: block; }
+    .value-text { font-size: 1rem; color: #fff; font-weight: 500; }
+</style>
+
+<div class="details-page pb-5">
+    <div class="movie-banner-wrapper">
+        <div class="movie-banner-blur" style="background-image: url('@Model.ImageUrl');"></div>
+    </div>
+
+    <div class="container details-content">
+        <div class="row g-4">
+            <div class="col-md-4 col-lg-3">
+                <div class="poster-box shadow-lg mx-auto ms-md-0">
+                    <img src="@Model.ImageUrl" alt="Poster">
+                </div>
+                <div class="mt-4 d-grid gap-2">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-danger py-2 fw-bold">CHỈNH SỬA</a>
+                    <a asp-action="Index" class="btn btn-outline-light py-2">QUAY LẠI</a>
+                </div>
+            </div>
+
+            <div class="col-md-8 col-lg-9 mt-md-5">
+                <div class="mb-2">
+                    @if (Model.IsHot) { <span class="badge bg-danger me-1">HOT</span> }
+                    @if (Model.IsActive) { <span class="badge bg-success">ĐANG CHIẾU</span> }
+                </div>
+                <h1 class="display-4 fw-bold text-white mb-3">@Model.Title</h1>
+                
+                <div class="d-flex align-items-center gap-3 mb-4 text-warning fw-bold fs-5">
+                    <span>⭐ @Model.Rating/10</span>
+                    <span class="text-secondary small">|</span>
+                    <span class="text-white small">@Model.Duration Phút</span>
+                    <span class="text-secondary small">|</span>
+                    <span class="text-white small">@Model.ReleaseDate.Year</span>
+                </div>
+
+                <div class="mb-4">
+                    <p class="text-secondary fs-6 lh-lg">@Model.Description</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="info-card">
+                            <span class="label-text">Đạo diễn</span>
+                            <span class="value-text">@Model.Director</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="info-card">
+                            <span class="label-text">Diễn viên</span>
+                            <span class="value-text">@Model.Cast</span>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="info-card">
+                            <span class="label-text">Trailer</span>
+                            <a href="@Model.TrailerUrl" target="_blank" class="value-text text-info">Xem trên YouTube</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

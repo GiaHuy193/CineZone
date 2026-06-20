@@ -1,0 +1,916 @@
+﻿@model IEnumerable<WebMTB.Models.Cinema>
+
+@{
+    ViewData["Title"] = "Cụm Rạp";
+
+    var cinemas = Model?.ToList() ?? new List<WebMTB.Models.Cinema>();
+
+    int totalCinemas = cinemas.Count;
+    int totalRooms = cinemas.Sum(c => c.Rooms?.Count ?? 0);
+    int totalSeats = cinemas.Sum(c => c.Rooms?.Sum(r => r.Seats?.Count ?? 0) ?? 0);
+
+    var firstCinema = cinemas.FirstOrDefault();
+    string firstMapQuery = firstCinema != null
+        ? Uri.EscapeDataString($"{firstCinema.Name} {firstCinema.Address}")
+        : Uri.EscapeDataString("Ho Chi Minh City Vietnam");
+}
+
+<div class="cinemas-page">
+    <div class="container-fluid px-4 px-lg-5 py-5">
+
+        <section class="cinema-hero mb-4">
+            <div>
+                <div class="cinema-eyebrow">
+                    <span class="material-symbols-outlined">location_on</span>
+                    CineZone Cinemas
+                </div>
+
+                <h1>Cụm rạp</h1>
+                <p>
+                    Tìm cụm rạp CineZone gần bạn, xem địa chỉ, số phòng chiếu, số ghế và bản đồ vị trí rạp.
+                </p>
+            </div>
+
+            <a asp-controller="Home" asp-action="Index" class="btn hero-btn">
+                <span class="material-symbols-outlined">movie</span>
+                Xem phim
+            </a>
+        </section>
+
+        <section class="cinema-stats mb-4">
+            <div class="stat-card">
+                <span class="material-symbols-outlined">apartment</span>
+                <p>Tổng cụm rạp</p>
+                <h3>@totalCinemas</h3>
+            </div>
+
+            <div class="stat-card">
+                <span class="material-symbols-outlined">meeting_room</span>
+                <p>Phòng chiếu</p>
+                <h3>@totalRooms</h3>
+            </div>
+
+            <div class="stat-card">
+                <span class="material-symbols-outlined">event_seat</span>
+                <p>Tổng ghế</p>
+                <h3>@totalSeats</h3>
+            </div>
+
+            <div class="stat-card">
+                <span class="material-symbols-outlined">support_agent</span>
+                <p>Hỗ trợ</p>
+                <h3>24/7</h3>
+            </div>
+        </section>
+
+        <div class="cinema-layout">
+            <aside class="cinema-sidebar">
+                <div class="filter-card mb-4">
+                    <h5>Thành phố</h5>
+
+                    <button class="city-btn active" type="button">
+                        <span>TP. Hồ Chí Minh</span>
+                        <span class="material-symbols-outlined">radio_button_checked</span>
+                    </button>
+
+                    <button class="city-btn" type="button">
+                        <span>Hà Nội</span>
+                        <span class="material-symbols-outlined">radio_button_unchecked</span>
+                    </button>
+
+                    <button class="city-btn" type="button">
+                        <span>Đà Nẵng</span>
+                        <span class="material-symbols-outlined">radio_button_unchecked</span>
+                    </button>
+
+                    <button class="city-btn" type="button">
+                        <span>Cần Thơ</span>
+                        <span class="material-symbols-outlined">radio_button_unchecked</span>
+                    </button>
+                </div>
+
+                <div class="map-card">
+                    <div class="map-card-header">
+                        <div>
+                            <h5>Bản đồ rạp</h5>
+                            <p>Bấm từng rạp để cập nhật vị trí trên bản đồ.</p>
+                        </div>
+
+                        <span class="material-symbols-outlined">map</span>
+                    </div>
+
+                    <div class="map-frame-wrap">
+                        <iframe id="cinemaMap"
+                                src="https://www.google.com/maps?q=@firstMapQuery&output=embed"
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+
+                    <a id="openMapLink"
+                       href="https://www.google.com/maps/search/?api=1&query=@firstMapQuery"
+                       target="_blank"
+                       class="btn open-map-btn">
+                        <span class="material-symbols-outlined">open_in_new</span>
+                        Mở Google Maps
+                    </a>
+                </div>
+            </aside>
+
+            <main class="cinema-main">
+                <div class="result-header mb-3">
+                    <div>
+                        <span>@cinemas.Count kết quả</span>
+                        <p>Danh sách cụm rạp CineZone đang hoạt động</p>
+                    </div>
+
+                    <div class="view-icons">
+                        <span class="material-symbols-outlined active">grid_view</span>
+                        <span class="material-symbols-outlined">view_list</span>
+                    </div>
+                </div>
+
+                @if (cinemas.Any())
+                {
+                    <div class="cinema-grid">
+                        @for (int i = 0; i < cinemas.Count; i++)
+                        {
+                            var cinema = cinemas[i];
+                            var rooms = cinema.Rooms?.OrderBy(r => r.Name).ToList() ?? new List<WebMTB.Models.Room>();
+                            int roomCount = rooms.Count;
+                            int seatCount = rooms.Sum(r => r.Seats?.Count ?? 0);
+
+                            string address = string.IsNullOrWhiteSpace(cinema.Address)
+                                ? "Chưa cập nhật địa chỉ"
+                                : cinema.Address;
+
+                            string mapQuery = Uri.EscapeDataString($"{cinema.Name} {cinema.Address}");
+                            string cardSizeClass = i == 0 ? "featured" : "";
+
+                            <article class="cinema-card @cardSizeClass">
+                                <div class="cinema-image">
+                                    <div class="cinema-image-overlay"></div>
+
+                                    <div class="favorite-btn">
+                                        <span class="material-symbols-outlined">favorite</span>
+                                    </div>
+
+                                    <div class="cinema-badges">
+                                        <span>2D</span>
+                                        <span>IMAX</span>
+                                        <span>VIP</span>
+                                    </div>
+                                </div>
+
+                                <div class="cinema-content">
+                                    <div class="cinema-title-row">
+                                        <div>
+                                            <h3>@cinema.Name</h3>
+                                            <p>
+                                                <span class="material-symbols-outlined">location_on</span>
+                                                @address
+                                            </p>
+                                        </div>
+
+                                        <span class="distance-badge">CineZone</span>
+                                    </div>
+
+                                    <div class="cinema-services">
+                                        <span title="Bãi giữ xe">
+                                            <span class="material-symbols-outlined">local_parking</span>
+                                        </span>
+
+                                        <span title="Bắp nước">
+                                            <span class="material-symbols-outlined">local_dining</span>
+                                        </span>
+
+                                        <span title="Wi-Fi">
+                                            <span class="material-symbols-outlined">wifi</span>
+                                        </span>
+
+                                        <span title="Hỗ trợ khách hàng">
+                                            <span class="material-symbols-outlined">support_agent</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="cinema-meta">
+                                        <span>
+                                            <span class="material-symbols-outlined">meeting_room</span>
+                                            @roomCount phòng
+                                        </span>
+
+                                        <span>
+                                            <span class="material-symbols-outlined">event_seat</span>
+                                            @seatCount ghế
+                                        </span>
+
+                                        <span>
+                                            <span class="material-symbols-outlined">verified</span>
+                                            Đang hoạt động
+                                        </span>
+                                    </div>
+
+                                    <div class="cinema-actions">
+                                        <button type="button"
+                                                class="btn map-update-btn"
+                                                data-map-query="@mapQuery">
+                                            <span class="material-symbols-outlined">map</span>
+                                            Xem bản đồ
+                                        </button>
+
+                                        <button class="btn room-toggle-btn"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#cinemaRooms-@cinema.Id">
+                                            <span class="material-symbols-outlined">meeting_room</span>
+                                            Xem phòng
+                                        </button>
+                                    </div>
+
+                                    <div class="collapse rooms-collapse" id="cinemaRooms-@cinema.Id">
+                                        <div class="room-list">
+                                            @if (rooms.Any())
+                                            {
+                                                foreach (var room in rooms)
+                                                {
+                                                    int seats = room.Seats?.Count ?? 0;
+
+                                                    <div class="room-item">
+                                                        <div>
+                                                            <h6>@room.Name</h6>
+                                                            <p>@seats ghế trong phòng</p>
+                                                        </div>
+
+                                                        <a asp-controller="Home"
+                                                           asp-action="Index"
+                                                           class="btn choose-movie-btn">
+                                                            <span class="material-symbols-outlined">movie</span>
+                                                            Chọn phim
+                                                        </a>
+                                                    </div>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <div class="empty-room">
+                                                    <span class="material-symbols-outlined">info</span>
+                                                    Rạp này chưa có phòng chiếu.
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-cinema">
+                        <span class="material-symbols-outlined">theaters</span>
+                        <h5>Chưa có cụm rạp nào</h5>
+                        <p>Admin cần tạo dữ liệu rạp trong khu vực quản trị.</p>
+                    </div>
+                }
+            </main>
+        </div>
+    </div>
+</div>
+
+<style>
+    .cinemas-page {
+        min-height: 100vh;
+        color: #fff;
+        background: radial-gradient(circle at 8% 12%, rgba(229, 9, 20, 0.22), transparent 30%), radial-gradient(circle at 90% 20%, rgba(255, 255, 255, 0.06), transparent 24%), #111;
+    }
+
+    .cinema-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 34px;
+        border-radius: 32px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: linear-gradient(90deg, rgba(0,0,0,0.84), rgba(0,0,0,0.48)), radial-gradient(circle at top right, rgba(229,9,20,0.36), transparent 36%), linear-gradient(135deg, #19191d, #09090b);
+        box-shadow: 0 24px 70px rgba(0,0,0,0.38);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .cinema-eyebrow {
+        color: #ff5964;
+        font-size: 0.8rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.3px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 12px;
+    }
+
+    .cinema-hero h1 {
+        font-size: clamp(2.4rem, 5vw, 4.4rem);
+        font-weight: 950;
+        letter-spacing: -0.065em;
+        line-height: 1;
+        margin-bottom: 12px;
+    }
+
+    .cinema-hero p {
+        color: #b5b5b5;
+        max-width: 740px;
+        margin-bottom: 0;
+        line-height: 1.7;
+    }
+
+    .hero-btn {
+        border-radius: 999px;
+        color: #fff;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+        box-shadow: 0 12px 28px rgba(229,9,20,0.28);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 20px;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+        .hero-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    .cinema-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .stat-card,
+    .filter-card,
+    .map-card,
+    .cinema-card {
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(18,18,22,0.92);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.28);
+    }
+
+    .stat-card {
+        padding: 20px;
+        border-radius: 24px;
+    }
+
+        .stat-card > span {
+            color: #ff5964;
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card p {
+            color: #aaa;
+            font-size: 0.76rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin: 0 0 6px;
+        }
+
+        .stat-card h3 {
+            font-size: 1.8rem;
+            font-weight: 950;
+            margin: 0;
+        }
+
+    .cinema-layout {
+        display: grid;
+        grid-template-columns: 310px minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+    }
+
+    .cinema-sidebar {
+        position: sticky;
+        top: 90px;
+    }
+
+    .filter-card,
+    .map-card {
+        border-radius: 26px;
+        overflow: hidden;
+    }
+
+    .filter-card {
+        padding: 20px;
+    }
+
+        .filter-card h5 {
+            font-weight: 950;
+            margin-bottom: 14px;
+            color: #fff;
+        }
+
+    .city-btn {
+        width: 100%;
+        min-height: 48px;
+        padding: 0 14px;
+        margin-bottom: 8px;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        background: rgba(255,255,255,0.05);
+        color: #ccc;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 850;
+    }
+
+        .city-btn.active {
+            color: #fff;
+            background: rgba(229,9,20,0.18);
+            border-color: rgba(229,9,20,0.42);
+        }
+
+        .city-btn span:last-child {
+            color: #ff5964;
+            font-size: 20px;
+        }
+
+    .map-card-header {
+        padding: 18px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+        .map-card-header h5 {
+            font-weight: 950;
+            margin-bottom: 4px;
+        }
+
+        .map-card-header p {
+            color: #999;
+            font-size: 0.82rem;
+            margin: 0;
+        }
+
+        .map-card-header > span {
+            color: #ff5964;
+            font-size: 32px;
+        }
+
+    .map-frame-wrap {
+        width: 100%;
+        height: 260px;
+        background: #222;
+    }
+
+        .map-frame-wrap iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            filter: grayscale(0.25) contrast(1.08) brightness(0.9);
+        }
+
+    .open-map-btn {
+        margin: 14px;
+        width: calc(100% - 28px);
+        border-radius: 999px;
+        color: #fff;
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.12);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-weight: 900;
+    }
+
+        .open-map-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.13);
+        }
+
+    .result-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #aaa;
+    }
+
+        .result-header span {
+            color: #fff;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-header p {
+            margin: 3px 0 0;
+            color: #888;
+        }
+
+    .view-icons {
+        display: flex;
+        gap: 10px;
+    }
+
+        .view-icons span {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            color: #aaa;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .view-icons span.active {
+                color: #fff;
+                background: rgba(229,9,20,0.18);
+            }
+
+    .cinema-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .cinema-card {
+        border-radius: 28px;
+        overflow: hidden;
+        transition: all 0.25s ease;
+    }
+
+        .cinema-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(229,9,20,0.24);
+        }
+
+        .cinema-card.featured {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 42% minmax(0, 1fr);
+        }
+
+    .cinema-image {
+        position: relative;
+        height: 230px;
+        background: linear-gradient(135deg, rgba(0,0,0,0.12), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80') center/cover;
+        overflow: hidden;
+    }
+
+    .featured .cinema-image {
+        height: 100%;
+        min-height: 310px;
+    }
+
+    .cinema-image-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.72)), radial-gradient(circle at top right, rgba(229,9,20,0.18), transparent 34%);
+    }
+
+    .favorite-btn {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 42px;
+        height: 42px;
+        border-radius: 999px;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(12px);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .favorite-btn span {
+            font-size: 23px;
+        }
+
+    .cinema-badges {
+        position: absolute;
+        left: 16px;
+        bottom: 16px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+        .cinema-badges span {
+            padding: 5px 10px;
+            border-radius: 999px;
+            color: #fff;
+            background: rgba(229,9,20,0.84);
+            font-size: 0.68rem;
+            font-weight: 950;
+            text-transform: uppercase;
+        }
+
+    .cinema-content {
+        padding: 22px;
+    }
+
+    .cinema-title-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+
+        .cinema-title-row h3 {
+            font-size: 1.35rem;
+            font-weight: 950;
+            letter-spacing: -0.04em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+    .featured .cinema-title-row h3 {
+        font-size: 2.2rem;
+    }
+
+    .cinema-title-row p {
+        color: #aaa;
+        margin: 0;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+        .cinema-title-row p span {
+            color: #ff5964;
+            font-size: 18px;
+            margin-top: 2px;
+        }
+
+    .distance-badge {
+        color: #ff5964;
+        font-size: 0.75rem;
+        font-weight: 950;
+        white-space: nowrap;
+    }
+
+    .cinema-services {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+        .cinema-services > span {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.07);
+            color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .cinema-services span span {
+            font-size: 18px;
+        }
+
+    .cinema-meta {
+        padding-top: 15px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 18px;
+    }
+
+        .cinema-meta > span {
+            min-height: 30px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.065);
+            color: #ddd;
+            font-size: 0.76rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cinema-meta .material-symbols-outlined {
+            color: #ff5964;
+            font-size: 17px;
+        }
+
+    .cinema-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .map-update-btn,
+    .room-toggle-btn,
+    .choose-movie-btn {
+        border-radius: 999px;
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 9px 15px;
+        font-size: 0.84rem;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .map-update-btn {
+        border: none;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+        box-shadow: 0 10px 22px rgba(229,9,20,0.22);
+    }
+
+    .room-toggle-btn,
+    .choose-movie-btn {
+        border: 1px solid rgba(255,255,255,0.14);
+        background: rgba(255,255,255,0.07);
+    }
+
+        .map-update-btn:hover,
+        .room-toggle-btn:hover,
+        .choose-movie-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    .rooms-collapse {
+        margin-top: 16px;
+    }
+
+    .room-list {
+        padding: 14px;
+        border-radius: 20px;
+        background: rgba(0,0,0,0.22);
+        border: 1px solid rgba(255,255,255,0.075);
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .room-item {
+        padding: 13px;
+        border-radius: 17px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.075);
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+        .room-item h6 {
+            font-weight: 950;
+            margin-bottom: 3px;
+        }
+
+        .room-item p {
+            color: #999;
+            margin: 0;
+            font-size: 0.82rem;
+        }
+
+    .empty-room,
+    .empty-cinema {
+        padding: 34px;
+        text-align: center;
+        color: #aaa;
+    }
+
+        .empty-cinema > span,
+        .empty-room span {
+            color: #ff5964;
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+
+    @@media (max-width: 1199.98px) {
+        .cinema-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .cinema-sidebar {
+            position: static;
+        }
+
+        .cinema-sidebar {
+            display: grid;
+            grid-template-columns: 300px minmax(0, 1fr);
+            gap: 20px;
+        }
+    }
+
+    @@media (max-width: 991.98px) {
+        .cinema-hero {
+            flex-direction: column;
+        }
+
+        .hero-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .cinema-stats {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .cinema-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .cinema-card.featured {
+            display: block;
+        }
+
+        .featured .cinema-image {
+            height: 240px;
+            min-height: 0;
+        }
+
+        .featured .cinema-title-row h3 {
+            font-size: 1.45rem;
+        }
+
+        .cinema-sidebar {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .container-fluid {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+        }
+
+        .cinema-hero {
+            padding: 24px;
+        }
+
+        .cinema-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .cinema-title-row {
+            flex-direction: column;
+        }
+
+        .cinema-actions,
+        .map-update-btn,
+        .room-toggle-btn {
+            width: 100%;
+        }
+
+        .room-list {
+            grid-template-columns: 1fr;
+        }
+
+        .room-item {
+            flex-direction: column;
+        }
+
+        .choose-movie-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const mapFrame = document.getElementById("cinemaMap");
+        const openMapLink = document.getElementById("openMapLink");
+        const buttons = document.querySelectorAll(".map-update-btn");
+
+        buttons.forEach(button => {
+            button.addEventListener("click", function () {
+                const query = this.getAttribute("data-map-query");
+
+                if (!query || !mapFrame) {
+                    return;
+                }
+
+                mapFrame.src = `https://www.google.com/maps?q=${query}&output=embed`;
+
+                if (openMapLink) {
+                    openMapLink.href = `https://www.google.com/maps/search/?api=1&query=${query}`;
+                }
+
+                document.querySelector(".map-card")?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+            });
+        });
+    });
+</script>

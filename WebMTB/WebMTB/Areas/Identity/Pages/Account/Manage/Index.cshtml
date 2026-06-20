@@ -1,0 +1,791 @@
+﻿@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Hồ sơ cá nhân";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+
+    string phoneDisplay = string.IsNullOrWhiteSpace(Model.Input.PhoneNumber)
+        ? "Chưa cập nhật"
+        : Model.Input.PhoneNumber;
+
+    string userEmail = string.IsNullOrWhiteSpace(Model.Username)
+        ? "Tài khoản CineZone"
+        : Model.Username;
+}
+
+<div class="cinema-profile-page">
+    <partial name="_StatusMessage" for="StatusMessage" />
+
+    <div class="profile-hero">
+        <div class="profile-hero-content">
+            <div class="profile-eyebrow">
+                <span class="material-symbols-outlined">local_activity</span>
+                CineZone Member
+            </div>
+
+            <h1>Hồ sơ khách hàng</h1>
+            <p>Quản lý tài khoản, theo dõi vé đã đặt và thông tin thanh toán tại CineZone.</p>
+
+            <div class="member-badges">
+                <span>
+                    <span class="material-symbols-outlined">verified</span>
+                    Thành viên CineZone
+                </span>
+
+                <span>
+                    <span class="material-symbols-outlined">movie</span>
+                    Movie Lover
+                </span>
+
+                <span>
+                    <span class="material-symbols-outlined">confirmation_number</span>
+                    Ticket Holder
+                </span>
+            </div>
+        </div>
+
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="btn home-btn">
+            <span class="material-symbols-outlined">home</span>
+            Về trang chủ
+        </a>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-xl-4">
+            <div class="member-card">
+                <div class="member-card-top">
+                    <div class="member-avatar">
+                        <span class="material-symbols-outlined">person</span>
+                    </div>
+
+                    <h3>@userEmail</h3>
+                    <p>Khách hàng CineZone</p>
+                </div>
+
+                <div class="member-info-list">
+                    <div class="member-info-item">
+                        <span class="material-symbols-outlined">mail</span>
+                        <div>
+                            <small>Email</small>
+                            <strong>@userEmail</strong>
+                        </div>
+                    </div>
+
+                    <div class="member-info-item">
+                        <span class="material-symbols-outlined">phone_iphone</span>
+                        <div>
+                            <small>Số điện thoại</small>
+                            <strong>@phoneDisplay</strong>
+                        </div>
+                    </div>
+
+                    <div class="member-info-item">
+                        <span class="material-symbols-outlined">payments</span>
+                        <div>
+                            <small>Tổng chi tiêu</small>
+                            <strong>@Model.TotalSpent.ToString("N0") VNĐ</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="movie-pass-card mt-4">
+                <div>
+                    <p>CineZone Pass</p>
+                    <h4>Member Card</h4>
+                    <span>@userEmail</span>
+                </div>
+
+                <div class="pass-code">
+                    CZ-@Model.TotalBookings.ToString("0000")
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-8">
+            <div class="stats-grid mb-4">
+                <div class="stat-card">
+                    <span class="material-symbols-outlined">confirmation_number</span>
+                    <p>Tổng vé</p>
+                    <h3>@Model.TotalBookings</h3>
+                </div>
+
+                <div class="stat-card success">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    <p>Đã thanh toán</p>
+                    <h3>@Model.CompletedBookings</h3>
+                </div>
+
+                <div class="stat-card warning">
+                    <span class="material-symbols-outlined">schedule</span>
+                    <p>Đang chờ</p>
+                    <h3>@Model.PendingBookings</h3>
+                </div>
+
+                <div class="stat-card danger">
+                    <span class="material-symbols-outlined">cancel</span>
+                    <p>Đã hủy</p>
+                    <h3>@Model.CancelledBookings</h3>
+                </div>
+            </div>
+
+            <div class="profile-panel">
+                <div class="profile-panel-header">
+                    <div>
+                        <h4>Thông tin tài khoản</h4>
+                        <p>Cập nhật số điện thoại để hỗ trợ đặt vé và nhận thông báo.</p>
+                    </div>
+
+                    <span class="material-symbols-outlined">manage_accounts</span>
+                </div>
+
+                <div class="profile-panel-body">
+                    <form id="profile-form" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                        <div class="form-group-cinema mb-4">
+                            <label asp-for="Username">
+                                <span class="material-symbols-outlined">alternate_email</span>
+                                Email / Username
+                            </label>
+
+                            <input asp-for="Username"
+                                   class="form-control cinema-input"
+                                   disabled />
+
+                            <small>Email tài khoản không thể chỉnh sửa tại đây.</small>
+                        </div>
+
+                        <div class="form-group-cinema mb-4">
+                            <label asp-for="Input.PhoneNumber">
+                                <span class="material-symbols-outlined">call</span>
+                                Số điện thoại
+                            </label>
+
+                            <input asp-for="Input.PhoneNumber"
+                                   class="form-control cinema-input"
+                                   placeholder="Nhập số điện thoại của bạn" />
+
+                            <span asp-validation-for="Input.PhoneNumber" class="text-danger small"></span>
+                        </div>
+
+                        <button id="update-profile-button" type="submit" class="btn save-btn">
+                            <span class="material-symbols-outlined">save</span>
+                            Lưu thay đổi
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="profile-panel mt-4">
+                <div class="profile-panel-header">
+                    <div>
+                        <h4>Vé gần đây</h4>
+                        <p>Các đơn đặt vé mới nhất của bạn tại CineZone.</p>
+                    </div>
+
+                    <a asp-controller="Bookings" asp-action="Index" class="btn view-all-btn">
+                        Xem tất cả
+                    </a>
+                </div>
+
+                <div class="recent-ticket-list">
+                    @if (Model.RecentBookings.Any())
+                    {
+                        foreach (var booking in Model.RecentBookings)
+                        {
+                            var ticket = booking.Tickets.FirstOrDefault();
+                            var st = ticket?.Showtime;
+                            var mv = st?.Movie;
+                            var rm = st?.Room;
+                            var cn = rm?.Cinema;
+
+                            string title = mv?.Title ?? "Phim";
+                            string cinema = cn?.Name ?? "Rạp";
+                            string room = rm?.Name ?? "Phòng";
+                            string status = booking.Status;
+
+                            string badgeClass = status == "Completed" ? "completed"
+                                : status == "Cancelled" ? "cancelled"
+                                : "pending";
+
+                            string seats = booking.Tickets.Any()
+                                ? string.Join(", ", booking.Tickets
+                                    .Where(t => t.Seat != null)
+                                    .OrderBy(t => t.Seat!.Row)
+                                    .ThenBy(t => t.Seat!.Number)
+                                    .Select(t => $"{t.Seat!.Row}{t.Seat!.Number}"))
+                                : "---";
+
+                            <a asp-controller="Bookings"
+                               asp-action="Details"
+                               asp-route-id="@booking.Id"
+                               class="recent-ticket-item">
+                                <div class="ticket-icon-mini">
+                                    <span class="material-symbols-outlined">movie</span>
+                                </div>
+
+                                <div class="ticket-info-main">
+                                    <div class="ticket-title-line">
+                                        <h5>@title</h5>
+                                        <span class="ticket-badge @badgeClass">@status</span>
+                                    </div>
+
+                                    <p>@cinema · @room</p>
+                                    <small>Ghế: @seats</small>
+                                </div>
+
+                                <div class="ticket-price-side">
+                                    <strong>@booking.TotalAmount.ToString("N0") VNĐ</strong>
+                                    <small>@booking.BookingDate.ToString("dd/MM/yyyy")</small>
+                                </div>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-ticket-box">
+                            <span class="material-symbols-outlined">confirmation_number</span>
+                            <h5>Bạn chưa có vé nào</h5>
+                            <p>Hãy chọn một bộ phim và đặt vé đầu tiên tại CineZone.</p>
+
+                            <a asp-area="" asp-controller="Home" asp-action="Index" class="btn save-btn">
+                                Đặt vé ngay
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .cinema-profile-page {
+        color: #fff;
+    }
+
+    .profile-hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 230px;
+        padding: 34px;
+        border-radius: 32px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: linear-gradient(90deg, rgba(0,0,0,0.84), rgba(0,0,0,0.48)), radial-gradient(circle at top left, rgba(229,9,20,0.48), transparent 38%), linear-gradient(135deg, #19191d, #09090b);
+        box-shadow: 0 24px 70px rgba(0,0,0,0.38);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+        .profile-hero::after {
+            content: "";
+            position: absolute;
+            right: -70px;
+            top: -70px;
+            width: 260px;
+            height: 260px;
+            border-radius: 999px;
+            background: rgba(229,9,20,0.24);
+            filter: blur(10px);
+        }
+
+    .profile-hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 740px;
+    }
+
+    .profile-eyebrow {
+        color: #ff5964;
+        font-size: 0.8rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.3px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 12px;
+    }
+
+    .profile-hero h1 {
+        font-size: clamp(2.2rem, 5vw, 4.2rem);
+        font-weight: 950;
+        letter-spacing: -0.065em;
+        line-height: 1;
+        margin-bottom: 12px;
+    }
+
+    .profile-hero p {
+        color: #b5b5b5;
+        font-size: 1rem;
+        margin-bottom: 18px;
+    }
+
+    .member-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+        .member-badges span {
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.075);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #eee;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 800;
+        }
+
+        .member-badges .material-symbols-outlined {
+            color: #ff5964;
+            font-size: 18px;
+        }
+
+    .home-btn,
+    .save-btn,
+    .view-all-btn {
+        position: relative;
+        z-index: 2;
+        border-radius: 999px;
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 900;
+    }
+
+    .home-btn,
+    .view-all-btn {
+        padding: 10px 18px;
+        border: 1px solid rgba(255,255,255,0.16);
+        background: rgba(255,255,255,0.07);
+    }
+
+        .home-btn:hover,
+        .view-all-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.13);
+            transform: translateY(-2px);
+        }
+
+    .member-card,
+    .profile-panel,
+    .stat-card,
+    .movie-pass-card {
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(18,18,22,0.92);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.32);
+        overflow: hidden;
+    }
+
+    .member-card {
+        padding: 26px;
+    }
+
+    .member-card-top {
+        text-align: center;
+        padding-bottom: 22px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        margin-bottom: 18px;
+    }
+
+    .member-avatar {
+        width: 118px;
+        height: 118px;
+        margin: 0 auto 18px;
+        border-radius: 999px;
+        background: radial-gradient(circle at top left, rgba(255,255,255,0.24), transparent 40%), linear-gradient(135deg, #e50914, #7c050b);
+        box-shadow: 0 18px 42px rgba(229,9,20,0.34);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .member-avatar span {
+            color: #fff;
+            font-size: 76px;
+        }
+
+    .member-card h3 {
+        font-size: 1.1rem;
+        font-weight: 950;
+        word-break: break-word;
+        margin-bottom: 6px;
+    }
+
+    .member-card p {
+        color: #999;
+        margin: 0;
+    }
+
+    .member-info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .member-info-item {
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.075);
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+        .member-info-item > span {
+            color: #ff5964;
+            font-size: 26px;
+        }
+
+        .member-info-item small {
+            display: block;
+            color: #999;
+            font-size: 0.74rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .member-info-item strong {
+            color: #fff;
+            word-break: break-word;
+        }
+
+    .movie-pass-card {
+        padding: 24px;
+        min-height: 170px;
+        background: radial-gradient(circle at top right, rgba(255,255,255,0.18), transparent 28%), linear-gradient(135deg, #e50914, #5f0408);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+        .movie-pass-card p {
+            font-size: 0.74rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            opacity: 0.82;
+        }
+
+        .movie-pass-card h4 {
+            font-weight: 950;
+            margin-bottom: 6px;
+        }
+
+        .movie-pass-card span {
+            color: rgba(255,255,255,0.8);
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+    .pass-code {
+        font-size: 1.4rem;
+        font-weight: 950;
+        letter-spacing: 2px;
+        text-align: right;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .stat-card {
+        padding: 18px;
+        min-height: 132px;
+    }
+
+        .stat-card > span {
+            color: #ff5964;
+            font-size: 30px;
+            margin-bottom: 14px;
+        }
+
+        .stat-card p {
+            color: #999;
+            font-size: 0.76rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin: 0 0 6px;
+        }
+
+        .stat-card h3 {
+            font-size: 1.8rem;
+            font-weight: 950;
+            margin: 0;
+        }
+
+        .stat-card.success h3 {
+            color: #37d67a;
+        }
+
+        .stat-card.warning h3 {
+            color: #ffc94a;
+        }
+
+        .stat-card.danger h3 {
+            color: #ff5964;
+        }
+
+    .profile-panel-header {
+        padding: 22px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+    }
+
+        .profile-panel-header h4 {
+            font-weight: 950;
+            margin-bottom: 4px;
+        }
+
+        .profile-panel-header p {
+            color: #999;
+            margin: 0;
+            font-size: 0.88rem;
+        }
+
+        .profile-panel-header > span {
+            color: #ff5964;
+            font-size: 34px;
+        }
+
+    .profile-panel-body {
+        padding: 24px;
+    }
+
+    .form-group-cinema label {
+        color: #fff;
+        font-weight: 850;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .form-group-cinema label span {
+            color: #ff5964;
+            font-size: 22px;
+        }
+
+    .cinema-input {
+        height: 54px;
+        border-radius: 16px;
+        color: #fff;
+        background: rgba(255,255,255,0.055);
+        border: 1px solid rgba(255,255,255,0.12);
+        box-shadow: none;
+    }
+
+        .cinema-input:focus {
+            color: #fff;
+            background: rgba(255,255,255,0.075);
+            border-color: rgba(229,9,20,0.6);
+            box-shadow: 0 0 0 0.25rem rgba(229,9,20,0.16);
+        }
+
+        .cinema-input:disabled {
+            color: #aaa;
+            background: rgba(255,255,255,0.035);
+            border-color: rgba(255,255,255,0.08);
+        }
+
+    .form-group-cinema small {
+        color: #888;
+        display: block;
+        margin-top: 8px;
+    }
+
+    .save-btn {
+        min-height: 50px;
+        padding: 0 24px;
+        border: none;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+        box-shadow: 0 12px 28px rgba(229,9,20,0.28);
+        text-transform: uppercase;
+    }
+
+        .save-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 18px 38px rgba(229,9,20,0.38);
+        }
+
+    .recent-ticket-list {
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .recent-ticket-item {
+        padding: 15px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.075);
+        display: grid;
+        grid-template-columns: 50px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 14px;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+        .recent-ticket-item:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.075);
+            transform: translateY(-2px);
+        }
+
+    .ticket-icon-mini {
+        width: 50px;
+        height: 50px;
+        border-radius: 17px;
+        background: rgba(229,9,20,0.16);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .ticket-icon-mini span {
+            font-size: 30px;
+        }
+
+    .ticket-title-line {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 4px;
+    }
+
+        .ticket-title-line h5 {
+            font-size: 1rem;
+            font-weight: 950;
+            margin: 0;
+        }
+
+    .ticket-info-main p {
+        color: #999;
+        margin: 0 0 2px;
+        font-size: 0.86rem;
+    }
+
+    .ticket-info-main small {
+        color: #aaa;
+    }
+
+    .ticket-badge {
+        padding: 4px 9px;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 950;
+        text-transform: uppercase;
+    }
+
+        .ticket-badge.completed {
+            color: #37d67a;
+            background: rgba(25,135,84,0.14);
+        }
+
+        .ticket-badge.pending {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.12);
+        }
+
+        .ticket-badge.cancelled {
+            color: #ff5964;
+            background: rgba(229,9,20,0.14);
+        }
+
+    .ticket-price-side {
+        text-align: right;
+    }
+
+        .ticket-price-side strong {
+            display: block;
+            color: #ff5964;
+            font-weight: 950;
+            white-space: nowrap;
+        }
+
+        .ticket-price-side small {
+            color: #999;
+        }
+
+    .empty-ticket-box {
+        padding: 42px 20px;
+        text-align: center;
+    }
+
+        .empty-ticket-box > span {
+            color: #ff5964;
+            font-size: 56px;
+            margin-bottom: 10px;
+        }
+
+        .empty-ticket-box h5 {
+            font-weight: 950;
+        }
+
+        .empty-ticket-box p {
+            color: #999;
+            margin-bottom: 18px;
+        }
+
+    @@media (max-width: 1199.98px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .profile-hero {
+            flex-direction: column;
+            padding: 24px;
+        }
+
+        .home-btn {
+            width: 100%;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .recent-ticket-item {
+            grid-template-columns: 50px minmax(0, 1fr);
+        }
+
+        .ticket-price-side {
+            grid-column: 1 / -1;
+            text-align: left;
+            padding-left: 64px;
+        }
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

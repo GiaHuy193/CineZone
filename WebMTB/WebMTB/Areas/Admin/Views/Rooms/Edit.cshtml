@@ -1,0 +1,590 @@
+﻿@model WebMTB.Models.Room
+
+@{
+    ViewData["Title"] = "Sửa phòng chiếu";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var cinemas = ViewBag.Cinemas as List<WebMTB.Models.Cinema> ?? new List<WebMTB.Models.Cinema>();
+}
+
+<div class="room-edit-page">
+    <div class="room-edit-hero mb-4">
+        <div>
+            <div class="room-eyebrow">
+                <span class="material-symbols-outlined">edit</span>
+                CineZone Admin
+            </div>
+
+            <h1>Sửa phòng chiếu</h1>
+            <p>
+                Cập nhật tên phòng và rạp liên kết. Sơ đồ ghế của phòng vẫn được giữ nguyên.
+            </p>
+        </div>
+
+        <a asp-action="Index" class="btn back-btn">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Quay lại
+        </a>
+    </div>
+
+    <div class="room-edit-layout">
+        <section class="form-panel">
+            <div class="form-panel-header">
+                <div>
+                    <h4>Thông tin phòng</h4>
+                    <p>Cập nhật dữ liệu cho phòng #@Model.Id.</p>
+                </div>
+
+                <span class="material-symbols-outlined">meeting_room</span>
+            </div>
+
+            <form asp-action="Edit" method="post" class="room-form">
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="Id" />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="room-id-box mb-4">
+                    <span class="material-symbols-outlined">tag</span>
+                    <div>
+                        <small>Mã phòng</small>
+                        <strong>#@Model.Id</strong>
+                    </div>
+                </div>
+
+                <div class="form-group-cine mb-4">
+                    <label asp-for="Name" class="form-label">
+                        <span class="material-symbols-outlined">meeting_room</span>
+                        Tên phòng
+                    </label>
+
+                    <input asp-for="Name"
+                           class="form-control cine-input"
+                           placeholder="Ví dụ: Phòng 1, Hall A, IMAX 01" />
+
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group-cine mb-4">
+                    <label asp-for="CinemaId" class="form-label">
+                        <span class="material-symbols-outlined">apartment</span>
+                        Rạp
+                    </label>
+
+                    <select asp-for="CinemaId" class="form-select cine-select">
+                        <option value="">-- Chọn rạp --</option>
+                        @foreach (var cinema in cinemas)
+                        {
+                            <option value="@cinema.Id">@cinema.Name</option>
+                        }
+                    </select>
+
+                    <span asp-validation-for="CinemaId" class="text-danger small"></span>
+                </div>
+
+                <div class="form-tip mb-4">
+                    <span class="material-symbols-outlined">info</span>
+                    <div>
+                        <strong>Lưu ý:</strong>
+                        Nếu bạn đổi rạp của phòng này, các suất chiếu/phòng liên quan vẫn dùng phòng hiện tại. Hãy kiểm tra lịch chiếu sau khi cập nhật.
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn save-btn">
+                        <span class="material-symbols-outlined">save</span>
+                        Lưu thay đổi
+                    </button>
+
+                    <a asp-action="Index" class="btn cancel-btn">
+                        <span class="material-symbols-outlined">close</span>
+                        Hủy
+                    </a>
+                </div>
+            </form>
+        </section>
+
+        <aside class="preview-panel">
+            <div class="preview-image">
+                <div class="preview-overlay"></div>
+
+                <div class="preview-badges">
+                    <span>Room</span>
+                    <span>Seat Map</span>
+                    <span>Active</span>
+                </div>
+
+                <div class="preview-status">
+                    <span></span>
+                    Active
+                </div>
+            </div>
+
+            <div class="preview-content">
+                <div class="preview-title-row">
+                    <div>
+                        <p>Preview hiện tại</p>
+                        <h4>@(string.IsNullOrWhiteSpace(Model.Name) ? "Cinema Room" : Model.Name)</h4>
+                    </div>
+
+                    <span class="material-symbols-outlined">event_seat</span>
+                </div>
+
+                <div class="preview-line">
+                    <span class="material-symbols-outlined">apartment</span>
+                    @(Model.Cinema?.Name ?? "Chưa chọn rạp")
+                </div>
+
+                <div class="preview-meta">
+                    <span>
+                        <span class="material-symbols-outlined">tag</span>
+                        ID #@Model.Id
+                    </span>
+
+                    <span>
+                        <span class="material-symbols-outlined">meeting_room</span>
+                        Phòng chiếu
+                    </span>
+
+                    <span>
+                        <span class="material-symbols-outlined">verified</span>
+                        Active
+                    </span>
+                </div>
+
+                <div class="preview-note">
+                    Trang này chỉ cập nhật <strong>tên phòng</strong> và <strong>rạp</strong>. Muốn sửa sơ đồ ghế, vào mục <strong>Chi tiết / Tạo ghế</strong>.
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<style>
+    .room-edit-page {
+        min-height: 100vh;
+        color: #fff;
+        padding: 28px;
+        background: radial-gradient(circle at 5% 5%, rgba(229, 9, 20, 0.16), transparent 26%), radial-gradient(circle at 95% 15%, rgba(255,255,255,0.05), transparent 24%), #101012;
+    }
+
+    .room-edit-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 30px;
+        border-radius: 30px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: linear-gradient(90deg, rgba(0,0,0,0.84), rgba(0,0,0,0.48)), radial-gradient(circle at top right, rgba(229,9,20,0.35), transparent 34%), linear-gradient(135deg, #1b1b20, #09090b);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.35);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 22px;
+    }
+
+    .room-eyebrow {
+        color: #ff5964;
+        font-size: 0.78rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 12px;
+    }
+
+    .room-edit-hero h1 {
+        font-size: clamp(2.2rem, 5vw, 4.1rem);
+        font-weight: 950;
+        letter-spacing: -0.065em;
+        line-height: 1;
+        margin-bottom: 12px;
+    }
+
+    .room-edit-hero p {
+        color: #aaa;
+        max-width: 780px;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .back-btn,
+    .save-btn {
+        border-radius: 999px;
+        color: #fff;
+        border: none;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+        box-shadow: 0 14px 32px rgba(229,9,20,0.28);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 950;
+        white-space: nowrap;
+    }
+
+    .back-btn {
+        min-height: 48px;
+        padding: 0 22px;
+    }
+
+    .save-btn {
+        min-height: 48px;
+        padding: 0 26px;
+    }
+
+        .back-btn:hover,
+        .save-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 18px 42px rgba(229,9,20,0.38);
+        }
+
+    .room-edit-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 390px;
+        gap: 22px;
+        align-items: start;
+    }
+
+    .form-panel,
+    .preview-panel {
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(18,18,22,0.94);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.30);
+        overflow: hidden;
+    }
+
+    .form-panel-header {
+        padding: 22px 24px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+        .form-panel-header h4 {
+            font-weight: 950;
+            margin-bottom: 4px;
+        }
+
+        .form-panel-header p {
+            color: #999;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .form-panel-header > span {
+            color: #ff5964;
+            font-size: 34px;
+        }
+
+    .room-form {
+        padding: 26px;
+    }
+
+    .room-id-box {
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: rgba(229,9,20,0.12);
+        border: 1px solid rgba(229,9,20,0.22);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .room-id-box > span {
+            color: #ff5964;
+            font-size: 24px;
+        }
+
+        .room-id-box small {
+            color: #aaa;
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .room-id-box strong {
+            color: #fff;
+            font-weight: 950;
+        }
+
+    .form-group-cine .form-label {
+        color: #ddd;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+        .form-group-cine .form-label span {
+            color: #ff5964;
+            font-size: 21px;
+        }
+
+    .cine-input,
+    .cine-select {
+        min-height: 54px;
+        border-radius: 17px;
+        color: #fff;
+        background-color: rgba(0,0,0,0.30);
+        border: 1px solid rgba(255,255,255,0.12);
+        padding: 0 16px;
+        font-weight: 750;
+    }
+
+        .cine-input:focus,
+        .cine-select:focus {
+            color: #fff;
+            background-color: rgba(0,0,0,0.42);
+            border-color: rgba(229,9,20,0.50);
+            box-shadow: 0 0 0 0.2rem rgba(229,9,20,0.14);
+        }
+
+        .cine-select option {
+            background: #111;
+            color: #fff;
+        }
+
+    .form-tip {
+        padding: 14px 16px;
+        border-radius: 18px;
+        color: #ccc;
+        background: rgba(255,193,7,0.08);
+        border: 1px solid rgba(255,193,7,0.16);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        line-height: 1.6;
+    }
+
+        .form-tip > span {
+            color: #ffc94a;
+            font-size: 24px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .form-tip strong {
+            color: #ffc94a;
+        }
+
+    .form-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .cancel-btn {
+        min-height: 48px;
+        padding: 0 22px;
+        border-radius: 999px;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.14);
+        background: rgba(255,255,255,0.07);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 900;
+    }
+
+        .cancel-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.13);
+            transform: translateY(-2px);
+        }
+
+    .preview-panel {
+        position: sticky;
+        top: 90px;
+    }
+
+    .preview-image {
+        position: relative;
+        height: 220px;
+        background: linear-gradient(135deg, rgba(0,0,0,0.14), rgba(0,0,0,0.70)), url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1000&q=80') center/cover;
+    }
+
+    .preview-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.78)), radial-gradient(circle at top right, rgba(229,9,20,0.22), transparent 34%);
+    }
+
+    .preview-badges {
+        position: absolute;
+        left: 18px;
+        bottom: 18px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+        .preview-badges span {
+            padding: 5px 10px;
+            border-radius: 999px;
+            color: #fff;
+            background: rgba(229,9,20,0.86);
+            font-size: 0.68rem;
+            font-weight: 950;
+            text-transform: uppercase;
+        }
+
+    .preview-status {
+        position: absolute;
+        right: 18px;
+        bottom: 18px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        color: #37d67a;
+        background: rgba(25,135,84,0.16);
+        border: 1px solid rgba(25,135,84,0.24);
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.75rem;
+        font-weight: 950;
+        text-transform: uppercase;
+    }
+
+        .preview-status span {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #37d67a;
+            box-shadow: 0 0 14px rgba(55,214,122,0.75);
+        }
+
+    .preview-content {
+        padding: 22px;
+    }
+
+    .preview-title-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+
+        .preview-title-row p {
+            color: #ff5964;
+            font-size: 0.72rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .preview-title-row h4 {
+            font-weight: 950;
+            margin: 0;
+        }
+
+        .preview-title-row > span {
+            color: #ff5964;
+            font-size: 30px;
+        }
+
+    .preview-line {
+        color: #aaa;
+        display: flex;
+        align-items: flex-start;
+        gap: 7px;
+        line-height: 1.6;
+        margin-bottom: 16px;
+    }
+
+        .preview-line span {
+            color: #ff5964;
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+    .preview-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        margin-bottom: 16px;
+    }
+
+        .preview-meta > span {
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.065);
+            color: #ddd;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            font-weight: 850;
+        }
+
+        .preview-meta .material-symbols-outlined {
+            color: #ff5964;
+            font-size: 17px;
+        }
+
+    .preview-note {
+        padding: 14px;
+        border-radius: 18px;
+        color: #aaa;
+        background: rgba(0,0,0,0.24);
+        border: 1px solid rgba(255,255,255,0.07);
+        line-height: 1.6;
+        font-size: 0.86rem;
+    }
+
+        .preview-note strong {
+            color: #fff;
+        }
+
+    @@media (max-width: 1199.98px) {
+        .room-edit-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .preview-panel {
+            position: static;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .room-edit-page {
+            padding: 18px;
+        }
+
+        .room-edit-hero {
+            flex-direction: column;
+            padding: 24px;
+        }
+
+        .back-btn,
+        .save-btn,
+        .cancel-btn {
+            width: 100%;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .room-form {
+            padding: 20px;
+        }
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

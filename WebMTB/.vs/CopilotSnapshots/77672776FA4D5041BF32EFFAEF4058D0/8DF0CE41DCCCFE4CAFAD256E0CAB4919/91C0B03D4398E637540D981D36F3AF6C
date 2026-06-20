@@ -1,0 +1,19 @@
+﻿{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=DESKTOP-U5SQ14I;Database=WebMTB;User Id= sa; Password= huy@123;MultipleActiveResultSets=true; TrustServerCertificate=True"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "EmailSettings": {
+    "Mail": "maidoangiahuy2004@gmail.com",
+    "Password": "ezid mtkw bxrc tphp",
+    "Host": "smtp.gmail.com",
+    "Port": "587",
+    "DisplayName": "CineZone"
+  }
+}

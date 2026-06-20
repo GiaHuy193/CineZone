@@ -1,0 +1,970 @@
+﻿@model IEnumerable<WebMTB.Models.Booking>
+
+@{
+    ViewData["Title"] = "Quản lý vé";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var bookings = Model?.ToList() ?? new List<WebMTB.Models.Booking>();
+
+    string currentStatus = (ViewBag.CurrentStatus as string) ?? "All";
+
+    int totalBookings = ViewBag.TotalBookings != null ? (int)ViewBag.TotalBookings : bookings.Count;
+    int pendingBookings = ViewBag.PendingBookings != null ? (int)ViewBag.PendingBookings : bookings.Count(b => b.Status == "Pending");
+    int completedBookings = ViewBag.CompletedBookings != null ? (int)ViewBag.CompletedBookings : bookings.Count(b => b.Status == "Completed");
+    int cancelledBookings = ViewBag.CancelledBookings != null ? (int)ViewBag.CancelledBookings : bookings.Count(b => b.Status == "Cancelled");
+
+    decimal totalRevenue = ViewBag.TotalRevenue != null
+        ? (decimal)ViewBag.TotalRevenue
+        : bookings.Where(b => b.Status == "Completed").Sum(b => b.TotalAmount);
+
+    decimal pendingAmount = bookings
+        .Where(b => b.Status == "Pending")
+        .Sum(b => b.TotalAmount);
+}
+
+<div class="ticket-admin-page">
+    <div class="ticket-hero mb-4">
+        <div>
+            <div class="ticket-eyebrow">
+                <span class="material-symbols-outlined">confirmation_number</span>
+                CineZone Ticket Management
+            </div>
+
+            <h1>Quản lý vé</h1>
+            <p>
+                Theo dõi booking, trạng thái thanh toán, ghế đã đặt, suất chiếu và xử lý vé đang chờ thanh toán.
+            </p>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="Dashboard"
+           asp-action="Index"
+           class="btn dashboard-btn">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success admin-alert">
+            <span class="material-symbols-outlined">check_circle</span>
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger admin-alert">
+            <span class="material-symbols-outlined">warning</span>
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="ticket-stats-grid mb-4">
+        <div class="ticket-stat-card highlight">
+            <span class="material-symbols-outlined">confirmation_number</span>
+            <p>Tổng booking</p>
+            <h3>@totalBookings</h3>
+        </div>
+
+        <div class="ticket-stat-card warning">
+            <span class="material-symbols-outlined">schedule</span>
+            <p>Pending</p>
+            <h3>@pendingBookings</h3>
+        </div>
+
+        <div class="ticket-stat-card success">
+            <span class="material-symbols-outlined">check_circle</span>
+            <p>Completed</p>
+            <h3>@completedBookings</h3>
+        </div>
+
+        <div class="ticket-stat-card revenue">
+            <span class="material-symbols-outlined">payments</span>
+            <p>Doanh thu</p>
+            <h3>@totalRevenue.ToString("N0")</h3>
+            <small>VNĐ</small>
+        </div>
+    </div>
+
+    <div class="ticket-layout">
+        <aside class="ticket-sidebar">
+            <div class="side-panel mb-4">
+                <div class="side-panel-header">
+                    <div>
+                        <h5>Bộ lọc vé</h5>
+                        <p>Lọc booking theo trạng thái.</p>
+                    </div>
+
+                    <span class="material-symbols-outlined">filter_list</span>
+                </div>
+
+                <form method="get" class="ticket-filter-form">
+                    <label class="form-label">Trạng thái</label>
+
+                    <select name="status" class="form-select ticket-select">
+                        @if (currentStatus == "All")
+                        {
+                            <option value="All" selected>Tất cả</option>
+                        }
+                        else
+                        {
+                            <option value="All">Tất cả</option>
+                        }
+
+                        @if (currentStatus == "Pending")
+                        {
+                            <option value="Pending" selected>Pending</option>
+                        }
+                        else
+                        {
+                            <option value="Pending">Pending</option>
+                        }
+
+                        @if (currentStatus == "Completed")
+                        {
+                            <option value="Completed" selected>Completed</option>
+                        }
+                        else
+                        {
+                            <option value="Completed">Completed</option>
+                        }
+
+                        @if (currentStatus == "Cancelled")
+                        {
+                            <option value="Cancelled" selected>Cancelled</option>
+                        }
+                        else
+                        {
+                            <option value="Cancelled">Cancelled</option>
+                        }
+                    </select>
+
+                    <button type="submit" class="btn filter-btn">
+                        <span class="material-symbols-outlined">manage_search</span>
+                        Lọc vé
+                    </button>
+                </form>
+            </div>
+
+            <div class="side-panel">
+                <div class="side-panel-header">
+                    <div>
+                        <h5>Tổng quan</h5>
+                        <p>Thông tin nhanh về vé.</p>
+                    </div>
+
+                    <span class="material-symbols-outlined">analytics</span>
+                </div>
+
+                <div class="quick-info-list">
+                    <div>
+                        <span class="material-symbols-outlined">pending_actions</span>
+                        <div>
+                            <small>Tiền đang chờ</small>
+                            <strong>@pendingAmount.ToString("N0") VNĐ</strong>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="material-symbols-outlined">cancel</span>
+                        <div>
+                            <small>Đã hủy</small>
+                            <strong>@cancelledBookings booking</strong>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="material-symbols-outlined">verified</span>
+                        <div>
+                            <small>Đã thanh toán</small>
+                            <strong>@completedBookings booking</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="ticket-main">
+            <div class="ticket-panel">
+                <div class="ticket-panel-header">
+                    <div>
+                        <h4>Danh sách booking</h4>
+                        <p>Quản lý giao dịch đặt vé gần đây trong hệ thống CineZone.</p>
+                    </div>
+
+                    <div class="panel-actions">
+                        <span class="material-symbols-outlined">receipt_long</span>
+                    </div>
+                </div>
+
+                @if (bookings.Any())
+                {
+                    <div class="ticket-table-wrap">
+                        <table class="table ticket-table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Mã vé</th>
+                                    <th>Khách hàng</th>
+                                    <th>Phim / Suất chiếu</th>
+                                    <th>Rạp / Ghế</th>
+                                    <th class="text-end">Tổng tiền</th>
+                                    <th class="text-center">Trạng thái</th>
+                                    <th class="text-end">Thao tác</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var booking in bookings)
+                                {
+                                    var tickets = booking.Tickets?.ToList() ?? new List<WebMTB.Models.Ticket>();
+                                    var firstTicket = tickets.FirstOrDefault();
+
+                                    var showtime = firstTicket?.Showtime;
+                                    var movie = showtime?.Movie;
+                                    var room = showtime?.Room;
+                                    var cinema = room?.Cinema;
+
+                                    string movieTitle = movie?.Title ?? "Thông tin phim";
+                                    string cinemaName = cinema?.Name ?? "Chưa có rạp";
+                                    string roomName = room?.Name ?? "Chưa có phòng";
+                                    string userEmail = booking.User?.Email ?? booking.User?.UserName ?? "Khách hàng";
+
+                                    string initials = "?";
+                                    if (!string.IsNullOrWhiteSpace(userEmail))
+                                    {
+                                        initials = userEmail.Trim().Substring(0, 1).ToUpper();
+                                    }
+
+                                    string seatNames = tickets.Any()
+                                        ? string.Join(", ", tickets
+                                            .Where(t => t.Seat != null)
+                                            .OrderBy(t => t.Seat!.Row)
+                                            .ThenBy(t => t.Seat!.Number)
+                                            .Select(t => $"{t.Seat!.Row}{t.Seat!.Number}"))
+                                        : "---";
+
+                                    string statusClass = booking.Status == "Completed" ? "completed"
+                                        : booking.Status == "Cancelled" ? "cancelled"
+                                        : "pending";
+
+                                    <tr>
+                                        <td>
+                                            <div class="ticket-code">
+                                                <span class="material-symbols-outlined">confirmation_number</span>
+                                                <div>
+                                                    <strong>#CZ-@booking.Id.ToString("00000")</strong>
+                                                    <small>@booking.BookingDate.ToString("dd/MM/yyyy HH:mm")</small>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="customer-cell">
+                                                <div class="customer-avatar">@initials</div>
+                                                <div>
+                                                    <strong>@userEmail</strong>
+                                                    <small>User booking</small>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="movie-cell">
+                                                <strong>@movieTitle</strong>
+                                                <small>
+                                                    <span class="material-symbols-outlined">schedule</span>
+                                                    @(showtime != null ? showtime.StartTime.ToString("HH:mm - dd/MM/yyyy") : "Chưa có suất chiếu")
+                                                </small>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="cinema-cell">
+                                                <strong>@cinemaName</strong>
+                                                <small>
+                                                    <span class="material-symbols-outlined">meeting_room</span>
+                                                    @roomName
+                                                </small>
+                                                <small>
+                                                    <span class="material-symbols-outlined">event_seat</span>
+                                                    @seatNames
+                                                </small>
+                                            </div>
+                                        </td>
+
+                                        <td class="text-end">
+                                            <div class="money-cell">
+                                                <strong>@booking.TotalAmount.ToString("N0")</strong>
+                                                <small>VNĐ</small>
+                                            </div>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span class="booking-status @statusClass">
+                                                @booking.Status
+                                            </span>
+                                        </td>
+
+                                        <td class="text-end">
+                                            <div class="ticket-actions">
+                                                @if (booking.Status == "Pending")
+                                                {
+                                                    <form asp-action="MarkCompleted" method="post" class="d-inline">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="id" value="@booking.Id" />
+
+                                                        <button type="submit"
+                                                                class="btn action-btn success-btn"
+                                                                title="Chuyển sang Completed">
+                                                            <span class="material-symbols-outlined">check</span>
+                                                        </button>
+                                                    </form>
+
+                                                    <form asp-action="Cancel" method="post" class="d-inline">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="id" value="@booking.Id" />
+
+                                                        <button type="submit"
+                                                                class="btn action-btn danger-btn"
+                                                                title="Hủy booking">
+                                                            <span class="material-symbols-outlined">close</span>
+                                                        </button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <span class="no-action">Không có</span>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="ticket-footer">
+                        <span>Đang hiển thị @bookings.Count booking theo bộ lọc hiện tại.</span>
+
+                        <div class="footer-pills">
+                            <span class="footer-pill completed">Completed @completedBookings</span>
+                            <span class="footer-pill pending">Pending @pendingBookings</span>
+                            <span class="footer-pill cancelled">Cancelled @cancelledBookings</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-ticket-box">
+                        <div class="empty-icon">
+                            <span class="material-symbols-outlined">inbox</span>
+                        </div>
+
+                        <h4>Chưa có booking nào</h4>
+                        <p>Khi khách đặt vé, booking sẽ hiển thị tại khu vực quản lý vé.</p>
+                    </div>
+                }
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+    .ticket-admin-page {
+        color: #fff;
+        min-height: 100vh;
+        padding: 28px;
+        background: radial-gradient(circle at 5% 5%, rgba(229, 9, 20, 0.16), transparent 26%), radial-gradient(circle at 95% 15%, rgba(255,255,255,0.05), transparent 24%), #101012;
+    }
+
+    .ticket-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 30px;
+        border-radius: 30px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: linear-gradient(90deg, rgba(0,0,0,0.84), rgba(0,0,0,0.48)), radial-gradient(circle at top right, rgba(229,9,20,0.35), transparent 34%), linear-gradient(135deg, #1b1b20, #09090b);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.35);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 22px;
+    }
+
+    .ticket-eyebrow {
+        color: #ff5964;
+        font-size: 0.78rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 12px;
+    }
+
+    .ticket-hero h1 {
+        font-size: clamp(2.2rem, 5vw, 4.1rem);
+        font-weight: 950;
+        letter-spacing: -0.065em;
+        line-height: 1;
+        margin-bottom: 12px;
+    }
+
+    .ticket-hero p {
+        color: #aaa;
+        max-width: 780px;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .dashboard-btn,
+    .filter-btn {
+        border-radius: 999px;
+        color: #fff;
+        border: none;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+        box-shadow: 0 14px 32px rgba(229,9,20,0.28);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 950;
+        white-space: nowrap;
+    }
+
+    .dashboard-btn {
+        min-height: 48px;
+        padding: 0 22px;
+    }
+
+        .dashboard-btn:hover,
+        .filter-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    .admin-alert {
+        border-radius: 18px;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 750;
+    }
+
+    .ticket-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .ticket-stat-card {
+        position: relative;
+        overflow: hidden;
+        padding: 20px;
+        border-radius: 24px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(22,22,27,0.92);
+        box-shadow: 0 18px 46px rgba(0,0,0,0.26);
+    }
+
+        .ticket-stat-card.highlight {
+            border-left: 4px solid #e50914;
+        }
+
+        .ticket-stat-card::after {
+            content: "";
+            position: absolute;
+            right: -34px;
+            top: -34px;
+            width: 96px;
+            height: 96px;
+            border-radius: 999px;
+            background: rgba(229,9,20,0.10);
+        }
+
+        .ticket-stat-card > span {
+            color: #ff5964;
+            font-size: 32px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ticket-stat-card p {
+            color: #aaa;
+            font-size: 0.76rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin: 0 0 6px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ticket-stat-card h3 {
+            font-size: 1.9rem;
+            font-weight: 950;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ticket-stat-card.warning h3 {
+            color: #ffc94a;
+        }
+
+        .ticket-stat-card.success h3 {
+            color: #37d67a;
+        }
+
+        .ticket-stat-card.revenue h3 {
+            color: #ff5964;
+            font-size: 1.45rem;
+        }
+
+        .ticket-stat-card small {
+            color: #999;
+            font-weight: 800;
+        }
+
+    .ticket-layout {
+        display: grid;
+        grid-template-columns: 310px minmax(0, 1fr);
+        gap: 22px;
+        align-items: start;
+    }
+
+    .ticket-sidebar {
+        position: sticky;
+        top: 90px;
+    }
+
+    .side-panel,
+    .ticket-panel {
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(18,18,22,0.94);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.30);
+        overflow: hidden;
+    }
+
+    .side-panel-header,
+    .ticket-panel-header {
+        padding: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+        .side-panel-header h5,
+        .ticket-panel-header h4 {
+            font-weight: 950;
+            margin-bottom: 4px;
+        }
+
+        .side-panel-header p,
+        .ticket-panel-header p {
+            color: #999;
+            margin: 0;
+            font-size: 0.86rem;
+        }
+
+        .side-panel-header > span {
+            color: #ff5964;
+            font-size: 30px;
+        }
+
+    .panel-actions {
+        width: 46px;
+        height: 46px;
+        border-radius: 16px;
+        background: rgba(229,9,20,0.14);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .panel-actions span {
+            font-size: 28px;
+        }
+
+    .ticket-filter-form {
+        padding: 18px;
+    }
+
+        .ticket-filter-form label {
+            color: #aaa;
+            font-weight: 850;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+    .ticket-select {
+        min-height: 48px;
+        border-radius: 16px;
+        color: #fff;
+        background-color: rgba(0,0,0,0.28);
+        border: 1px solid rgba(255,255,255,0.12);
+        margin-bottom: 12px;
+    }
+
+        .ticket-select:focus {
+            color: #fff;
+            background-color: rgba(0,0,0,0.36);
+            border-color: rgba(229,9,20,0.45);
+            box-shadow: 0 0 0 0.2rem rgba(229,9,20,0.14);
+        }
+
+    .filter-btn {
+        min-height: 46px;
+        width: 100%;
+    }
+
+    .quick-info-list {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .quick-info-list > div {
+            padding: 12px;
+            border-radius: 16px;
+            background: rgba(0,0,0,0.22);
+            border: 1px solid rgba(255,255,255,0.065);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .quick-info-list > div > span {
+                color: #ff5964;
+                font-size: 24px;
+            }
+
+        .quick-info-list small {
+            color: #888;
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .quick-info-list strong {
+            color: #fff;
+            font-weight: 900;
+            font-size: 0.88rem;
+        }
+
+    .ticket-table-wrap {
+        overflow-x: auto;
+    }
+
+    .ticket-table {
+        color: #fff;
+        min-width: 1180px;
+    }
+
+        .ticket-table thead tr {
+            background: rgba(255,255,255,0.035);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .ticket-table th {
+            color: #9b9b9b;
+            padding: 18px 22px;
+            font-size: 0.72rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            border: none;
+        }
+
+        .ticket-table td {
+            padding: 20px 22px;
+            border-color: rgba(255,255,255,0.075);
+            vertical-align: middle;
+        }
+
+        .ticket-table tbody tr {
+            transition: all 0.18s ease;
+        }
+
+            .ticket-table tbody tr:hover {
+                background: rgba(255,255,255,0.045);
+            }
+
+    .ticket-code,
+    .customer-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .ticket-code > span {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: rgba(229,9,20,0.16);
+            color: #ff5964;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ticket-code strong,
+        .customer-cell strong,
+        .movie-cell strong,
+        .cinema-cell strong {
+            color: #fff;
+            display: block;
+            font-weight: 950;
+            max-width: 230px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ticket-code small,
+        .customer-cell small,
+        .movie-cell small,
+        .cinema-cell small {
+            color: #999;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.78rem;
+            margin-top: 4px;
+        }
+
+            .movie-cell small span,
+            .cinema-cell small span {
+                color: #ff5964;
+                font-size: 17px;
+            }
+
+    .customer-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        background: rgba(229,9,20,0.16);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 950;
+        flex-shrink: 0;
+    }
+
+    .money-cell strong {
+        color: #ff5964;
+        display: block;
+        font-size: 1.05rem;
+        font-weight: 950;
+    }
+
+    .money-cell small {
+        color: #999;
+        font-weight: 800;
+    }
+
+    .booking-status {
+        min-height: 30px;
+        padding: 6px 11px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .booking-status.pending {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.12);
+            border: 1px solid rgba(255,193,7,0.18);
+        }
+
+        .booking-status.completed {
+            color: #37d67a;
+            background: rgba(25,135,84,0.14);
+            border: 1px solid rgba(25,135,84,0.20);
+        }
+
+        .booking-status.cancelled {
+            color: #ff5964;
+            background: rgba(229,9,20,0.14);
+            border: 1px solid rgba(229,9,20,0.20);
+        }
+
+    .ticket-actions {
+        display: inline-flex;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+
+    .action-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 13px;
+        color: #ddd;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.055);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.18s ease;
+    }
+
+        .action-btn span {
+            font-size: 20px;
+        }
+
+    .success-btn:hover {
+        color: #fff;
+        background: rgba(25,135,84,0.18);
+        border-color: rgba(25,135,84,0.35);
+        transform: translateY(-2px);
+    }
+
+    .danger-btn:hover {
+        color: #fff;
+        background: rgba(229,9,20,0.18);
+        border-color: rgba(229,9,20,0.38);
+        transform: translateY(-2px);
+    }
+
+    .no-action {
+        color: #888;
+        font-size: 0.78rem;
+        font-weight: 800;
+    }
+
+    .ticket-footer {
+        padding: 18px 22px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.025);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        color: #999;
+        font-weight: 750;
+    }
+
+    .footer-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+
+    .footer-pill {
+        border-radius: 999px;
+        padding: 5px 10px;
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+    }
+
+        .footer-pill.completed {
+            color: #37d67a;
+            background: rgba(25,135,84,0.14);
+        }
+
+        .footer-pill.pending {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.12);
+        }
+
+        .footer-pill.cancelled {
+            color: #ff5964;
+            background: rgba(229,9,20,0.14);
+        }
+
+    .empty-ticket-box {
+        padding: 74px 20px;
+        text-align: center;
+    }
+
+    .empty-icon {
+        width: 88px;
+        height: 88px;
+        margin: 0 auto 18px;
+        border-radius: 28px;
+        background: rgba(229,9,20,0.16);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .empty-icon span {
+            font-size: 52px;
+        }
+
+    .empty-ticket-box h4 {
+        font-weight: 950;
+    }
+
+    .empty-ticket-box p {
+        color: #999;
+        margin: 0;
+    }
+
+    @@media (max-width: 1199.98px) {
+        .ticket-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .ticket-sidebar {
+            position: static;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .ticket-stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .ticket-admin-page {
+            padding: 18px;
+        }
+
+        .ticket-hero {
+            flex-direction: column;
+            padding: 24px;
+        }
+
+        .dashboard-btn {
+            width: 100%;
+        }
+
+        .ticket-stats-grid,
+        .ticket-sidebar {
+            grid-template-columns: 1fr;
+        }
+
+        .ticket-footer {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .footer-pills {
+            justify-content: flex-start;
+        }
+    }
+</style>

@@ -1,0 +1,890 @@
+﻿@model IEnumerable<WebMTB.Models.Cinema>
+
+@{
+    ViewData["Title"] = "Quản lý rạp";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var cinemas = Model?.ToList() ?? new List<WebMTB.Models.Cinema>();
+
+    int totalCinemas = cinemas.Count;
+    int totalRooms = cinemas.Sum(c => c.Rooms?.Count ?? 0);
+    int totalSeats = cinemas.Sum(c => c.Rooms?.Sum(r => r.Seats?.Count ?? 0) ?? 0);
+    int activeCinemas = totalCinemas;
+}
+
+<div class="cinema-admin-page">
+
+    <div class="cinema-hero mb-4">
+        <div class="hero-content">
+            <div class="cinema-eyebrow">
+                <span class="material-symbols-outlined">theaters</span>
+                CineZone Cinema Network
+            </div>
+
+            <h1>Quản lý rạp chiếu</h1>
+
+            <p>
+                Theo dõi toàn bộ hệ thống rạp, địa chỉ, số phòng chiếu và số lượng ghế.
+                Mỗi rạp là một chi nhánh trong hệ thống đặt vé CineZone.
+            </p>
+
+        </div>
+
+        <div class="hero-side-card">
+            <span class="material-symbols-outlined">add_business</span>
+            <h4>Thêm rạp mới</h4>
+            <p>Tạo rạp trước, sau đó cấu hình phòng chiếu và sơ đồ ghế.</p>
+
+            <a asp-action="Create" class="btn hero-add-btn">
+                <span class="material-symbols-outlined">add</span>
+                Tạo rạp
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert cz-alert-success mb-4">
+            <span class="material-symbols-outlined">check_circle</span>
+            <span>@TempData["Success"]</span>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert cz-alert-danger mb-4">
+            <span class="material-symbols-outlined">warning</span>
+            <span>@TempData["Error"]</span>
+        </div>
+    }
+
+    <div class="cinema-stat-grid mb-4">
+        <div class="cinema-stat-card red">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">apartment</span>
+            </div>
+
+            <div>
+                <p>Tổng rạp</p>
+                <h3>@totalCinemas</h3>
+            </div>
+        </div>
+
+        <div class="cinema-stat-card purple">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">meeting_room</span>
+            </div>
+
+            <div>
+                <p>Phòng chiếu</p>
+                <h3>@totalRooms</h3>
+            </div>
+        </div>
+
+        <div class="cinema-stat-card blue">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">event_seat</span>
+            </div>
+
+            <div>
+                <p>Tổng ghế</p>
+                <h3>@totalSeats</h3>
+            </div>
+        </div>
+
+        <div class="cinema-stat-card green">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">verified</span>
+            </div>
+
+            <div>
+                <p>Hoạt động</p>
+                <h3>@activeCinemas</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="cinema-toolbar mb-4">
+        <div>
+            <h4>Danh sách rạp</h4>
+            <p>Quản lý chi nhánh rạp và truy cập nhanh vào phòng chiếu.</p>
+        </div>
+
+        <div class="toolbar-actions">
+            <div class="cinema-search-box">
+                <span class="material-symbols-outlined">search</span>
+                <input type="text"
+                       id="cinemaSearchInput"
+                       placeholder="Tìm rạp theo tên hoặc địa chỉ..." />
+            </div>
+
+            <a asp-action="Create" class="btn toolbar-add-btn">
+                <span class="material-symbols-outlined">add</span>
+                Thêm rạp
+            </a>
+        </div>
+    </div>
+
+    @if (cinemas.Any())
+    {
+        <div class="cinema-card-grid" id="cinemaCardGrid">
+            @foreach (var item in cinemas)
+            {
+                int roomCount = item.Rooms?.Count ?? 0;
+                int seatCount = item.Rooms?.Sum(r => r.Seats?.Count ?? 0) ?? 0;
+
+                string searchText = $"{item.Name} {item.Address}".ToLower();
+
+                <div class="cinema-branch-card" data-search="@searchText">
+                    <div class="branch-cover">
+                        <div class="branch-cover-overlay"></div>
+
+                        <div class="branch-top">
+                            <div class="branch-logo">
+                                <span class="material-symbols-outlined">local_movies</span>
+                            </div>
+
+                            <span class="branch-status">
+                                <span class="material-symbols-outlined">check_circle</span>
+                                Hoạt động
+                            </span>
+                        </div>
+
+                        <div class="branch-title">
+                            <small>Mã rạp #@item.Id</small>
+                            <h3>@item.Name</h3>
+                        </div>
+                    </div>
+
+                    <div class="branch-body">
+                        <div class="branch-address">
+                            <span class="material-symbols-outlined">location_on</span>
+                            <p>
+                                @(string.IsNullOrWhiteSpace(item.Address)
+                                    ? "Chưa cập nhật địa chỉ"
+                                    : item.Address)
+                            </p>
+                        </div>
+
+                        <div class="branch-metrics">
+                            <div>
+                                <span class="material-symbols-outlined">meeting_room</span>
+                                <small>Phòng</small>
+                                <strong>@roomCount</strong>
+                            </div>
+
+                            <div>
+                                <span class="material-symbols-outlined">event_seat</span>
+                                <small>Ghế</small>
+                                <strong>@seatCount</strong>
+                            </div>
+                        </div>
+
+                        <div class="branch-actions">
+                            <a asp-area="Admin"
+                               asp-controller="Rooms"
+                               asp-action="Index"
+                               asp-route-cinemaId="@item.Id"
+                               class="btn branch-action-btn room">
+                                <span class="material-symbols-outlined">meeting_room</span>
+                                Phòng chiếu
+                            </a>
+
+                            <a asp-action="Edit"
+                               asp-route-id="@item.Id"
+                               class="btn branch-icon-btn edit"
+                               title="Sửa rạp">
+                                <span class="material-symbols-outlined">edit</span>
+                            </a>
+
+                            <a asp-action="Delete"
+                               asp-route-id="@item.Id"
+                               class="btn branch-icon-btn delete"
+                               title="Xóa rạp">
+                                <span class="material-symbols-outlined">delete</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="cinema-empty-search d-none" id="cinemaEmptySearch">
+            <span class="material-symbols-outlined">manage_search</span>
+            <h4>Không tìm thấy rạp phù hợp</h4>
+            <p>Thử nhập tên rạp hoặc địa chỉ khác.</p>
+        </div>
+    }
+    else
+    {
+        <div class="empty-cinema-box">
+            <div class="empty-icon">
+                <span class="material-symbols-outlined">theaters</span>
+            </div>
+
+            <h4>Chưa có rạp nào</h4>
+            <p>Bạn cần tạo rạp trước, sau đó mới tạo phòng chiếu và sơ đồ ghế.</p>
+
+            <a asp-action="Create" class="btn hero-add-btn">
+                <span class="material-symbols-outlined">add</span>
+                Tạo rạp đầu tiên
+            </a>
+        </div>
+    }
+</div>
+
+<style>
+    .cinema-admin-page {
+        min-height: 100vh;
+        padding: 28px;
+        color: #fff;
+        background: radial-gradient(circle at 8% 10%, rgba(160, 0, 20, 0.30), transparent 28%), radial-gradient(circle at 92% 8%, rgba(120, 0, 18, 0.22), transparent 24%), linear-gradient(135deg, #070709 0%, #0d0d12 45%, #08080a 100%);
+    }
+
+    .cinema-hero {
+        min-height: 245px;
+        padding: 38px 34px;
+        border-radius: 34px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        background: radial-gradient(circle at 12% 20%, rgba(150, 0, 22, 0.42), transparent 30%), radial-gradient(circle at 95% 20%, rgba(125, 0, 18, 0.45), transparent 24%), linear-gradient(90deg, #2a070d 0%, #0b0b12 40%, #090910 70%, #3a0710 100%);
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 330px;
+        align-items: stretch;
+        gap: 28px;
+    }
+
+        .cinema-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 0% 50%, rgba(229, 9, 20, 0.10), transparent 20%), radial-gradient(circle at 100% 50%, rgba(229, 9, 20, 0.12), transparent 20%);
+        }
+
+    .hero-content,
+    .hero-side-card {
+        position: relative;
+        z-index: 2;
+    }
+
+    .cinema-eyebrow {
+        width: fit-content;
+        padding: 10px 18px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, rgba(229, 9, 20, 0.18), rgba(110, 0, 14, 0.22));
+        border: 1px solid rgba(229, 9, 20, 0.32);
+        color: #ff7b86;
+        font-size: 0.95rem;
+        font-weight: 900;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 20px rgba(229, 9, 20, 0.14);
+    }
+
+    .cinema-hero h1 {
+        font-size: clamp(3rem, 5vw, 4.8rem);
+        font-weight: 1000;
+        letter-spacing: -0.05em;
+        line-height: 0.95;
+        margin-bottom: 14px;
+        color: #ffffff;
+    }
+
+    .cinema-hero p {
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 1.05rem;
+        font-weight: 600;
+        line-height: 1.65;
+        margin: 0;
+    }
+
+    .hero-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 26px;
+    }
+
+        .hero-tags span {
+            min-height: 42px;
+            padding: 0 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.075);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-weight: 850;
+        }
+
+        .hero-tags .material-symbols-outlined {
+            color: #ff5964;
+            font-size: 20px;
+        }
+
+    .hero-side-card {
+        padding: 24px;
+        border-radius: 28px;
+        background: radial-gradient(circle at top right, rgba(255,255,255,0.12), transparent 34%), rgba(255,255,255,0.075);
+        border: 1px solid rgba(255,255,255,0.13);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+        .hero-side-card > span {
+            width: 66px;
+            height: 66px;
+            border-radius: 22px;
+            background: rgba(229,9,20,0.18);
+            color: #ff5964;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            margin-bottom: 18px;
+        }
+
+        .hero-side-card h4 {
+            font-weight: 950;
+            margin-bottom: 8px;
+        }
+
+        .hero-side-card p {
+            color: #bdbdc6;
+            font-size: 0.92rem;
+            margin-bottom: 20px;
+        }
+
+    .hero-add-btn,
+    .toolbar-add-btn {
+        min-height: 48px;
+        padding: 0 20px;
+        border-radius: 999px;
+        color: #fff;
+        border: none;
+        background: linear-gradient(135deg, #ff8b8b, #e50914);
+        box-shadow: 0 14px 34px rgba(229,9,20,0.32);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 950;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+        .hero-add-btn:hover,
+        .toolbar-add-btn:hover {
+            color: #fff;
+            background: linear-gradient(135deg, #ff9e9e, #ff111d);
+        }
+
+    .cz-alert-success,
+    .cz-alert-danger {
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.10);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+    }
+
+    .cz-alert-success {
+        color: #d7ffe6;
+        background: rgba(25, 135, 84, 0.18);
+    }
+
+    .cz-alert-danger {
+        color: #ffd6d9;
+        background: rgba(229, 9, 20, 0.18);
+    }
+
+    .cinema-stat-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .cinema-stat-card {
+        min-height: 122px;
+        padding: 20px;
+        border-radius: 26px;
+        background: rgba(18,18,22,0.96);
+        border: 1px solid rgba(255,255,255,0.09);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 18px 46px rgba(0,0,0,0.26);
+    }
+
+        .cinema-stat-card.red {
+            background: radial-gradient(circle at bottom right, rgba(229,9,20,0.20), transparent 34%), rgba(18,18,22,0.96);
+        }
+
+        .cinema-stat-card.purple {
+            background: radial-gradient(circle at bottom right, rgba(147,51,234,0.18), transparent 34%), rgba(18,18,22,0.96);
+        }
+
+        .cinema-stat-card.blue {
+            background: radial-gradient(circle at bottom right, rgba(14,165,233,0.18), transparent 34%), rgba(18,18,22,0.96);
+        }
+
+        .cinema-stat-card.green {
+            background: radial-gradient(circle at bottom right, rgba(25,135,84,0.18), transparent 34%), rgba(18,18,22,0.96);
+        }
+
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 19px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(229,9,20,0.16);
+        color: #ff5964;
+        flex-shrink: 0;
+    }
+
+    .cinema-stat-card.purple .stat-icon {
+        background: rgba(147,51,234,0.16);
+        color: #c084fc;
+    }
+
+    .cinema-stat-card.blue .stat-icon {
+        background: rgba(14,165,233,0.16);
+        color: #38bdf8;
+    }
+
+    .cinema-stat-card.green .stat-icon {
+        background: rgba(25,135,84,0.16);
+        color: #37d67a;
+    }
+
+    .stat-icon span {
+        font-size: 32px;
+    }
+
+    .cinema-stat-card p {
+        color: #a7a7af;
+        font-size: 0.78rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        margin: 0 0 4px;
+    }
+
+    .cinema-stat-card h3 {
+        color: #fff;
+        font-size: 1.95rem;
+        font-weight: 950;
+        margin: 0;
+    }
+
+    .cinema-toolbar {
+        padding: 20px;
+        border-radius: 26px;
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.12), transparent 32%), rgba(18,18,22,0.96);
+        border: 1px solid rgba(255,255,255,0.09);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        box-shadow: 0 20px 56px rgba(0,0,0,0.26);
+    }
+
+        .cinema-toolbar h4 {
+            font-weight: 950;
+            margin-bottom: 4px;
+        }
+
+        .cinema-toolbar p {
+            color: #a5a5ad;
+            margin: 0;
+        }
+
+    .toolbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .cinema-search-box {
+        width: 360px;
+        height: 48px;
+        padding: 0 14px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.075);
+        border: 1px solid rgba(255,255,255,0.12);
+        display: flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+        .cinema-search-box span {
+            color: #ff5964;
+            font-size: 22px;
+        }
+
+        .cinema-search-box input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #fff;
+            font-weight: 750;
+        }
+
+            .cinema-search-box input::placeholder {
+                color: #8e8e96;
+            }
+
+    .cinema-card-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .cinema-branch-card {
+        overflow: hidden;
+        border-radius: 28px;
+        background: rgba(18,18,22,0.96);
+        border: 1px solid rgba(255,255,255,0.09);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.30);
+    }
+
+    .branch-cover {
+        min-height: 180px;
+        padding: 20px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: linear-gradient(135deg, rgba(229,9,20,0.76), rgba(18,18,22,0.70)), radial-gradient(circle at top right, rgba(255,255,255,0.20), transparent 32%), #2a0b10;
+    }
+
+        .branch-cover::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 34px 34px;
+            opacity: 0.30;
+        }
+
+        .branch-cover > * {
+            position: relative;
+            z-index: 2;
+        }
+
+    .branch-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .branch-logo {
+        width: 56px;
+        height: 56px;
+        border-radius: 20px;
+        background: rgba(0,0,0,0.24);
+        border: 1px solid rgba(255,255,255,0.16);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .branch-logo span {
+            font-size: 33px;
+        }
+
+    .branch-status {
+        min-height: 34px;
+        padding: 0 11px;
+        border-radius: 999px;
+        color: #d7ffe6;
+        background: rgba(25,135,84,0.25);
+        border: 1px solid rgba(25,135,84,0.30);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+    }
+
+        .branch-status span {
+            font-size: 17px;
+        }
+
+    .branch-title small {
+        color: rgba(255,255,255,0.72);
+        font-weight: 850;
+    }
+
+    .branch-title h3 {
+        color: #fff;
+        font-size: 1.65rem;
+        font-weight: 950;
+        letter-spacing: -0.04em;
+        margin: 4px 0 0;
+    }
+
+    .branch-body {
+        padding: 20px;
+    }
+
+    .branch-address {
+        min-height: 64px;
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.055);
+        border: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        margin-bottom: 16px;
+    }
+
+        .branch-address span {
+            color: #ff5964;
+            font-size: 21px;
+            margin-top: 1px;
+            flex-shrink: 0;
+        }
+
+        .branch-address p {
+            color: #c8c8cf;
+            margin: 0;
+            line-height: 1.55;
+            font-weight: 650;
+        }
+
+    .branch-metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+        .branch-metrics div {
+            padding: 15px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.055);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .branch-metrics span {
+            color: #ff5964;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .branch-metrics small {
+            display: block;
+            color: #999;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            margin-bottom: 2px;
+        }
+
+        .branch-metrics strong {
+            color: #fff;
+            font-size: 1.35rem;
+            font-weight: 950;
+        }
+
+    .branch-actions {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+    .branch-action-btn {
+        flex: 1;
+        min-height: 44px;
+        border-radius: 999px;
+        color: #fff;
+        background: rgba(255,255,255,0.075);
+        border: 1px solid rgba(255,255,255,0.12);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-weight: 900;
+    }
+
+        .branch-action-btn:hover {
+            color: #fff;
+            background: rgba(229,9,20,0.22);
+            border-color: rgba(229,9,20,0.35);
+        }
+
+    .branch-icon-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 15px;
+        color: #ddd;
+        background: rgba(255,255,255,0.065);
+        border: 1px solid rgba(255,255,255,0.12);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .branch-icon-btn.edit:hover {
+            color: #fff;
+            background: rgba(255,193,7,0.20);
+            border-color: rgba(255,193,7,0.38);
+        }
+
+        .branch-icon-btn.delete:hover {
+            color: #fff;
+            background: rgba(229,9,20,0.24);
+            border-color: rgba(229,9,20,0.42);
+        }
+
+    .empty-cinema-box,
+    .cinema-empty-search {
+        padding: 70px 20px;
+        text-align: center;
+        border-radius: 28px;
+        background: rgba(18,18,22,0.96);
+        border: 1px solid rgba(255,255,255,0.09);
+    }
+
+    .empty-icon {
+        width: 88px;
+        height: 88px;
+        margin: 0 auto 18px;
+        border-radius: 28px;
+        background: rgba(229,9,20,0.16);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .empty-icon span,
+        .cinema-empty-search > span {
+            color: #ff5964;
+            font-size: 52px;
+            margin-bottom: 12px;
+        }
+
+    .empty-cinema-box h4,
+    .cinema-empty-search h4 {
+        color: #fff;
+        font-weight: 950;
+    }
+
+    .empty-cinema-box p,
+    .cinema-empty-search p {
+        color: #999;
+        margin-bottom: 22px;
+    }
+
+    @@media (max-width: 1399.98px) {
+        .cinema-card-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 1199.98px) {
+        .cinema-hero {
+            grid-template-columns: 1fr;
+        }
+
+        .cinema-stat-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .cinema-toolbar {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .toolbar-actions,
+        .cinema-search-box {
+            width: 100%;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .cinema-admin-page {
+            padding: 18px;
+        }
+
+        .cinema-hero {
+            padding: 24px;
+        }
+
+        .cinema-stat-grid,
+        .cinema-card-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .toolbar-add-btn,
+        .hero-add-btn {
+            width: 100%;
+        }
+
+        .branch-actions {
+            flex-wrap: wrap;
+        }
+
+        .branch-action-btn {
+            flex-basis: 100%;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("cinemaSearchInput");
+            const cards = document.querySelectorAll(".cinema-branch-card");
+            const emptySearch = document.getElementById("cinemaEmptySearch");
+
+            if (!searchInput) {
+                return;
+            }
+
+            searchInput.addEventListener("input", function () {
+                const keyword = this.value.trim().toLowerCase();
+                let visibleCount = 0;
+
+                cards.forEach(function (card) {
+                    const searchText = card.dataset.search || "";
+
+                    if (searchText.includes(keyword)) {
+                        card.classList.remove("d-none");
+                        visibleCount++;
+                    } else {
+                        card.classList.add("d-none");
+                    }
+                });
+
+                if (emptySearch) {
+                    if (visibleCount === 0) {
+                        emptySearch.classList.remove("d-none");
+                    } else {
+                        emptySearch.classList.add("d-none");
+                    }
+                }
+            });
+        });
+    </script>
+}

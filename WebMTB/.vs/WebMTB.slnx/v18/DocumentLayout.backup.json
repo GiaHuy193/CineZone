@@ -1,0 +1,2251 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\bookings\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\bookings\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\bookings\\checkout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\bookings\\checkout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\bookings\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\bookings\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\bookingcombo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\bookingcombo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\service\\expiredbookingcleanupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\service\\expiredbookingcleanupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\cinemas\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\cinemas\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\controllers\\cinemascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\controllers\\cinemascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\dashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\dashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\shared\\components\\moviesearch\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\shared\\components\\moviesearch\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\shared\\_loginpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\shared\\_loginpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\scaffoldingreadme.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\scaffoldingreadme.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\showtime.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\showtime.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\seattype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\seattype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\seathold.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\seathold.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\seat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\seat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\review.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\review.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\priceconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\priceconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\moviegenre.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\moviegenre.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\movieactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\movieactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\actor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\actor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\movie.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\movie.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\genre.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\genre.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\favorite.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\favorite.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\combo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\combo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\cinemachain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\cinemachain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\login.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\login.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\confirmemailotp.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\confirmemailotp.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\confirmemailotp.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\confirmemailotp.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\resetpassword.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\resetpassword.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\verifyresetpasswordotp.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\verifyresetpasswordotp.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\logout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\logout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\verifyresetpasswordotp.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\verifyresetpasswordotp.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\accessdenied.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\accessdenied.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\forgotpassword.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\forgotpassword.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\confirmemail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\confirmemail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\register.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\register.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\service\\otpservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\service\\otpservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\forgotpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\forgotpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\resetpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\resetpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\resendemailconfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\resendemailconfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\forgotpasswordconfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\forgotpasswordconfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\externallogin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\externallogin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\confirmemailchange.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\confirmemailchange.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\registerconfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\registerconfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\loginwithrecoverycode.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\loginwithrecoverycode.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\loginwith2fa.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\loginwith2fa.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\lockout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\lockout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\bookings\\verifyticket.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\bookings\\verifyticket.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\bookings\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\bookings\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\movies\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\movies\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\movies\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\movies\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\movies\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\movies\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\movies\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\movies\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\controllers\\moviescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\controllers\\moviescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\movies\\import.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\movies\\import.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\viewcomponents\\moviesearchviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\viewcomponents\\moviesearchviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\promotions\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\promotions\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\contact\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\contact\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\policy\\cinemarules.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\policy\\cinemarules.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\policy\\member.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\policy\\member.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\policy\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\policy\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\policy\\terms.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\policy\\terms.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\policy\\faq.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\policy\\faq.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\policy\\payment.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\policy\\payment.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\policy\\bookingguide.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\policy\\bookingguide.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\wwwroot\\css\\cine-pages.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\wwwroot\\css\\cine-pages.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\controllers\\promotionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\controllers\\promotionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\controllers\\policycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\controllers\\policycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\controllers\\contactcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\controllers\\contactcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\movies\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\movies\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\resetpasswordconfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\resetpasswordconfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\manage\\changepassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\manage\\changepassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\shared\\_adminlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\shared\\_adminlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\_statusmessage.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\_statusmessage.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\rooms\\seatdesigner.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\rooms\\seatdesigner.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\seats\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\seats\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\manage\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\manage\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\showtimes\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\showtimes\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\showtimes\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\showtimes\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\showtimes\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\showtimes\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\rooms\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\rooms\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\rooms\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\rooms\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\controllers\\roomscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\controllers\\roomscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\rooms\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\rooms\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\cinemas\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\cinemas\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\cinemas\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\cinemas\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\cinemas\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\cinemas\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\users\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\users\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\cinemas\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\cinemas\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\controllers\\cinemascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\controllers\\cinemascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\manage\\_managenav.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\manage\\_managenav.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\bookings\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\bookings\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\bookings\\payments.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\bookings\\payments.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\manage\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\manage\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\account\\manage\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\account\\manage\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\service\\paypalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\service\\paypalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\service\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\service\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\hubs\\tickethub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\hubs\\tickethub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\rooms\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\rooms\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\controllers\\seatscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\controllers\\seatscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\cinema.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\cinema.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\controllers\\showtimescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\controllers\\showtimescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\movies\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\movies\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\admin\\views\\showtimes\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\admin\\views\\showtimes\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\ticket.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\ticket.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\views\\movies\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\views\\movies\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\data\\migrations\\20260522084556_agerating.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\data\\migrations\\20260522084556_agerating.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\controllers\\moviescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\controllers\\moviescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\data\\dbinitializer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\data\\dbinitializer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\areas\\identity\\pages\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\areas\\identity\\pages\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\models\\auditlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\models\\auditlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\data\\migrations\\applicationdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\data\\migrations\\applicationdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\data\\migrations\\20260416125334_coverimageurl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\data\\migrations\\20260416125334_coverimageurl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\data\\migrations\\20260527132320_addseathold.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\data\\migrations\\20260527132320_addseathold.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\data\\migrations\\20260527131839_seathold.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\data\\migrations\\20260527131839_seathold.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\data\\migrations\\20260530073221_seat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\data\\migrations\\20260530073221_seat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\data\\migrations\\20260619140620_renameexpireattoexpiresat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\data\\migrations\\20260619140620_renameexpireattoexpiresat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|c:\\users\\huy\\desktop\\webmtb\\webmtb\\webmtb\\data\\migrations\\20260619134714_addbookingexpiresat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{800E5640-EAFB-1A2E-E214-86F675D31C52}|WebMTB\\WebMTB.csproj|solutionrelative:webmtb\\data\\migrations\\20260619134714_addbookingexpiresat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 229,
+          "SelectedChildIndex": 11,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Program.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Program.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Program.cs",
+              "RelativeToolTip": "WebMTB\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAD4vxcAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T14:48:04.417Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Checkout.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Bookings\\Checkout.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Bookings\\Checkout.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Bookings\\Checkout.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Bookings\\Checkout.cshtml",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAIwGMAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-03T12:40:36.938Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "BookingCombo.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\BookingCombo.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\BookingCombo.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\BookingCombo.cs",
+              "RelativeToolTip": "WebMTB\\Models\\BookingCombo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:13:36.239Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Booking.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Booking.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\Booking.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Booking.cs",
+              "RelativeToolTip": "WebMTB\\Models\\Booking.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAmwAsAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:12:14.334Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Bookings\\Details.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Bookings\\Details.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Bookings\\Details.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Bookings\\Details.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-22T09:18:51.656Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BookingsController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\BookingsController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Controllers\\BookingsController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\BookingsController.cs",
+              "RelativeToolTip": "WebMTB\\Controllers\\BookingsController.cs",
+              "ViewState": "AgIAAIQEAAAAAAAAAAAUwJ4EAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-21T04:28:55.042Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Bookings\\Create.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Bookings\\Create.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Bookings\\Create.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Bookings\\Create.cshtml",
+              "ViewState": "AgIAAPoFAAAAAAAAAAAYwCAGAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-21T05:58:40.878Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ExpiredBookingCleanupService.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Service\\ExpiredBookingCleanupService.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Service\\ExpiredBookingCleanupService.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Service\\ExpiredBookingCleanupService.cs",
+              "RelativeToolTip": "WebMTB\\Service\\ExpiredBookingCleanupService.cs",
+              "ViewState": "AgIAADUAAAAAAAAAAAAAAEkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-19T13:56:17.594Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 136,
+              "Title": "20260619140620_RenameExpireAtToExpiresAt.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260619140620_RenameExpireAtToExpiresAt.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Data\\Migrations\\20260619140620_RenameExpireAtToExpiresAt.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260619140620_RenameExpireAtToExpiresAt.cs",
+              "RelativeToolTip": "WebMTB\\Data\\Migrations\\20260619140620_RenameExpireAtToExpiresAt.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-19T14:06:21.16Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 137,
+              "Title": "20260619134714_AddBookingExpiresAt.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260619134714_AddBookingExpiresAt.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Data\\Migrations\\20260619134714_AddBookingExpiresAt.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260619134714_AddBookingExpiresAt.cs",
+              "RelativeToolTip": "WebMTB\\Data\\Migrations\\20260619134714_AddBookingExpiresAt.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-19T13:47:15.429Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Cinemas\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Cinemas\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Cinemas\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Cinemas\\Index.cshtml",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-27T14:20:44.046Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CinemasController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\CinemasController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Controllers\\CinemasController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\CinemasController.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Controllers\\CinemasController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwBwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-27T14:19:43.175Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "DashboardController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\DashboardController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Controllers\\DashboardController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\DashboardController.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Controllers\\DashboardController.cs",
+              "ViewState": "AgIAAJMBAAAAAAAAAAAYwLkBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-02T13:33:22.017Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Dashboard\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Dashboard\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Dashboard\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Dashboard\\Index.cshtml",
+              "ViewState": "AgIAAH8FAAAAAAAAAAAAAKEFAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-02T13:37:58.828Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Default.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Shared\\Components\\MovieSearch\\Default.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Shared\\Components\\MovieSearch\\Default.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Shared\\Components\\MovieSearch\\Default.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Shared\\Components\\MovieSearch\\Default.cshtml",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAYwHEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-14T05:07:38.887Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "ScaffoldingReadMe.txt",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\ScaffoldingReadMe.txt",
+              "RelativeDocumentMoniker": "WebMTB\\ScaffoldingReadMe.txt",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\ScaffoldingReadMe.txt",
+              "RelativeToolTip": "WebMTB\\ScaffoldingReadMe.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2026-04-15T04:42:07.333Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "_LoginPartial.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Shared\\_LoginPartial.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Shared\\_LoginPartial.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Shared\\_LoginPartial.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Shared\\_LoginPartial.cshtml",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAYwGoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-14T09:57:37.175Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAuwA8AAABOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-05T05:06:05.369Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\Login.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Login.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\Login.cshtml",
+              "ViewState": "AgIAAJsCAAAAAAAAAAAcwK8CAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-15T04:54:59.49Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Showtime.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Showtime.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\Showtime.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Showtime.cs",
+              "RelativeToolTip": "WebMTB\\Models\\Showtime.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:11:44.369Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "SeatType.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\SeatType.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\SeatType.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\SeatType.cs",
+              "RelativeToolTip": "WebMTB\\Models\\SeatType.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:18:36.386Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "SeatHold.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\SeatHold.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\SeatHold.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\SeatHold.cs",
+              "RelativeToolTip": "WebMTB\\Models\\SeatHold.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-27T13:14:10.846Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Seat.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Seat.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\Seat.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Seat.cs",
+              "RelativeToolTip": "WebMTB\\Models\\Seat.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAiwBUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:11:13.958Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Room.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Room.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\Room.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Room.cs",
+              "RelativeToolTip": "WebMTB\\Models\\Room.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:10:43.39Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Review.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Review.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\Review.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Review.cs",
+              "RelativeToolTip": "WebMTB\\Models\\Review.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAQwBcAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T06:26:16.01Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "PriceConfig.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\PriceConfig.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\PriceConfig.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\PriceConfig.cs",
+              "RelativeToolTip": "WebMTB\\Models\\PriceConfig.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:19:13.526Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "MovieGenre.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\MovieGenre.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\MovieGenre.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\MovieGenre.cs",
+              "RelativeToolTip": "WebMTB\\Models\\MovieGenre.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:07:16.314Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "MovieActor.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\MovieActor.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\MovieActor.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\MovieActor.cs",
+              "RelativeToolTip": "WebMTB\\Models\\MovieActor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:17:48.467Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "Actor.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Actor.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\Actor.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Actor.cs",
+              "RelativeToolTip": "WebMTB\\Models\\Actor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:17:12.596Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "Movie.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Movie.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\Movie.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Movie.cs",
+              "RelativeToolTip": "WebMTB\\Models\\Movie.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAYwBoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T06:21:21.942Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "Genre.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Genre.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\Genre.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Genre.cs",
+              "RelativeToolTip": "WebMTB\\Models\\Genre.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T06:23:18.8Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "Favorite.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Favorite.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\Favorite.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Favorite.cs",
+              "RelativeToolTip": "WebMTB\\Models\\Favorite.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:19:38.335Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "ErrorViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\ErrorViewModel.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\ErrorViewModel.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\ErrorViewModel.cs",
+              "RelativeToolTip": "WebMTB\\Models\\ErrorViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T14:44:57.651Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "Combo.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Combo.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\Combo.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Combo.cs",
+              "RelativeToolTip": "WebMTB\\Models\\Combo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:13:14.034Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "CinemaChain.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\CinemaChain.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\CinemaChain.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\CinemaChain.cs",
+              "RelativeToolTip": "WebMTB\\Models\\CinemaChain.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:18:16.125Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "Login.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Login.cshtml.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\Login.cshtml.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Login.cshtml.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\Login.cshtml.cs",
+              "ViewState": "AgIAAIoAAAAAAAAAAAAcwLAAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-16T08:26:27.753Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "VerifyResetPasswordOtp.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\VerifyResetPasswordOtp.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\VerifyResetPasswordOtp.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\VerifyResetPasswordOtp.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\VerifyResetPasswordOtp.cshtml",
+              "ViewState": "AgIAABEAAAAAAAAAAAAIwDkAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-15T07:31:15.987Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "ConfirmEmailOtp.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmailOtp.cshtml.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmailOtp.cshtml.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmailOtp.cshtml.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmailOtp.cshtml.cs",
+              "ViewState": "AgIAAG8AAAAAAAAAAAAAAIMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-15T07:24:17.131Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "ResetPassword.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ResetPassword.cshtml.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\ResetPassword.cshtml.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ResetPassword.cshtml.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\ResetPassword.cshtml.cs",
+              "ViewState": "AgIAAFkAAAAAAAAAAAAMwGwAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-15T06:33:53.759Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "ConfirmEmail.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmail.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmail.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmail.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmail.cshtml",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAADAAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-16T09:12:21.627Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "ConfirmEmailOtp.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmailOtp.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmailOtp.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmailOtp.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmailOtp.cshtml",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAAEQAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-15T07:26:06.724Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "VerifyResetPasswordOtp.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\VerifyResetPasswordOtp.cshtml.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\VerifyResetPasswordOtp.cshtml.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\VerifyResetPasswordOtp.cshtml.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\VerifyResetPasswordOtp.cshtml.cs",
+              "ViewState": "AgIAACwAAAAAAAAAAAAIwFQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-15T07:31:59.549Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "ForgotPassword.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ForgotPassword.cshtml.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\ForgotPassword.cshtml.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ForgotPassword.cshtml.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\ForgotPassword.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-09T15:43:59.565Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "Logout.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Logout.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\Logout.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Logout.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\Logout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-15T06:47:39.63Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "AccessDenied.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\AccessDenied.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\AccessDenied.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\AccessDenied.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\AccessDenied.cshtml",
+              "ViewState": "AgIAAMYAAAAAAAAAAAAYwOwAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-08T06:40:19.349Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "OtpService.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Service\\OtpService.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Service\\OtpService.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Service\\OtpService.cs",
+              "RelativeToolTip": "WebMTB\\Service\\OtpService.cs",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAIwGwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-15T07:12:54.699Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "ForgotPassword.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ForgotPassword.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\ForgotPassword.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ForgotPassword.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\ForgotPassword.cshtml",
+              "ViewState": "AgIAALkCAAAAAAAAAAAswOECAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T14:54:17.57Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "Register.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Register.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\Register.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Register.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\Register.cshtml",
+              "ViewState": "AgIAAA8DAAAAAAAAAAAYwP4CAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-15T04:58:33.095Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "Register.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Register.cshtml.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\Register.cshtml.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Register.cshtml.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\Register.cshtml.cs",
+              "ViewState": "AgIAAHkAAAAAAAAAAAD4v5wAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-16T08:28:26.444Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "ResetPassword.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ResetPassword.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\ResetPassword.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ResetPassword.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\ResetPassword.cshtml",
+              "ViewState": "AgIAAIkDAAAAAAAAAAAYwK8DAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T15:15:39.859Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "ResendEmailConfirmation.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ResendEmailConfirmation.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\ResendEmailConfirmation.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ResendEmailConfirmation.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\ResendEmailConfirmation.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T15:16:03.024Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 49,
+              "Title": "ForgotPasswordConfirmation.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ForgotPasswordConfirmation.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\ForgotPasswordConfirmation.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ForgotPasswordConfirmation.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\ForgotPasswordConfirmation.cshtml",
+              "ViewState": "AgIAAMwAAAAAAAAAAAAAAPIAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T14:55:05.249Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 50,
+              "Title": "ExternalLogin.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ExternalLogin.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\ExternalLogin.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ExternalLogin.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\ExternalLogin.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T14:54:53.621Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 51,
+              "Title": "ConfirmEmailChange.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmailChange.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmailChange.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmailChange.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\ConfirmEmailChange.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T14:54:47.757Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 52,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAIgJAAAAAAAAAAAIwGYJAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-05T05:03:11.317Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 53,
+              "Title": "RegisterConfirmation.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\RegisterConfirmation.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\RegisterConfirmation.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\RegisterConfirmation.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\RegisterConfirmation.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T15:16:04.42Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 54,
+              "Title": "LoginWithRecoveryCode.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\LoginWithRecoveryCode.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\LoginWithRecoveryCode.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\LoginWithRecoveryCode.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\LoginWithRecoveryCode.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T15:16:08.872Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 55,
+              "Title": "LoginWith2fa.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\LoginWith2fa.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\LoginWith2fa.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\LoginWith2fa.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\LoginWith2fa.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T15:16:20.19Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 56,
+              "Title": "Lockout.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Lockout.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\Lockout.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Lockout.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\Lockout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T15:12:16.946Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 61,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Movies\\Edit.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Movies\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Movies\\Edit.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Movies\\Edit.cshtml",
+              "ViewState": "AgIAADkDAAAAAAAAAAAYwF8DAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-01T04:30:29.257Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 58,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Bookings\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Bookings\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Bookings\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Bookings\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMkDAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-02T15:25:47.787Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 57,
+              "Title": "VerifyTicket.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Bookings\\VerifyTicket.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Bookings\\VerifyTicket.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Bookings\\VerifyTicket.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Bookings\\VerifyTicket.cshtml",
+              "ViewState": "AgIAAPwAAAAAAAAAAAAYwCIBAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-14T14:02:18.521Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 59,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Movies\\Details.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Movies\\Details.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Movies\\Details.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Movies\\Details.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAANUAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-01T04:30:35.071Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 60,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Movies\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Movies\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Movies\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Movies\\Index.cshtml",
+              "ViewState": "AgIAALMDAAAAAAAAAAAYwM4DAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-03T09:52:52.34Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 62,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Movies\\Create.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Movies\\Create.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Movies\\Create.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Movies\\Create.cshtml",
+              "ViewState": "AgIAACUDAAAAAAAAAAAYwEsDAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-01T04:15:52.054Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 63,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "WebMTB\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAYwHEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-16T09:52:36.863Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 64,
+              "Title": "MoviesController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\MoviesController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Controllers\\MoviesController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\MoviesController.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Controllers\\MoviesController.cs",
+              "ViewState": "AgIAAFwBAAAAAAAAAAAQwIEBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T14:49:02.062Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 65,
+              "Title": "Import.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Movies\\Import.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Movies\\Import.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Movies\\Import.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Movies\\Import.cshtml",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAIwEYAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-14T06:18:31.779Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 66,
+              "Title": "MovieSearchViewComponent.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\ViewComponents\\MovieSearchViewComponent.cs",
+              "RelativeDocumentMoniker": "WebMTB\\ViewComponents\\MovieSearchViewComponent.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\ViewComponents\\MovieSearchViewComponent.cs",
+              "RelativeToolTip": "WebMTB\\ViewComponents\\MovieSearchViewComponent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-14T05:02:31.008Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 68,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Contact\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Contact\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Contact\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Contact\\Index.cshtml",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAYwEMAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-10T12:40:36.629Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 67,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Promotions\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Promotions\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Promotions\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Promotions\\Index.cshtml",
+              "ViewState": "AgIAABQAAAAAAAAAAAAYwDoAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-10T12:40:47.513Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 69,
+              "Title": "CinemaRules.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\CinemaRules.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Policy\\CinemaRules.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\CinemaRules.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Policy\\CinemaRules.cshtml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAYwCkAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-10T12:39:38.998Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 70,
+              "Title": "Member.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\Member.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Policy\\Member.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\Member.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Policy\\Member.cshtml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAYwCkAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-10T12:39:28.775Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 71,
+              "Title": "Privacy.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\Privacy.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Policy\\Privacy.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\Privacy.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Policy\\Privacy.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-10T12:39:18.787Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 72,
+              "Title": "Terms.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\Terms.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Policy\\Terms.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\Terms.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Policy\\Terms.cshtml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAYwCkAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-10T12:39:04.547Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 73,
+              "Title": "FAQ.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\FAQ.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Policy\\FAQ.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\FAQ.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Policy\\FAQ.cshtml",
+              "ViewState": "AgIAABIAAAAAAAAAAAAYwDgAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-10T12:38:52.545Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 74,
+              "Title": "Payment.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\Payment.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Policy\\Payment.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\Payment.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Policy\\Payment.cshtml",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAYwDMAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-10T12:38:39.86Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 75,
+              "Title": "BookingGuide.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\BookingGuide.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Policy\\BookingGuide.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Policy\\BookingGuide.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Policy\\BookingGuide.cshtml",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAYwDMAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-10T12:38:28.642Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 76,
+              "Title": "cine-pages.css",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\wwwroot\\css\\cine-pages.css",
+              "RelativeDocumentMoniker": "WebMTB\\wwwroot\\css\\cine-pages.css",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\wwwroot\\css\\cine-pages.css",
+              "RelativeToolTip": "WebMTB\\wwwroot\\css\\cine-pages.css",
+              "ViewState": "AgIAAHUBAAAAAAAAAAAswJ0BAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-06-10T13:16:12.784Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 77,
+              "Title": "PromotionsController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\PromotionsController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Controllers\\PromotionsController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\PromotionsController.cs",
+              "RelativeToolTip": "WebMTB\\Controllers\\PromotionsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-10T12:37:48.291Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 78,
+              "Title": "PolicyController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\PolicyController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Controllers\\PolicyController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\PolicyController.cs",
+              "RelativeToolTip": "WebMTB\\Controllers\\PolicyController.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAmwCkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-10T12:36:59.304Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 79,
+              "Title": "ContactController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\ContactController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Controllers\\ContactController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\ContactController.cs",
+              "RelativeToolTip": "WebMTB\\Controllers\\ContactController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-10T12:37:34.41Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 80,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Movies\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Movies\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Movies\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Movies\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-05T09:24:30.635Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 81,
+              "Title": "ResetPasswordConfirmation.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ResetPasswordConfirmation.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\ResetPasswordConfirmation.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\ResetPasswordConfirmation.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\ResetPasswordConfirmation.cshtml",
+              "ViewState": "AgIAAM0AAAAAAAAAAAAcwPMAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T15:15:50.998Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 82,
+              "Title": "ChangePassword.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\ChangePassword.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\ChangePassword.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\ChangePassword.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\ChangePassword.cshtml",
+              "ViewState": "AgIAANMBAAAAAAAAAAAIwPEBAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T15:18:53.038Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 83,
+              "Title": "_AdminLayout.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Shared\\_AdminLayout.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Shared\\_AdminLayout.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Shared\\_AdminLayout.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Shared\\_AdminLayout.cshtml",
+              "ViewState": "AgIAAGYAAAAAAAAAAAAYwI4BAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-03T09:24:42.891Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 84,
+              "Title": "_StatusMessage.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\_StatusMessage.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\_StatusMessage.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\_StatusMessage.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\_StatusMessage.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-08T06:40:13.168Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 85,
+              "Title": "_ViewImports.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\_ViewImports.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\_ViewImports.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\_ViewImports.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\_ViewImports.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-08T06:40:17.024Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 86,
+              "Title": "SeatDesigner.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Rooms\\SeatDesigner.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Rooms\\SeatDesigner.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Rooms\\SeatDesigner.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Rooms\\SeatDesigner.cshtml",
+              "ViewState": "AgIAAKADAAAAAAAAAAAYwNUDAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-30T07:46:59.956Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 87,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Seats\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Seats\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Seats\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Seats\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAE8BAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-27T13:55:34.148Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 90,
+              "Title": "_ViewImports.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\_ViewImports.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\_ViewImports.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\_ViewImports.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\_ViewImports.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-03T09:22:37.119Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 88,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\_Layout.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-03T14:32:47.265Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 89,
+              "Title": "_ViewStart.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\_ViewStart.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\_ViewStart.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\_ViewStart.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\_ViewStart.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-03T09:22:01.845Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 91,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Showtimes\\Delete.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Showtimes\\Delete.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Showtimes\\Delete.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Showtimes\\Delete.cshtml",
+              "ViewState": "AgIAABgCAAAAAAAAAAAYwD4CAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-27T13:56:34.506Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 92,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Showtimes\\Edit.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Showtimes\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Showtimes\\Edit.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Showtimes\\Edit.cshtml",
+              "ViewState": "AgIAAKQCAAAAAAAAAAAYwMoCAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-27T13:56:23.524Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 93,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Showtimes\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Showtimes\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Showtimes\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Showtimes\\Index.cshtml",
+              "ViewState": "AgIAAC8BAAAAAAAAAAAAADoBAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-27T13:55:59.648Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 94,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Rooms\\Create.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Rooms\\Create.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Rooms\\Create.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Rooms\\Create.cshtml",
+              "ViewState": "AgIAADECAAAAAAAAAAAYwFcCAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-27T13:54:57.677Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 95,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Rooms\\Edit.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Rooms\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Rooms\\Edit.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Rooms\\Edit.cshtml",
+              "ViewState": "AgIAACcCAAAAAAAAAAAYwE0CAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-08T13:07:39.544Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 97,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Rooms\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Rooms\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Rooms\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Rooms\\Index.cshtml",
+              "ViewState": "AgIAAJIDAAAAAAAAAAAYwLgDAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-27T13:54:43.288Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 98,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Cinemas\\Delete.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Cinemas\\Delete.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Cinemas\\Delete.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Cinemas\\Delete.cshtml",
+              "ViewState": "AgIAADQCAAAAAAAAAAAYwFoCAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-27T14:22:06.852Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 99,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Cinemas\\Edit.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Cinemas\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Cinemas\\Edit.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Cinemas\\Edit.cshtml",
+              "ViewState": "AgIAAB0CAAAAAAAAAAAYwEMCAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-27T14:21:43.861Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 100,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Cinemas\\Create.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Cinemas\\Create.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Cinemas\\Create.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Cinemas\\Create.cshtml",
+              "ViewState": "AgIAANgBAAAAAAAAAAAYwP4BAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-27T14:21:11.047Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 96,
+              "Title": "RoomsController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\RoomsController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Controllers\\RoomsController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\RoomsController.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Controllers\\RoomsController.cs",
+              "ViewState": "AgIAADIBAAAAAAAAAAAUwEkBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-27T13:53:27.061Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 101,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Users\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Users\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Users\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Users\\Index.cshtml",
+              "ViewState": "AgIAAIADAAAAAAAAAAAYwKYDAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-02T15:26:33.618Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 102,
+              "Title": "BookingsController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\BookingsController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Controllers\\BookingsController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\BookingsController.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Controllers\\BookingsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-02T15:24:40.696Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 103,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Cinemas\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Cinemas\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Cinemas\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Cinemas\\Index.cshtml",
+              "ViewState": "AgIAAG0DAAAAAAAAAAAYwJMDAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-08T08:51:34.965Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 105,
+              "Title": "_ManageNav.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\_ManageNav.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\_ManageNav.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\_ManageNav.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\_ManageNav.cshtml",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAC4AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-03T13:53:17.094Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 108,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\Index.cshtml",
+              "ViewState": "AgIAAOQCAAAAAAAAAAAYwBYDAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-03T13:56:04.588Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 104,
+              "Title": "CinemasController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\CinemasController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Controllers\\CinemasController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\CinemasController.cs",
+              "RelativeToolTip": "WebMTB\\Controllers\\CinemasController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-08T08:50:41.137Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 107,
+              "Title": "Payments.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Bookings\\Payments.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Bookings\\Payments.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Bookings\\Payments.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Bookings\\Payments.cshtml",
+              "ViewState": "AgIAAHYCAAAAAAAAAAAYwJwCAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-08T07:28:13.32Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 106,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Bookings\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Bookings\\Index.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Bookings\\Index.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Bookings\\Index.cshtml",
+              "ViewState": "AgIAAG4AAAAAAAAAAAAIwIoAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-30T08:59:04.498Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 109,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\Index.cshtml.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\Account\\Manage\\Index.cshtml.cs",
+              "ViewState": "AgIAAGcAAAAAAAAAAAAYwI0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T14:16:42.844Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 110,
+              "Title": "PayPalService.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Service\\PayPalService.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Service\\PayPalService.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Service\\PayPalService.cs",
+              "RelativeToolTip": "WebMTB\\Service\\PayPalService.cs",
+              "ViewState": "AgIAAI0AAAAAAAAAAAAIwLUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T12:24:02.648Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 112,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\appsettings.json",
+              "RelativeDocumentMoniker": "WebMTB\\appsettings.json",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\appsettings.json",
+              "RelativeToolTip": "WebMTB\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-01T14:32:25.626Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 113,
+              "Title": "TicketHub.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Hubs\\TicketHub.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Hubs\\TicketHub.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Hubs\\TicketHub.cs",
+              "RelativeToolTip": "WebMTB\\Hubs\\TicketHub.cs",
+              "ViewState": "AgIAAIAAAAAAAAAAAAAUwJcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-27T02:49:43.956Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 111,
+              "Title": "EmailService.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Service\\EmailService.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Service\\EmailService.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Service\\EmailService.cs",
+              "RelativeToolTip": "WebMTB\\Service\\EmailService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-16T08:20:53.321Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 114,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Controllers\\UsersController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Controllers\\UsersController.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAIwGoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-02T15:24:58.499Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 116,
+              "Title": "SeatsController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\SeatsController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Controllers\\SeatsController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\SeatsController.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Controllers\\SeatsController.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAgwDQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-27T13:53:42.557Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 115,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Rooms\\Details.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Rooms\\Details.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Rooms\\Details.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Rooms\\Details.cshtml",
+              "ViewState": "AgIAAMkAAAAAAAAAAAAIwOAAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-27T13:55:07.829Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 135,
+              "Title": "20260530073221_seat.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260530073221_seat.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Data\\Migrations\\20260530073221_seat.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260530073221_seat.cs",
+              "RelativeToolTip": "WebMTB\\Data\\Migrations\\20260530073221_seat.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-30T07:32:21.56Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 117,
+              "Title": "Cinema.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Cinema.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\Cinema.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Cinema.cs",
+              "RelativeToolTip": "WebMTB\\Models\\Cinema.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:10:11.904Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 118,
+              "Title": "ShowtimesController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\ShowtimesController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Controllers\\ShowtimesController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Controllers\\ShowtimesController.cs",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Controllers\\ShowtimesController.cs",
+              "ViewState": "AgIAAGoAAAAAAAAAAAAIwJIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-27T13:53:54.035Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 119,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Movies\\Delete.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Movies\\Delete.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Movies\\Delete.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Movies\\Delete.cshtml",
+              "ViewState": "AgIAAKoCAAAAAAAAAAAYwMACAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-01T04:29:41.589Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 120,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Showtimes\\Create.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Admin\\Views\\Showtimes\\Create.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Admin\\Views\\Showtimes\\Create.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Admin\\Views\\Showtimes\\Create.cshtml",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAIwEUAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-27T13:56:12.402Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 121,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "WebMTB\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAIwGgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T06:26:52.395Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 122,
+              "Title": "Ticket.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Ticket.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\Ticket.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\Ticket.cs",
+              "RelativeToolTip": "WebMTB\\Models\\Ticket.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:12:51.677Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 133,
+              "Title": "20260527132320_AddSeatHold.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260527132320_AddSeatHold.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Data\\Migrations\\20260527132320_AddSeatHold.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260527132320_AddSeatHold.cs",
+              "RelativeToolTip": "WebMTB\\Data\\Migrations\\20260527132320_AddSeatHold.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-27T13:23:20.802Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 134,
+              "Title": "20260527131839_seathold.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260527131839_seathold.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Data\\Migrations\\20260527131839_seathold.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260527131839_seathold.cs",
+              "RelativeToolTip": "WebMTB\\Data\\Migrations\\20260527131839_seathold.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-27T13:18:40.097Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 123,
+              "Title": "site.css",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\wwwroot\\css\\site.css",
+              "RelativeDocumentMoniker": "WebMTB\\wwwroot\\css\\site.css",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "WebMTB\\wwwroot\\css\\site.css",
+              "ViewState": "AgIAAAQDAAAAAAAAAAAUwBcDAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-04-05T05:05:30.439Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 124,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Movies\\Details.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Views\\Movies\\Details.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Views\\Movies\\Details.cshtml",
+              "RelativeToolTip": "WebMTB\\Views\\Movies\\Details.cshtml",
+              "ViewState": "AgIAAOkAAAAAAAAAAAAYwPIAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-05T09:43:54.014Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 125,
+              "Title": "20260522084556_agerating.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260522084556_agerating.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Data\\Migrations\\20260522084556_agerating.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260522084556_agerating.cs",
+              "RelativeToolTip": "WebMTB\\Data\\Migrations\\20260522084556_agerating.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-22T08:45:56.363Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 126,
+              "Title": "MoviesController.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\MoviesController.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Controllers\\MoviesController.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Controllers\\MoviesController.cs",
+              "RelativeToolTip": "WebMTB\\Controllers\\MoviesController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T09:15:49.56Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 127,
+              "Title": "DbInitializer.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\DbInitializer.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Data\\DbInitializer.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\DbInitializer.cs",
+              "RelativeToolTip": "WebMTB\\Data\\DbInitializer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-03T09:36:29.654Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 128,
+              "Title": "_ViewStart.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\_ViewStart.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\_ViewStart.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\_ViewStart.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\_ViewStart.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-01T09:14:31.466Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 129,
+              "Title": "_ViewImports.cshtml",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\_ViewImports.cshtml",
+              "RelativeDocumentMoniker": "WebMTB\\Areas\\Identity\\Pages\\_ViewImports.cshtml",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Areas\\Identity\\Pages\\_ViewImports.cshtml",
+              "RelativeToolTip": "WebMTB\\Areas\\Identity\\Pages\\_ViewImports.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-01T09:16:47.085Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 132,
+              "Title": "20260416125334_CoverImageUrl.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260416125334_CoverImageUrl.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Data\\Migrations\\20260416125334_CoverImageUrl.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\20260416125334_CoverImageUrl.cs",
+              "RelativeToolTip": "WebMTB\\Data\\Migrations\\20260416125334_CoverImageUrl.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-16T12:53:34.5Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 130,
+              "Title": "AuditLog.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\AuditLog.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Models\\AuditLog.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Models\\AuditLog.cs",
+              "RelativeToolTip": "WebMTB\\Models\\AuditLog.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:32:48.74Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 131,
+              "Title": "ApplicationDbContextModelSnapshot.cs",
+              "DocumentMoniker": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "RelativeDocumentMoniker": "WebMTB\\Data\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "ToolTip": "C:\\Users\\HUY\\Desktop\\WebMTB\\WebMTB\\WebMTB\\Data\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "RelativeToolTip": "WebMTB\\Data\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-05T04:59:19.402Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

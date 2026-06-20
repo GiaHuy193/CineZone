@@ -1,0 +1,204 @@
+﻿@inject SignInManager<IdentityUser> SignInManager
+
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+
+<div class="account-nav-card">
+    <div class="account-nav-header">
+        <div class="account-nav-avatar">
+            <span class="material-symbols-outlined">local_activity</span>
+        </div>
+
+        <div>
+            <h5>Tài khoản</h5>
+            <p>Trung tâm thành viên CineZone</p>
+        </div>
+    </div>
+
+    <ul class="account-nav-list">
+        <li>
+            <a class="account-nav-link @ManageNavPages.IndexNavClass(ViewContext)"
+               id="profile"
+               asp-page="./Index">
+                <span class="material-symbols-outlined">person</span>
+                <span>Hồ sơ</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="account-nav-link"
+               asp-area=""
+               asp-controller="Bookings"
+               asp-action="Index">
+                <span class="material-symbols-outlined">confirmation_number</span>
+                <span>Vé của tôi</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="account-nav-link"
+               asp-area=""
+               asp-controller="Bookings"
+               asp-action="Payments">
+                <span class="material-symbols-outlined">payments</span>
+                <span>Thanh toán</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="account-nav-link disabled-link"
+               href="javascript:void(0)">
+                <span class="material-symbols-outlined">local_offer</span>
+                <span>Ưu đãi</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="account-nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)"
+               id="change-password"
+               asp-page="./ChangePassword">
+                <span class="material-symbols-outlined">shield_lock</span>
+                <span>Bảo mật</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="account-nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)"
+               id="personal-data"
+               asp-page="./PersonalData">
+                <span class="material-symbols-outlined">database</span>
+                <span>Dữ liệu</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<style>
+    .account-nav-card {
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(18,18,22,0.94);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.35);
+        overflow: hidden;
+        color: #fff;
+    }
+
+    .account-nav-header {
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: radial-gradient(circle at top left, rgba(229,9,20,0.28), transparent 38%), linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.018));
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .account-nav-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 19px;
+        background: linear-gradient(135deg, #ff3131, #e50914 55%, #7c050b);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 14px 30px rgba(229,9,20,0.28);
+        flex-shrink: 0;
+    }
+
+        .account-nav-avatar span {
+            color: #fff;
+            font-size: 34px;
+        }
+
+    .account-nav-header h5 {
+        margin: 0 0 4px;
+        font-weight: 950;
+        letter-spacing: -0.03em;
+    }
+
+    .account-nav-header p {
+        margin: 0;
+        color: #999;
+        font-size: 0.84rem;
+        font-weight: 600;
+    }
+
+    .account-nav-list {
+        list-style: none;
+        padding: 14px;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+        .account-nav-list li {
+            margin: 0;
+            padding: 0;
+        }
+
+    .account-nav-link {
+        min-height: 50px;
+        padding: 0 15px;
+        border-radius: 17px;
+        color: #bdbdbd;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+        font-weight: 850;
+    }
+
+        .account-nav-link span.material-symbols-outlined {
+            color: #ff5964;
+            font-size: 24px;
+        }
+
+        .account-nav-link:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.1);
+            transform: translateX(4px);
+            text-decoration: none;
+        }
+
+        .account-nav-link.active {
+            color: #fff;
+            background: rgba(229,9,20,0.16);
+            border-color: rgba(229,9,20,0.38);
+            box-shadow: inset 4px 0 0 #e50914;
+        }
+
+            .account-nav-link.active span.material-symbols-outlined {
+                color: #fff;
+            }
+
+    .disabled-link {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+
+        .disabled-link:hover {
+            transform: none;
+            background: rgba(255,255,255,0.035);
+        }
+
+    @@media (max-width: 991.98px) {
+        .account-nav-card {
+            margin-bottom: 24px;
+        }
+
+        .account-nav-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .account-nav-list {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

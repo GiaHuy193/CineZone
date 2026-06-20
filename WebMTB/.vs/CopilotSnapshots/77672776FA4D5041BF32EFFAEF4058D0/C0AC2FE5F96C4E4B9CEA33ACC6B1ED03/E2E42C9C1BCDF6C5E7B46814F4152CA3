@@ -1,0 +1,115 @@
+﻿@model WebMTB.Models.Movie
+
+@{
+    ViewData["Title"] = "Chi tiết phim " + Model.Title;
+}
+
+@functions {
+    // Link cho Video chạy nền (Mute, Autoplay, No Controls)
+    public string GetBackgroundVideoUrl(string url)
+    {
+        if (string.IsNullOrEmpty(url)) return "";
+        var videoId = "";
+        if (url.Contains("watch?v=")) videoId = url.Split("v=")[1].Split("&")[0];
+        else if (url.Contains("youtu.be/")) videoId = url.Split("/").Last();
+        return $"https://www.youtube.com/embed/{videoId}?autoplay=1&mute=1&loop=1&playlist={videoId}&controls=0&modestbranding=1&rel=0";
+    }
+
+    // Link cho Video xem Full (Có âm thanh, có nút điều khiển)
+    public string GetFullVideoUrl(string url)
+    {
+        if (string.IsNullOrEmpty(url)) return "";
+        var videoId = "";
+        if (url.Contains("watch?v=")) videoId = url.Split("v=")[1].Split("&")[0];
+        else if (url.Contains("youtu.be/")) videoId = url.Split("/").Last();
+        return $"https://www.youtube.com/embed/{videoId}?autoplay=1&controls=1";
+    }
+}
+
+<div class="details-page pb-5">
+    <div class="trailer-hero" data-bs-toggle="modal" data-bs-target="#videoModal">
+        <iframe src="@GetBackgroundVideoUrl(Model.TrailerUrl)" frameborder="0"></iframe>
+        
+        <div class="trailer-clickable-overlay">
+            <div class="play-hint">
+                <div class="bg-danger rounded-circle d-inline-flex align-items-center justify-content-center shadow-lg" style="width: 80px; height: 80px;">
+                    <span class="material-symbols-outlined text-white fs-1">play_arrow</span>
+                </div>
+                <p class="text-white fw-bold mt-2 text-uppercase tracking-wider">Nhấn để xem Full Trailer</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container details-content">
+        <div class="row g-5">
+            <div class="col-md-4 col-lg-3">
+                <div class="poster-box mx-auto ms-md-0">
+                    <img src="@Model.ImageUrl" alt="Poster">
+                </div>
+                <div class="mt-4 d-grid gap-2">
+                    <a asp-action="Bookings" asp-route-id="@Model.Id" class="btn btn-danger fw-bold py-2">ĐẶT VÉ NGAY</a>
+                    <a asp-action="Index" class="btn btn-outline-light py-2">QUAY LẠI</a>
+                </div>
+            </div>
+
+            <div class="col-md-8 col-lg-9 mt-md-5">
+                <h1 class="display-3 fw-bolder text-white mb-2">@Model.Title</h1>
+                <div class="d-flex align-items-center gap-3 mb-4 fs-5 text-warning fw-bold">
+                    <span>⭐ @Model.Rating/10</span>
+                    <span class="text-white-50 small">| @Model.Duration Phút | @Model.ReleaseDate.Year</span>
+                </div>
+                
+                <p class="text-secondary fs-5 lh-lg mb-5">@Model.Description</p>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <span class="text-muted small text-uppercase d-block mb-1">Đạo diễn</span>
+                            <span class="text-white fs-5">@Model.Director</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <span class="text-muted small text-uppercase d-block mb-1">Diễn viên</span>
+                            <span class="text-white fs-5">@Model.Cast</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white small">Trailer: @Model.Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe id="fullVideoFrame" src="" title="YouTube video player" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var videoModal = document.getElementById('videoModal');
+        var fullVideoFrame = document.getElementById('fullVideoFrame');
+        var fullUrl = "@GetFullVideoUrl(Model.TrailerUrl)";
+
+        // Khi mở modal thì gán link full có tiếng vào
+        videoModal.addEventListener('show.bs.modal', function () {
+            fullVideoFrame.src = fullUrl;
+        });
+
+        // Khi đóng modal thì xóa link để dừng video (tránh tiếng vẫn kêu)
+        videoModal.addEventListener('hide.bs.modal', function () {
+            fullVideoFrame.src = "";
+        });
+    </script>
+}

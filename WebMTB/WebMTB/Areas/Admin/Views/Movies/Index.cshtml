@@ -1,0 +1,1063 @@
+﻿@model IEnumerable<WebMTB.Models.Movie>
+
+@{
+    ViewData["Title"] = "Quản lý danh sách phim";
+
+    var today = DateTime.Today;
+    var movies = Model?.ToList() ?? new List<WebMTB.Models.Movie>();
+
+    var totalMovies = movies.Count;
+    var hotMovies = movies.Count(x => x.IsHot);
+    var nowShowingMovies = movies.Count(x => x.IsActive && x.ReleaseDate.Date <= today);
+    var upcomingMovies = movies.Count(x => x.IsActive && x.ReleaseDate.Date > today);
+    var inactiveMovies = movies.Count(x => !x.IsActive);
+}
+
+<div class="admin-movies-page container-fluid px-4 px-lg-5 py-4">
+
+    <div class="admin-hero mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-danger">movie_edit</span>
+                <span class="admin-eyebrow">Movie Management</span>
+            </div>
+
+            <h2 class="admin-title mb-2">Quản lý danh sách phim</h2>
+            <p class="admin-subtitle mb-0">
+                Theo dõi phim đang chiếu, phim sắp chiếu, phim tạm dừng và phim hot trên hệ thống CineZone.
+            </p>
+        </div>
+
+        <div class="admin-hero-actions">
+            <a asp-action="Import" class="btn admin-import-btn">
+                <span class="material-symbols-outlined">upload_file</span>
+                Import phim
+            </a>
+
+            <a asp-action="Create" class="btn admin-add-btn">
+                <span class="material-symbols-outlined">add_circle</span>
+                Thêm phim mới
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-xl">
+            <button type="button" class="stat-card stat-filter active" data-filter="all">
+                <div>
+                    <p class="stat-label">Tổng phim</p>
+                    <h4>@totalMovies</h4>
+                </div>
+                <div class="stat-icon">
+                    <span class="material-symbols-outlined">local_movies</span>
+                </div>
+            </button>
+        </div>
+
+        <div class="col-6 col-xl">
+            <button type="button" class="stat-card stat-filter" data-filter="now">
+                <div>
+                    <p class="stat-label">Đang chiếu</p>
+                    <h4>@nowShowingMovies</h4>
+                </div>
+                <div class="stat-icon success">
+                    <span class="material-symbols-outlined">play_circle</span>
+                </div>
+            </button>
+        </div>
+
+        <div class="col-6 col-xl">
+            <button type="button" class="stat-card stat-filter" data-filter="upcoming">
+                <div>
+                    <p class="stat-label">Sắp chiếu</p>
+                    <h4>@upcomingMovies</h4>
+                </div>
+                <div class="stat-icon warning">
+                    <span class="material-symbols-outlined">event_upcoming</span>
+                </div>
+            </button>
+        </div>
+
+        <div class="col-6 col-xl">
+            <button type="button" class="stat-card stat-filter" data-filter="paused">
+                <div>
+                    <p class="stat-label">Tạm dừng</p>
+                    <h4>@inactiveMovies</h4>
+                </div>
+                <div class="stat-icon muted">
+                    <span class="material-symbols-outlined">pause_circle</span>
+                </div>
+            </button>
+        </div>
+
+        <div class="col-6 col-xl">
+            <button type="button" class="stat-card stat-filter" data-filter="hot">
+                <div>
+                    <p class="stat-label">Phim hot</p>
+                    <h4>@hotMovies</h4>
+                </div>
+                <div class="stat-icon danger">
+                    <span class="material-symbols-outlined">local_fire_department</span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div class="admin-table-card">
+        <div class="admin-table-header">
+            <div>
+                <h5 class="mb-1" id="tableTitle">Tất cả phim</h5>
+                <p class="mb-0" id="tableSubtitle">Bấm vào các thẻ thống kê phía trên để lọc theo từng nhóm phim.</p>
+            </div>
+
+            <div class="admin-search-box">
+                <span class="material-symbols-outlined">search</span>
+                <input type="text" id="movieSearchInput" placeholder="Tìm phim..." />
+            </div>
+        </div>
+
+        <div class="movie-filter-tabs">
+            <button type="button" class="movie-filter-btn active" data-filter="all">Tất cả</button>
+            <button type="button" class="movie-filter-btn" data-filter="now">Đang chiếu</button>
+            <button type="button" class="movie-filter-btn" data-filter="upcoming">Sắp chiếu</button>
+            <button type="button" class="movie-filter-btn" data-filter="paused">Tạm dừng</button>
+            <button type="button" class="movie-filter-btn" data-filter="hot">Phim hot</button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table admin-movie-table mb-0 align-middle" id="movieTable">
+                <thead>
+                    <tr>
+                        <th class="text-center">Poster</th>
+                        <th>Thông tin phim</th>
+                        <th>Đạo diễn</th>
+                        <th>Ngày khởi chiếu</th>
+                        <th>Thời lượng</th>
+                        <th>Đánh giá</th>
+                        <th>Trạng thái</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (movies.Any())
+                    {
+                        foreach (var item in movies)
+                        {
+                            string displayAge = !string.IsNullOrEmpty(item.AgeRating)
+                                ? (item.AgeRating == "P" || item.AgeRating == "K" ? item.AgeRating : "T" + item.AgeRating)
+                                : "P";
+
+                            string ageClass = displayAge == "P"
+                                ? "age-green"
+                                : (displayAge == "K" ? "age-blue" : "age-red");
+
+                            string castText = !string.IsNullOrWhiteSpace(item.Cast) ? item.Cast : "Chưa cập nhật diễn viên";
+                            string directorText = !string.IsNullOrWhiteSpace(item.Director) ? item.Director : "Chưa cập nhật";
+
+                            bool isUpcoming = item.IsActive && item.ReleaseDate.Date > today;
+                            bool isNowShowing = item.IsActive && item.ReleaseDate.Date <= today;
+                            bool isPaused = !item.IsActive;
+
+                            string rowStatus = isPaused ? "paused" : (isUpcoming ? "upcoming" : "now");
+                            string rowStatusText = isPaused ? "Tạm dừng" : (isUpcoming ? "Sắp chiếu" : "Đang chiếu");
+                            string releaseLabel = isUpcoming ? "Khởi chiếu" : "Ngày chiếu";
+
+                            <tr class="movie-row"
+                                data-status="@rowStatus"
+                                data-hot="@(item.IsHot ? "true" : "false")">
+                                <td class="text-center">
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <div class="admin-poster mx-auto">
+                                            <img src="@item.ImageUrl" alt="@item.Title" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="admin-poster empty mx-auto">
+                                            <span class="material-symbols-outlined">image_not_supported</span>
+                                        </div>
+                                    }
+                                </td>
+
+                                <td>
+                                    <div class="movie-info-cell">
+                                        <div class="movie-name">@item.Title</div>
+
+                                        <div class="movie-meta-line">
+                                            <span class="age-badge @ageClass">@displayAge</span>
+                                            <span class="movie-cast" title="@castText">@castText</span>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="director-text">@directorText</span>
+                                </td>
+
+                                <td>
+                                    <span class="release-pill @(isUpcoming ? "upcoming" : (isPaused ? "paused" : "now"))">
+                                        <span class="material-symbols-outlined">@(isUpcoming ? "event_upcoming" : "event")</span>
+                                        <span>
+                                            <small>@releaseLabel</small>
+                                            @item.ReleaseDate.ToString("dd/MM/yyyy")
+                                        </span>
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="info-pill">
+                                        <span class="material-symbols-outlined">schedule</span>
+                                        @item.Duration phút
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="rating-pill">
+                                        <span class="material-symbols-outlined">star</span>
+                                        @item.Rating<span>/10</span>
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="status-wrap">
+                                        @if (item.IsHot)
+                                        {
+                                            <span class="status-badge hot">
+                                                <span class="material-symbols-outlined">local_fire_department</span>
+                                                Hot
+                                            </span>
+                                        }
+
+                                        @if (isNowShowing)
+                                        {
+                                            <span class="status-badge active">
+                                                <i></i>
+                                                Đang chiếu
+                                            </span>
+                                        }
+                                        else if (isUpcoming)
+                                        {
+                                            <span class="status-badge upcoming">
+                                                <span class="material-symbols-outlined">event_upcoming</span>
+                                                Sắp chiếu
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge inactive">
+                                                <i></i>
+                                                Tạm dừng
+                                            </span>
+                                        }
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="action-group">
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="action-btn edit"
+                                           title="Chỉnh sửa phim">
+                                            <span class="material-symbols-outlined">edit</span>
+                                        </a>
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@item.Id"
+                                           class="action-btn details"
+                                           title="Xem chi tiết">
+                                            <span class="material-symbols-outlined">visibility</span>
+                                        </a>
+
+                                        <a asp-action="Delete"
+                                           asp-route-id="@item.Id"
+                                           class="action-btn delete"
+                                           title="Xóa phim">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                        <tr id="noMovieRow" style="display: none;">
+                            <td colspan="8">
+                                <div class="empty-state compact">
+                                    <span class="material-symbols-outlined">movie_off</span>
+                                    <h5>Không tìm thấy phim phù hợp</h5>
+                                    <p>Thử đổi từ khóa tìm kiếm hoặc chọn nhóm phim khác.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8">
+                                <div class="empty-state">
+                                    <span class="material-symbols-outlined">movie_off</span>
+                                    <h5>Chưa có phim nào</h5>
+                                    <p>Hãy thêm phim mới để bắt đầu quản lý hệ thống CineZone.</p>
+                                    <a asp-action="Create" class="btn admin-add-btn">
+                                        <span class="material-symbols-outlined">add_circle</span>
+                                        Thêm phim mới
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .admin-movies-page {
+        color: #fff;
+    }
+
+    .admin-hero {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 28px;
+        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.22), transparent 34%), linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+    }
+
+        .admin-hero::after {
+            content: "";
+            position: absolute;
+            top: -80px;
+            right: -80px;
+            width: 220px;
+            height: 220px;
+            border-radius: 999px;
+            background: rgba(229, 9, 20, 0.16);
+            filter: blur(10px);
+            pointer-events: none;
+        }
+
+    .admin-hero-actions {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .admin-eyebrow {
+        color: #ff6b73;
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+    }
+
+    .admin-title {
+        color: #fff;
+        font-size: clamp(1.7rem, 3vw, 2.35rem);
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
+    }
+
+    .admin-subtitle {
+        color: #a7a7a7;
+        max-width: 760px;
+        font-size: 0.95rem;
+    }
+
+    .admin-add-btn,
+    .admin-import-btn {
+        min-height: 46px;
+        padding: 0 20px;
+        border-radius: 999px;
+        color: #fff !important;
+        font-weight: 850;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+    .admin-add-btn {
+        border: none;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 55%, #a9050d 100%);
+        box-shadow: 0 12px 28px rgba(229, 9, 20, 0.32);
+    }
+
+    .admin-import-btn {
+        border: 1px solid rgba(229, 9, 20, 0.42);
+        background: rgba(229, 9, 20, 0.12);
+    }
+
+        .admin-add-btn:hover,
+        .admin-import-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 38px rgba(229, 9, 20, 0.32);
+        }
+
+    .stat-card {
+        width: 100%;
+        height: 100%;
+        min-height: 105px;
+        padding: 20px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.035);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        transition: all 0.25s ease;
+        text-align: left;
+    }
+
+    button.stat-card {
+        cursor: pointer;
+    }
+
+    .stat-card:hover,
+    .stat-card.active {
+        transform: translateY(-4px);
+        background: linear-gradient(135deg, rgba(229, 9, 20, 0.18), rgba(255, 255, 255, 0.045));
+        border-color: rgba(229, 9, 20, 0.36);
+        box-shadow: 0 18px 42px rgba(229, 9, 20, 0.12);
+    }
+
+    .stat-label {
+        color: #9b9b9b;
+        font-size: 0.8rem;
+        font-weight: 750;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        margin-bottom: 6px;
+    }
+
+    .stat-card h4 {
+        color: #fff;
+        font-size: 2rem;
+        font-weight: 900;
+        margin: 0;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .stat-icon span {
+            font-size: 28px;
+        }
+
+        .stat-icon.danger {
+            color: #ff555f;
+            background: rgba(229, 9, 20, 0.16);
+        }
+
+        .stat-icon.success {
+            color: #38d996;
+            background: rgba(25, 135, 84, 0.16);
+        }
+
+        .stat-icon.warning {
+            color: #ffc94a;
+            background: rgba(255, 193, 7, 0.13);
+        }
+
+        .stat-icon.muted {
+            color: #b2b2b2;
+            background: rgba(255, 255, 255, 0.055);
+        }
+
+    .admin-table-card {
+        overflow: hidden;
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(18, 18, 22, 0.88);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+    }
+
+    .admin-table-header {
+        padding: 22px 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+        .admin-table-header h5 {
+            color: #fff;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+        }
+
+        .admin-table-header p {
+            color: #929292;
+            font-size: 0.88rem;
+        }
+
+    .admin-search-box {
+        width: min(100%, 320px);
+        height: 44px;
+        padding: 0 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .admin-search-box span {
+            color: #8c8c8c;
+            font-size: 20px;
+        }
+
+        .admin-search-box input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+            .admin-search-box input::placeholder {
+                color: #7d7d7d;
+            }
+
+    .movie-filter-tabs {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 16px 24px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: rgba(0,0,0,0.12);
+    }
+
+    .movie-filter-btn {
+        min-height: 38px;
+        padding: 0 15px;
+        border-radius: 999px;
+        color: #bdbdc4;
+        background: rgba(255,255,255,0.055);
+        border: 1px solid rgba(255,255,255,0.08);
+        font-weight: 850;
+        transition: 0.2s ease;
+    }
+
+        .movie-filter-btn:hover,
+        .movie-filter-btn.active {
+            color: #fff;
+            background: rgba(229, 9, 20, 0.24);
+            border-color: rgba(229, 9, 20, 0.48);
+        }
+
+    .admin-movie-table {
+        --bs-table-bg: transparent;
+        --bs-table-color: #d9d9d9;
+        --bs-table-hover-bg: rgba(255, 255, 255, 0.035);
+        color: #d9d9d9;
+    }
+
+        .admin-movie-table thead th {
+            padding: 15px 18px;
+            background: rgba(0, 0, 0, 0.18);
+            color: #8f8f8f;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.72rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.9px;
+            white-space: nowrap;
+        }
+
+        .admin-movie-table tbody td {
+            padding: 16px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+            vertical-align: middle;
+        }
+
+        .admin-movie-table tbody tr {
+            transition: all 0.18s ease;
+        }
+
+            .admin-movie-table tbody tr:hover {
+                background: rgba(255, 255, 255, 0.035);
+            }
+
+    .admin-poster {
+        width: 58px;
+        height: 82px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #222;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+    }
+
+        .admin-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.35s ease;
+        }
+
+    .movie-row:hover .admin-poster img {
+        transform: scale(1.08);
+    }
+
+    .admin-poster.empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #777;
+    }
+
+    .movie-name {
+        color: #fff;
+        font-size: 0.98rem;
+        font-weight: 900;
+        margin-bottom: 8px;
+        max-width: 320px;
+    }
+
+    .movie-meta-line {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .movie-cast {
+        color: #8f8f8f;
+        font-size: 0.82rem;
+        max-width: 260px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .age-badge {
+        min-width: 34px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        font-weight: 900;
+        text-align: center;
+        border: 1px solid currentColor;
+    }
+
+    .age-green {
+        color: #37d67a;
+        background: rgba(25, 135, 84, 0.12);
+    }
+
+    .age-blue {
+        color: #49c7ff;
+        background: rgba(13, 202, 240, 0.12);
+    }
+
+    .age-red {
+        color: #ff5b66;
+        background: rgba(229, 9, 20, 0.14);
+    }
+
+    .director-text {
+        color: #bdbdbd;
+        font-size: 0.9rem;
+        font-weight: 650;
+    }
+
+    .info-pill,
+    .rating-pill,
+    .release-pill {
+        min-height: 32px;
+        width: fit-content;
+        padding: 6px 10px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.82rem;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .info-pill {
+        color: #cfcfcf;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .rating-pill {
+        color: #ffc94a;
+        background: rgba(255, 193, 7, 0.1);
+        border: 1px solid rgba(255, 193, 7, 0.18);
+    }
+
+        .rating-pill span:last-child {
+            color: #8c8c8c;
+            font-weight: 700;
+            margin-left: -2px;
+        }
+
+    .release-pill {
+        color: #d8d8df;
+        background: rgba(255,255,255,0.055);
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+        .release-pill small {
+            display: block;
+            color: #85858d;
+            font-size: 0.66rem;
+            line-height: 1;
+            font-weight: 850;
+            text-transform: uppercase;
+        }
+
+        .release-pill.upcoming {
+            color: #ffc94a;
+            background: rgba(255, 193, 7, 0.1);
+            border-color: rgba(255, 193, 7, 0.20);
+        }
+
+        .release-pill.now {
+            color: #38d996;
+            background: rgba(25, 135, 84, 0.10);
+            border-color: rgba(25, 135, 84, 0.18);
+        }
+
+        .release-pill.paused {
+            color: #b0b0b0;
+            background: rgba(255,255,255,0.045);
+        }
+
+        .info-pill .material-symbols-outlined,
+        .rating-pill .material-symbols-outlined,
+        .release-pill .material-symbols-outlined {
+            font-size: 17px;
+        }
+
+    .status-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .status-badge {
+        min-height: 28px;
+        padding: 5px 9px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.72rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+    }
+
+        .status-badge .material-symbols-outlined {
+            font-size: 15px;
+        }
+
+        .status-badge i {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            display: inline-block;
+        }
+
+        .status-badge.hot {
+            color: #ff5964;
+            background: rgba(229, 9, 20, 0.14);
+            border: 1px solid rgba(229, 9, 20, 0.28);
+        }
+
+        .status-badge.active {
+            color: #38d996;
+            background: rgba(25, 135, 84, 0.12);
+            border: 1px solid rgba(25, 135, 84, 0.25);
+        }
+
+            .status-badge.active i {
+                background: #38d996;
+                box-shadow: 0 0 10px rgba(56, 217, 150, 0.9);
+            }
+
+        .status-badge.upcoming {
+            color: #ffc94a;
+            background: rgba(255, 193, 7, 0.12);
+            border: 1px solid rgba(255, 193, 7, 0.25);
+        }
+
+        .status-badge.inactive {
+            color: #b0b0b0;
+            background: rgba(255, 255, 255, 0.055);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+            .status-badge.inactive i {
+                background: #8a8a8a;
+            }
+
+    .action-group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.2s ease;
+    }
+
+        .action-btn span {
+            font-size: 18px;
+        }
+
+        .action-btn.edit {
+            color: #39d5ff;
+        }
+
+        .action-btn.details {
+            color: #f2f2f2;
+        }
+
+        .action-btn.delete {
+            color: #ff5964;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .action-btn.edit:hover {
+            background: #39d5ff;
+            color: #000;
+            box-shadow: 0 8px 20px rgba(57, 213, 255, 0.25);
+        }
+
+        .action-btn.details:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.18);
+        }
+
+        .action-btn.delete:hover {
+            background: #e50914;
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(229, 9, 20, 0.28);
+        }
+
+    .empty-state {
+        padding: 60px 20px;
+        text-align: center;
+        color: #9b9b9b;
+    }
+
+        .empty-state.compact {
+            padding: 38px 20px;
+        }
+
+        .empty-state .material-symbols-outlined {
+            font-size: 54px;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h5 {
+            color: #fff;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+
+    @@media (max-width: 991.98px) {
+        .admin-hero,
+        .admin-table-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .admin-hero-actions,
+        .admin-add-btn,
+        .admin-import-btn,
+        .admin-search-box {
+            width: 100%;
+        }
+
+        .admin-add-btn,
+        .admin-import-btn {
+            justify-content: center;
+        }
+
+        .admin-movie-table {
+            min-width: 1120px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .admin-movies-page {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+        }
+
+        .admin-hero {
+            padding: 22px;
+            border-radius: 20px;
+        }
+
+        .admin-title {
+            font-size: 1.5rem;
+        }
+
+        .stat-card {
+            min-height: 96px;
+            padding: 16px;
+        }
+
+            .stat-card h4 {
+                font-size: 1.55rem;
+            }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        const movieSearchInput = document.getElementById("movieSearchInput");
+        const movieRows = document.querySelectorAll("#movieTable tbody tr.movie-row");
+        const noMovieRow = document.getElementById("noMovieRow");
+        const filterButtons = document.querySelectorAll(".movie-filter-btn, .stat-filter");
+        const tableTitle = document.getElementById("tableTitle");
+        const tableSubtitle = document.getElementById("tableSubtitle");
+
+        let currentFilter = "all";
+
+        const filterText = {
+            all: {
+                title: "Tất cả phim",
+                subtitle: "Hiển thị toàn bộ phim đang có trong hệ thống."
+            },
+            now: {
+                title: "Phim đang chiếu",
+                subtitle: "Những phim đang active và ngày khởi chiếu không lớn hơn hôm nay."
+            },
+            upcoming: {
+                title: "Phim sắp chiếu",
+                subtitle: "Những phim đang active nhưng ngày khởi chiếu ở tương lai."
+            },
+            paused: {
+                title: "Phim tạm dừng",
+                subtitle: "Những phim đã bị ẩn khỏi trang người dùng."
+            },
+            hot: {
+                title: "Phim hot",
+                subtitle: "Những phim được đánh dấu nổi bật trong hệ thống."
+            }
+        };
+
+        function setActiveFilterButton(filter) {
+            filterButtons.forEach(button => {
+                button.classList.toggle("active", button.dataset.filter === filter);
+            });
+        }
+
+        function applyMovieFilter() {
+            const keyword = movieSearchInput ? movieSearchInput.value.toLowerCase().trim() : "";
+            let visibleCount = 0;
+
+            movieRows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                const status = row.dataset.status;
+                const isHot = row.dataset.hot === "true";
+
+                const matchKeyword = keyword === "" || text.includes(keyword);
+
+                let matchFilter = true;
+
+                if (currentFilter === "now") {
+                    matchFilter = status === "now";
+                }
+                else if (currentFilter === "upcoming") {
+                    matchFilter = status === "upcoming";
+                }
+                else if (currentFilter === "paused") {
+                    matchFilter = status === "paused";
+                }
+                else if (currentFilter === "hot") {
+                    matchFilter = isHot;
+                }
+
+                const shouldShow = matchKeyword && matchFilter;
+                row.style.display = shouldShow ? "" : "none";
+
+                if (shouldShow) {
+                    visibleCount++;
+                }
+            });
+
+            if (noMovieRow) {
+                noMovieRow.style.display = visibleCount === 0 ? "" : "none";
+            }
+
+            if (tableTitle && tableSubtitle && filterText[currentFilter]) {
+                tableTitle.textContent = filterText[currentFilter].title;
+                tableSubtitle.textContent = filterText[currentFilter].subtitle;
+            }
+        }
+
+        filterButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                currentFilter = this.dataset.filter || "all";
+                setActiveFilterButton(currentFilter);
+                applyMovieFilter();
+            });
+        });
+
+        if (movieSearchInput) {
+            movieSearchInput.addEventListener("input", applyMovieFilter);
+        }
+    </script>
+}

@@ -1,0 +1,502 @@
+﻿@model IEnumerable<WebMTB.Models.Booking>
+
+@{
+    ViewData["Title"] = "Vé của tôi - CineZone";
+    var bookings = Model?.ToList() ?? new List<WebMTB.Models.Booking>();
+}
+
+<div class="booking-history-page">
+    <div class="container py-5">
+
+        <div class="history-header mb-4">
+            <div>
+                <div class="history-eyebrow">
+                    <span class="material-symbols-outlined">confirmation_number</span>
+                    CineZone Booking
+                </div>
+
+                <h1>Vé của tôi</h1>
+                <p>Xem danh sách vé đã đặt, vé đang chờ và vé đã hủy tại CineZone.</p>
+            </div>
+
+            <a asp-controller="Home" asp-action="Index" class="btn back-home-btn">
+                <span class="material-symbols-outlined">home</span>
+                Về trang chủ
+            </a>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success rounded-4 border-0 mb-4">
+                @TempData["Success"]
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger rounded-4 border-0 mb-4">
+                @TempData["Error"]
+            </div>
+        }
+
+        <div class="history-card">
+            <div class="history-card-header">
+                <div>
+                    <h5>Danh sách vé</h5>
+                    <p>Tổng số vé đã đặt: @bookings.Count</p>
+                </div>
+
+                <span class="material-symbols-outlined">receipt_long</span>
+            </div>
+
+            <div class="history-card-body">
+                @if (bookings.Any())
+                {
+                    <div class="booking-list">
+                        @foreach (var item in bookings.OrderByDescending(b => b.BookingDate))
+                        {
+                            var tickets = item.Tickets?.ToList() ?? new List<WebMTB.Models.Ticket>();
+                            var firstTicket = tickets.FirstOrDefault();
+
+                            var showtime = firstTicket?.Showtime;
+                            var movie = showtime?.Movie;
+                            var room = showtime?.Room;
+                            var cinema = room?.Cinema;
+
+                            string movieTitle = movie?.Title ?? "Thông tin phim";
+                            string cinemaName = cinema?.Name ?? "Chưa có rạp";
+                            string roomName = room?.Name ?? "Chưa có phòng";
+                            string seatNames = tickets.Any()
+                                ? string.Join(", ", tickets
+                                    .Where(t => t.Seat != null)
+                                    .OrderBy(t => t.Seat!.Row)
+                                    .ThenBy(t => t.Seat!.Number)
+                                    .Select(t => $"{t.Seat!.Row}{t.Seat!.Number}"))
+                                : "---";
+
+                            string statusClass = item.Status == "Completed" ? "status-success"
+                                : item.Status == "Cancelled" ? "status-danger"
+                                : "status-warning";
+
+                            <div class="booking-item">
+                                <div class="booking-main">
+                                    <div class="booking-icon">
+                                        <span class="material-symbols-outlined">movie</span>
+                                    </div>
+
+                                    <div class="booking-info">
+                                        <div class="d-flex align-items-center flex-wrap gap-2 mb-1">
+                                            <h5>@movieTitle</h5>
+                                            <span class="booking-status @statusClass">@item.Status</span>
+                                        </div>
+
+                                        <p>
+                                            <span class="material-symbols-outlined">location_on</span>
+                                            @cinemaName · @roomName
+                                        </p>
+
+                                        <p>
+                                            <span class="material-symbols-outlined">schedule</span>
+                                            Suất chiếu:
+                                            @(showtime != null ? showtime.StartTime.ToString("HH:mm - dd/MM/yyyy") : "Chưa có suất chiếu")
+                                        </p>
+
+                                        <p>
+                                            <span class="material-symbols-outlined">event_seat</span>
+                                            Ghế: @seatNames
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="booking-side">
+                                    <div class="booking-price">
+                                        <span>Tổng tiền</span>
+                                        <strong>@item.TotalAmount.ToString("N0") VNĐ</strong>
+                                    </div>
+
+                                    <div class="booking-date">
+                                        <span>Ngày đặt</span>
+                                        <strong>@item.BookingDate.ToString("HH:mm - dd/MM/yyyy")</strong>
+                                    </div>
+
+                                    <div class="booking-actions">
+                                        <a asp-action="Details"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-detail">
+                                            <span class="material-symbols-outlined">visibility</span>
+                                            Chi tiết
+                                        </a>
+
+                                        @if (item.Status == "Pending")
+                                        {
+                                            <a asp-controller="Bookings"
+                                               asp-action="Checkout"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-paypal">
+                                                <span class="material-symbols-outlined">payments</span>
+                                                Thanh toán
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-history">
+                        <span class="material-symbols-outlined">confirmation_number</span>
+                        <h5>Chưa có vé nào</h5>
+                        <p>Bạn chưa có lịch sử đặt vé. Hãy chọn một bộ phim và đặt vé ngay.</p>
+
+                        <a asp-controller="Home" asp-action="Index" class="btn back-home-btn">
+                            Xem phim đang chiếu
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .booking-history-page {
+        min-height: 100vh;
+        color: #fff;
+        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.14), transparent 32%), #111;
+    }
+
+    .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .history-eyebrow {
+        color: #ff5964;
+        font-size: 0.8rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+
+    .history-header h1 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        font-weight: 950;
+        letter-spacing: -0.05em;
+        margin-bottom: 8px;
+    }
+
+    .history-header p {
+        color: #999;
+        margin: 0;
+    }
+
+    .back-home-btn {
+        min-height: 44px;
+        padding: 0 18px;
+        border-radius: 999px;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.16);
+        background: rgba(255,255,255,0.06);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 850;
+        white-space: nowrap;
+    }
+
+        .back-home-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-2px);
+        }
+
+    .history-card {
+        border-radius: 26px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(18,18,22,0.9);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.32);
+        overflow: hidden;
+    }
+
+    .history-card-header {
+        padding: 22px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+    }
+
+        .history-card-header h5 {
+            font-weight: 900;
+            margin-bottom: 4px;
+        }
+
+        .history-card-header p {
+            color: #999;
+            margin: 0;
+            font-size: 0.86rem;
+        }
+
+        .history-card-header > span {
+            color: #ff5964;
+            font-size: 32px;
+        }
+
+    .history-card-body {
+        padding: 20px;
+    }
+
+    .booking-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .booking-item {
+        padding: 18px;
+        border-radius: 22px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.075);
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        transition: all 0.2s ease;
+    }
+
+        .booking-item:hover {
+            background: rgba(255,255,255,0.065);
+            transform: translateY(-2px);
+        }
+
+    .booking-main {
+        display: flex;
+        gap: 14px;
+        min-width: 0;
+    }
+
+    .booking-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 17px;
+        background: rgba(229,9,20,0.15);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .booking-icon span {
+            font-size: 30px;
+        }
+
+    .booking-info {
+        min-width: 0;
+    }
+
+        .booking-info h5 {
+            font-size: 1.1rem;
+            font-weight: 950;
+            margin: 0;
+        }
+
+        .booking-info p {
+            color: #a5a5a5;
+            margin: 6px 0 0;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .booking-info p span {
+                color: #ff5964;
+                font-size: 18px;
+            }
+
+    .booking-status {
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+    }
+
+    .status-success {
+        color: #37d67a;
+        background: rgba(25,135,84,0.14);
+    }
+
+    .status-warning {
+        color: #ffc94a;
+        background: rgba(255,193,7,0.12);
+    }
+
+    .status-danger {
+        color: #ff5964;
+        background: rgba(229,9,20,0.14);
+    }
+
+    .booking-side {
+        min-width: 260px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .booking-price,
+    .booking-date {
+        text-align: right;
+    }
+
+        .booking-price span,
+        .booking-date span {
+            color: #888;
+            font-size: 0.74rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .booking-price strong {
+            color: #ff4d57;
+            font-size: 1.25rem;
+            font-weight: 950;
+        }
+
+        .booking-date strong {
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+    .booking-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .btn-detail,
+    .btn-paypal {
+        min-height: 38px;
+        padding: 0 14px;
+        border-radius: 999px;
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.82rem;
+        font-weight: 850;
+        border: none;
+    }
+
+    .btn-detail {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.14);
+    }
+
+        .btn-detail:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.14);
+        }
+
+    .btn-paypal {
+        background: linear-gradient(135deg, #0070ba, #003087);
+        box-shadow: 0 10px 22px rgba(0,112,186,0.22);
+    }
+
+        .btn-paypal:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    .empty-history {
+        padding: 56px 20px;
+        text-align: center;
+        color: #aaa;
+    }
+
+        .empty-history > span {
+            color: #ff5964;
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+
+        .empty-history h5 {
+            color: #fff;
+            font-weight: 950;
+            margin-bottom: 8px;
+        }
+
+        .empty-history p {
+            margin-bottom: 20px;
+        }
+
+    @@media (max-width: 991.98px) {
+        .history-header {
+            flex-direction: column;
+        }
+
+        .back-home-btn {
+            width: 100%;
+        }
+
+        .booking-item {
+            flex-direction: column;
+        }
+
+        .booking-side {
+            min-width: 0;
+            align-items: flex-start;
+        }
+
+        .booking-price,
+        .booking-date {
+            text-align: left;
+        }
+
+        .booking-actions {
+            justify-content: flex-start;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .booking-history-page .container {
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .history-card-body {
+            padding: 14px;
+        }
+
+        .booking-item {
+            padding: 15px;
+            border-radius: 18px;
+        }
+
+        .booking-main {
+            flex-direction: column;
+        }
+
+        .btn-detail,
+        .btn-paypal {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>

@@ -1,0 +1,842 @@
+﻿@model WebMTB.Models.Movie
+
+@{
+    ViewData["Title"] = "Chi tiết phim " + Model.Title;
+
+    string displayAge = !string.IsNullOrEmpty(Model.AgeRating)
+        ? (Model.AgeRating == "P" || Model.AgeRating == "K" ? Model.AgeRating : "T" + Model.AgeRating)
+        : "P";
+
+    string ageClass = displayAge == "P"
+        ? "age-green"
+        : (displayAge == "K" ? "age-blue" : "age-red");
+
+    string directorText = !string.IsNullOrWhiteSpace(Model.Director) ? Model.Director : "Chưa cập nhật";
+    string castText = !string.IsNullOrWhiteSpace(Model.Cast) ? Model.Cast : "Chưa cập nhật";
+    string descriptionText = !string.IsNullOrWhiteSpace(Model.Description) ? Model.Description : "Chưa có mô tả nội dung cho phim này.";
+    bool hasTrailer = !string.IsNullOrWhiteSpace(Model.TrailerUrl);
+    bool hasPoster = !string.IsNullOrWhiteSpace(Model.ImageUrl);
+    bool hasCover = !string.IsNullOrWhiteSpace(Model.CoverImageUrl);
+}
+
+@functions {
+    public string GetYoutubeVideoId(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url)) return "";
+
+        if (url.Contains("watch?v="))
+        {
+            return url.Split("v=")[1].Split("&")[0];
+        }
+
+        if (url.Contains("youtu.be/"))
+        {
+            return url.Split("/").Last().Split("?")[0];
+        }
+
+        if (url.Contains("/embed/"))
+        {
+            return url.Split("/embed/")[1].Split("?")[0];
+        }
+
+        return "";
+    }
+
+    public string GetBackgroundVideoUrl(string url)
+    {
+        var videoId = GetYoutubeVideoId(url);
+        if (string.IsNullOrEmpty(videoId)) return "";
+
+        return $"https://www.youtube.com/embed/{videoId}?autoplay=1&mute=1&loop=1&playlist={videoId}&controls=0&modestbranding=1&rel=0&showinfo=0";
+    }
+
+    public string GetFullVideoUrl(string url)
+    {
+        var videoId = GetYoutubeVideoId(url);
+        if (string.IsNullOrEmpty(videoId)) return "";
+
+        return $"https://www.youtube.com/embed/{videoId}?autoplay=1&controls=1&rel=0";
+    }
+}
+
+<div class="customer-detail-page">
+
+    <section class="customer-hero">
+        @if (hasTrailer)
+        {
+            <div class="customer-trailer-bg" data-bs-toggle="modal" data-bs-target="#videoModal">
+                <iframe src="@GetBackgroundVideoUrl(Model.TrailerUrl)"
+                        title="@Model.Title trailer background"
+                        frameborder="0"
+                        allow="autoplay; encrypted-media"
+                        allowfullscreen>
+                </iframe>
+
+                <div class="customer-hero-overlay">
+                    <div class="trailer-play-hint">
+                        <div class="play-circle">
+                            <span class="material-symbols-outlined">play_arrow</span>
+                        </div>
+                        <p>Nhấn để xem trailer</p>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="customer-cover-bg">
+                @if (hasCover)
+                {
+                    <img src="@Model.CoverImageUrl" alt="@Model.Title" />
+                }
+                else if (hasPoster)
+                {
+                    <img src="@Model.ImageUrl" alt="@Model.Title" />
+                }
+
+                <div class="customer-hero-overlay">
+                    <div class="trailer-play-hint show">
+                        <div class="play-circle muted">
+                            <span class="material-symbols-outlined">movie</span>
+                        </div>
+                        <p>Chưa có trailer</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </section>
+
+    <main class="container customer-detail-content">
+        <div class="row g-4 g-lg-5">
+
+            <div class="col-lg-3 col-md-4">
+                <div class="customer-poster-panel">
+                    <div class="customer-poster">
+                        @if (hasPoster)
+                        {
+                            <img src="@Model.ImageUrl" alt="@Model.Title" />
+                        }
+                        else
+                        {
+                            <div class="poster-empty">
+                                <span class="material-symbols-outlined">image_not_supported</span>
+                                <p>Không có poster</p>
+                            </div>
+                        }
+
+                        <div class="poster-rating">
+                            <span class="material-symbols-outlined">star</span>
+                            <strong>@Model.Rating</strong>
+                        </div>
+                    </div>
+
+                    <div class="customer-action-stack">
+                        <a asp-controller="Bookings"
+                           asp-action="Create"
+                           asp-route-movieId="@Model.Id"
+                           class="btn customer-btn booking">
+                            <span class="material-symbols-outlined">confirmation_number</span>
+                            Đặt vé ngay
+                        </a>
+
+                        @if (hasTrailer)
+                        {
+                            <button type="button"
+                                    class="btn customer-btn trailer"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#videoModal">
+                                <span class="material-symbols-outlined">play_circle</span>
+                                Xem trailer
+                            </button>
+                        }
+
+                        <a asp-action="Index" class="btn customer-btn back">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                            Quay lại
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9 col-md-8">
+                <div class="customer-info-card">
+
+                    <div class="customer-badges">
+                        <span class="age-badge @ageClass">@displayAge</span>
+
+                        @if (Model.IsHot)
+                        {
+                            <span class="movie-badge hot">
+                                <span class="material-symbols-outlined">local_fire_department</span>
+                                Phim hot
+                            </span>
+                        }
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="movie-badge active">
+                                <i></i>
+                                Đang chiếu
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="movie-badge inactive">
+                                <i></i>
+                                Tạm dừng
+                            </span>
+                        }
+                    </div>
+
+                    <h1 class="customer-title">@Model.Title</h1>
+
+                    <div class="customer-meta">
+                        <span class="rating-meta">
+                            <span class="material-symbols-outlined">star</span>
+                            @Model.Rating/10
+                        </span>
+
+                        <span>
+                            <span class="material-symbols-outlined">schedule</span>
+                            @Model.Duration phút
+                        </span>
+
+                        <span>
+                            <span class="material-symbols-outlined">calendar_month</span>
+                            @Model.ReleaseDate.ToString("dd/MM/yyyy")
+                        </span>
+                    </div>
+
+                    <div class="quick-info-grid">
+                        <div class="quick-info-card">
+                            <span class="material-symbols-outlined">person</span>
+                            <div>
+                                <p>Đạo diễn</p>
+                                <h6>@directorText</h6>
+                            </div>
+                        </div>
+
+                        <div class="quick-info-card">
+                            <span class="material-symbols-outlined">groups</span>
+                            <div>
+                                <p>Diễn viên</p>
+                                <h6>@castText</h6>
+                            </div>
+                        </div>
+
+                        <div class="quick-info-card">
+                            <span class="material-symbols-outlined">local_movies</span>
+                            <div>
+                                <p>Định dạng</p>
+                                <h6>2D Phụ Đề</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <section class="description-card">
+                        <div class="section-heading">
+                            <span class="material-symbols-outlined">subject</span>
+                            <h5>Tóm tắt nội dung</h5>
+                        </div>
+
+                        <p>@descriptionText</p>
+                    </section>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+@if (hasTrailer)
+{
+    <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content customer-trailer-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white">
+                        Trailer: @Model.Title
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+                </div>
+
+                <div class="modal-body p-0">
+                    <div class="ratio ratio-16x9">
+                        <iframe id="fullVideoFrame"
+                                src=""
+                                title="YouTube video player"
+                                frameborder="0"
+                                allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .customer-detail-page {
+        min-height: 100vh;
+        color: #fff;
+        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.12), transparent 30%), #131313;
+    }
+
+    .customer-hero {
+        position: relative;
+        width: 100%;
+        height: 72vh;
+        min-height: 500px;
+        max-height: 740px;
+        overflow: hidden;
+        background: #000;
+    }
+
+    .customer-trailer-bg,
+    .customer-cover-bg {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        cursor: pointer;
+        background: #000;
+    }
+
+        .customer-trailer-bg iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120vw;
+            height: 67.5vw;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            filter: brightness(0.66);
+        }
+
+        .customer-cover-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.48) blur(1px);
+            transform: scale(1.04);
+        }
+
+    .customer-hero-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.16), transparent 34%), linear-gradient(to top, #131313 0%, rgba(19, 19, 19, 0.86) 16%, transparent 56%), linear-gradient(to right, rgba(19, 19, 19, 0.68), transparent 42%, rgba(19, 19, 19, 0.2));
+        transition: background 0.35s ease;
+    }
+
+    .customer-trailer-bg:hover .customer-hero-overlay {
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.18), transparent 34%), linear-gradient(to top, #131313 0%, rgba(19, 19, 19, 0.78) 18%, rgba(0, 0, 0, 0.22) 100%);
+    }
+
+    .trailer-play-hint {
+        opacity: 0;
+        transform: scale(0.9) translateY(12px);
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+
+        .customer-trailer-bg:hover .trailer-play-hint,
+        .trailer-play-hint.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+    .play-circle {
+        width: 86px;
+        height: 86px;
+        border-radius: 999px;
+        margin: 0 auto 12px;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 18px 45px rgba(229, 9, 20, 0.42);
+    }
+
+        .play-circle.muted {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+        }
+
+        .play-circle span {
+            font-size: 48px;
+        }
+
+    .trailer-play-hint p {
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0;
+    }
+
+    .customer-detail-content {
+        position: relative;
+        z-index: 10;
+        margin-top: -155px;
+        padding-bottom: 70px;
+    }
+
+    .customer-poster-panel {
+        position: sticky;
+        top: 92px;
+    }
+
+    .customer-poster {
+        position: relative;
+        width: 100%;
+        max-width: 300px;
+        aspect-ratio: 2 / 3;
+        border-radius: 24px;
+        overflow: hidden;
+        background: #202020;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 28px 75px rgba(0, 0, 0, 0.58);
+    }
+
+        .customer-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .poster-empty {
+        width: 100%;
+        height: 100%;
+        color: #8a8a8a;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .poster-empty span {
+            font-size: 48px;
+        }
+
+        .poster-empty p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+    .poster-rating {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        min-height: 34px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.72);
+        backdrop-filter: blur(8px);
+        color: #ffc94a;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        border: 1px solid rgba(255, 193, 7, 0.16);
+    }
+
+        .poster-rating span {
+            font-size: 18px;
+        }
+
+    .customer-action-stack {
+        width: 100%;
+        max-width: 300px;
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    .customer-info-card {
+        padding: 32px;
+        border-radius: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025));
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+    }
+
+    .customer-badges {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .age-badge {
+        min-width: 42px;
+        padding: 6px 11px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 900;
+        text-align: center;
+        border: 1px solid currentColor;
+    }
+
+    .age-green {
+        color: #37d67a;
+        background: rgba(25, 135, 84, 0.12);
+    }
+
+    .age-blue {
+        color: #49c7ff;
+        background: rgba(13, 202, 240, 0.12);
+    }
+
+    .age-red {
+        color: #ff5b66;
+        background: rgba(229, 9, 20, 0.14);
+    }
+
+    .movie-badge {
+        min-height: 32px;
+        padding: 6px 11px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.74rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.35px;
+    }
+
+        .movie-badge .material-symbols-outlined {
+            font-size: 16px;
+        }
+
+        .movie-badge i {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            display: inline-block;
+        }
+
+        .movie-badge.hot {
+            color: #ff5964;
+            background: rgba(229, 9, 20, 0.14);
+            border: 1px solid rgba(229, 9, 20, 0.28);
+        }
+
+        .movie-badge.active {
+            color: #38d996;
+            background: rgba(25, 135, 84, 0.12);
+            border: 1px solid rgba(25, 135, 84, 0.25);
+        }
+
+            .movie-badge.active i {
+                background: #38d996;
+                box-shadow: 0 0 10px rgba(56, 217, 150, 0.9);
+            }
+
+        .movie-badge.inactive {
+            color: #b0b0b0;
+            background: rgba(255, 255, 255, 0.055);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+            .movie-badge.inactive i {
+                background: #8a8a8a;
+            }
+
+    .customer-title {
+        color: #fff;
+        max-width: 980px;
+        font-size: clamp(2.3rem, 5vw, 4.8rem);
+        font-weight: 950;
+        line-height: 0.95;
+        letter-spacing: -0.06em;
+        margin-bottom: 18px;
+    }
+
+    .customer-meta {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 26px;
+    }
+
+        .customer-meta span {
+            min-height: 34px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #d7d7d7;
+            font-size: 0.88rem;
+            font-weight: 800;
+        }
+
+        .customer-meta .material-symbols-outlined {
+            font-size: 18px;
+        }
+
+        .customer-meta .rating-meta {
+            color: #ffc94a;
+            background: rgba(255, 193, 7, 0.1);
+            border-color: rgba(255, 193, 7, 0.18);
+        }
+
+    .quick-info-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 26px;
+    }
+
+    .quick-info-card {
+        min-height: 104px;
+        padding: 18px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.075);
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+        .quick-info-card > span {
+            color: #ff5964;
+            font-size: 26px;
+        }
+
+        .quick-info-card p {
+            color: #939393;
+            font-size: 0.76rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            margin-bottom: 5px;
+        }
+
+        .quick-info-card h6 {
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 800;
+            line-height: 1.45;
+            margin: 0;
+        }
+
+    .description-card {
+        padding: 24px;
+        border-radius: 22px;
+        background: rgba(0, 0, 0, 0.22);
+        border: 1px solid rgba(255, 255, 255, 0.075);
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+        .section-heading span {
+            color: #ff5964;
+        }
+
+        .section-heading h5 {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin: 0;
+        }
+
+    .description-card p {
+        color: #c0c0c0;
+        font-size: 1.02rem;
+        line-height: 1.85;
+        margin: 0;
+    }
+
+    .customer-bottom-actions {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 22px;
+    }
+
+    .customer-btn {
+        min-height: 46px;
+        padding: 0 18px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        transition: all 0.25s ease;
+    }
+
+        .customer-btn span {
+            font-size: 20px;
+        }
+
+        .customer-btn.booking {
+            background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+            color: #fff;
+            box-shadow: 0 12px 28px rgba(229, 9, 20, 0.28);
+        }
+
+            .customer-btn.booking:hover {
+                color: #fff;
+                transform: translateY(-2px);
+                box-shadow: 0 18px 38px rgba(229, 9, 20, 0.4);
+            }
+
+        .customer-btn.trailer,
+        .customer-btn.back {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+            .customer-btn.trailer:hover,
+            .customer-btn.back:hover {
+                color: #fff;
+                background: rgba(255, 255, 255, 0.12);
+                transform: translateY(-2px);
+            }
+
+        .customer-btn.large {
+            min-height: 50px;
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+
+    .customer-trailer-modal {
+        background: #050505;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.65);
+    }
+
+        .customer-trailer-modal .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px 18px;
+        }
+
+        .customer-trailer-modal .modal-title {
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+
+    @@media (max-width: 991.98px) {
+        .customer-hero {
+            height: 58vh;
+            min-height: 380px;
+        }
+
+        .customer-detail-content {
+            margin-top: -95px;
+        }
+
+        .customer-poster-panel {
+            position: static;
+        }
+
+        .quick-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .customer-poster,
+        .customer-action-stack {
+            max-width: 250px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .customer-info-card {
+            padding: 24px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .customer-hero {
+            height: 50vh;
+            min-height: 320px;
+        }
+
+        .customer-detail-content {
+            margin-top: -60px;
+        }
+
+        .customer-info-card {
+            padding: 20px;
+            border-radius: 22px;
+        }
+
+        .customer-title {
+            font-size: 2rem;
+            letter-spacing: -0.04em;
+        }
+
+        .customer-bottom-actions .customer-btn,
+        .customer-action-stack .customer-btn {
+            width: 100%;
+        }
+
+        .play-circle {
+            width: 68px;
+            height: 68px;
+        }
+
+            .play-circle span {
+                font-size: 38px;
+            }
+    }
+</style>
+
+@section Scripts {
+    @if (hasTrailer)
+    {
+        <script>
+            const videoModal = document.getElementById("videoModal");
+            const fullVideoFrame = document.getElementById("fullVideoFrame");
+            const fullUrl = "@GetFullVideoUrl(Model.TrailerUrl)";
+
+            if (videoModal && fullVideoFrame) {
+                videoModal.addEventListener("show.bs.modal", function () {
+                    fullVideoFrame.src = fullUrl;
+                });
+
+                videoModal.addEventListener("hide.bs.modal", function () {
+                    fullVideoFrame.src = "";
+                });
+            }
+        </script>
+    }
+}

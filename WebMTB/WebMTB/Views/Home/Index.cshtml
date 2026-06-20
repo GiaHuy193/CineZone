@@ -1,0 +1,2466 @@
+﻿@model IEnumerable<WebMTB.Models.Movie>
+
+@{
+    ViewData["Title"] = "Trang Chủ";
+
+    var hotMovies = ViewBag.HotMovies as List<WebMTB.Models.Movie> ?? new List<WebMTB.Models.Movie>();
+    var showingMovies = Model != null ? Model.ToList() : new List<WebMTB.Models.Movie>();
+    var upcomingMovies = ViewBag.UpcomingMovies as List<WebMTB.Models.Movie> ?? new List<WebMTB.Models.Movie>();
+
+    bool isSearch = ViewBag.IsSearch == true;
+}
+
+@if (!isSearch && hotMovies.Any())
+{
+    var heroBannerMovies = hotMovies.Take(3).ToList();
+
+    <section class="cz-premiere-hero">
+        <div class="cz-stage-light cz-stage-light-left"></div>
+        <div class="cz-stage-light cz-stage-light-right"></div>
+        <div class="cz-film-strip cz-film-strip-top"></div>
+        <div class="cz-film-strip cz-film-strip-bottom"></div>
+        <div class="cz-hero-particles"></div>
+
+        <div id="heroCarousel"
+             class="carousel slide carousel-fade position-absolute top-0 start-0 w-100 h-100"
+             data-bs-ride="carousel"
+             style="z-index: 2;">
+
+            <div class="carousel-indicators cz-hero-indicators">
+                @for (int i = 0; i < heroBannerMovies.Count; i++)
+                {
+                    <button type="button"
+                            data-bs-target="#heroCarousel"
+                            data-bs-slide-to="@i"
+                            class="@(i == 0 ? "active" : "")"
+                            aria-current="@(i == 0 ? "true" : "false")"
+                            aria-label="Slide @(i + 1)">
+                    </button>
+                }
+            </div>
+
+            <div class="carousel-inner h-100">
+                @for (int i = 0; i < heroBannerMovies.Count; i++)
+                {
+                    var movie = heroBannerMovies[i];
+
+                    string heroBgImage = !string.IsNullOrWhiteSpace(movie.CoverImageUrl)
+                        ? movie.CoverImageUrl
+                        : movie.ImageUrl;
+
+                    string heroPoster = !string.IsNullOrWhiteSpace(movie.ImageUrl)
+                        ? movie.ImageUrl
+                        : heroBgImage;
+
+                    string heroDesc = !string.IsNullOrWhiteSpace(movie.Description)
+                        ? (movie.Description.Length > 170 ? movie.Description.Substring(0, 170) + "..." : movie.Description)
+                        : "Khám phá suất chiếu, chọn ghế đẹp và đặt vé ngay tại CineZone.";
+
+                    string heroGenres = movie.MovieGenres != null && movie.MovieGenres.Any()
+                        ? string.Join(", ", movie.MovieGenres.Select(mg => mg.Genre?.Name))
+                        : "Phim";
+
+                    string displayAge = !string.IsNullOrEmpty(movie.AgeRating)
+                        ? (movie.AgeRating == "P" || movie.AgeRating == "K" ? movie.AgeRating : "T" + movie.AgeRating)
+                        : "P";
+
+                    <div class="carousel-item h-100 @(i == 0 ? "active" : "")" data-bs-interval="4600">
+                        <div class="cz-hero-bg" style="background-image: url('@Html.Raw(heroBgImage)');"></div>
+
+                        <div class="cz-bg-light-sweep"></div>
+                        <div class="cz-bg-color-orb"></div>
+                        <div class="cz-hero-overlay"></div>
+
+                        <div class="cz-hero-layout">
+                            <div class="cz-hero-left">
+                                <div class="cz-hero-kicker">
+                                    <span class="material-symbols-outlined">auto_awesome</span>
+                                    CineZone Premiere
+                                </div>
+
+                                <h1 class="cz-hero-title">@movie.Title</h1>
+
+                                <div class="cz-hero-meta">
+                                    <span>
+                                        <span class="material-symbols-outlined">local_activity</span>
+                                        @displayAge
+                                    </span>
+
+                                    <span>
+                                        <span class="material-symbols-outlined">movie</span>
+                                        @heroGenres
+                                    </span>
+
+                                    <span>
+                                        <span class="material-symbols-outlined">schedule</span>
+                                        @movie.Duration phút
+                                    </span>
+
+                                    <span>
+                                        <span class="material-symbols-outlined">star</span>
+                                        @movie.Rating
+                                    </span>
+                                </div>
+
+                                <p class="cz-hero-desc">@heroDesc</p>
+
+                                <div class="cz-hero-actions">
+                                    <a asp-controller="Bookings"
+                                       asp-action="Create"
+                                       asp-route-movieId="@movie.Id"
+                                       class="cz-btn-book text-decoration-none">
+                                        <span class="material-symbols-outlined">confirmation_number</span>
+                                        Đặt Vé Ngay
+                                    </a>
+
+                                    <a asp-controller="Movies"
+                                       asp-action="Details"
+                                       asp-route-id="@movie.Id"
+                                       class="cz-btn-trailer text-decoration-none">
+                                        <span class="material-symbols-outlined">play_circle</span>
+                                        Xem Chi Tiết
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="cz-hero-right">
+                                <div class="cz-poster-stage">
+                                    <div class="cz-poster-back-card cz-poster-back-1"></div>
+                                    <div class="cz-poster-back-card cz-poster-back-2"></div>
+
+                                    <div class="cz-main-poster-card">
+                                        <img src="@heroPoster" alt="@movie.Title" />
+
+                                        <div class="cz-poster-glare"></div>
+
+                                        <div class="cz-poster-bottom">
+                                            <div>
+                                                <strong>@movie.Title</strong>
+                                                <span>@heroGenres</span>
+                                            </div>
+
+                                            <div class="cz-mini-rating">
+                                                <span class="material-symbols-outlined">star</span>
+                                                @movie.Rating
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="cz-ticket-card">
+                                        <span>VIP PASS</span>
+                                        <strong>CZ-2026</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+@if (!isSearch && hotMovies.Any())
+{
+    <section class="cz-movie-section reveal-target">
+        <div class="cz-section-head">
+            <div>
+                <h2>Phim Đang Hot</h2>
+                <p>Những bộ phim được đặt vé nhiều nhất tại CineZone</p>
+            </div>
+        </div>
+
+        <div class="horizontal-scroll d-flex gap-4 overflow-auto hide-scrollbar pb-3">
+            @foreach (var movie in hotMovies)
+            {
+                string displayAge = !string.IsNullOrEmpty(movie.AgeRating)
+                    ? (movie.AgeRating == "P" || movie.AgeRating == "K" ? movie.AgeRating : "T" + movie.AgeRating)
+                    : "P";
+
+                string badgeColorClass = displayAge == "P" ? "bg-success" : (displayAge == "K" ? "bg-info" : "bg-danger");
+
+                string genreList = movie.MovieGenres != null && movie.MovieGenres.Any()
+                    ? string.Join(", ", movie.MovieGenres.Select(mg => mg.Genre?.Name))
+                    : "Phim";
+
+                string shortDescription = !string.IsNullOrEmpty(movie.Description)
+                    ? (movie.Description.Length > 95 ? movie.Description.Substring(0, 95) + "..." : movie.Description)
+                    : "Xem thông tin chi tiết và đặt vé ngay.";
+
+                <div class="cz-movie-card" style="min-width: 220px; max-width: 220px;">
+                    <div class="cz-poster-wrap">
+                        <img src="@movie.ImageUrl" alt="@movie.Title" />
+
+                        <div class="cz-age-badge badge @badgeColorClass">
+                            @displayAge
+                        </div>
+
+                        <div class="cz-rating-badge">
+                            <span class="material-symbols-outlined">star</span>
+                            @movie.Rating
+                        </div>
+
+                        <div class="cz-card-overlay">
+                            <div class="cz-card-info">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <span class="badge bg-warning text-dark fw-bold">
+                                        <span class="material-symbols-outlined align-middle" style="font-size: 15px;">star</span>
+                                        @movie.Rating
+                                    </span>
+
+                                    <span class="badge bg-dark bg-opacity-75 text-white">
+                                        @movie.Duration phút
+                                    </span>
+                                </div>
+
+                                <h6>@movie.Title</h6>
+                                <p class="cz-genre">@genreList</p>
+                                <p class="cz-movie-desc">@shortDescription</p>
+
+                                <div class="d-flex gap-2">
+                                    <a asp-controller="Bookings"
+                                       asp-action="Create"
+                                       asp-route-movieId="@movie.Id"
+                                       class="btn btn-sm btn-danger rounded-pill px-3 fw-bold text-decoration-none">
+                                        Đặt vé
+                                    </a>
+
+                                    <a asp-controller="Movies"
+                                       asp-action="Details"
+                                       asp-route-id="@movie.Id"
+                                       class="btn btn-sm btn-outline-light rounded-pill px-3 text-decoration-none">
+                                        Chi tiết
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="text-decoration-none">
+                        <h5 class="cz-card-title">@movie.Title</h5>
+                    </a>
+
+                    <p class="cz-card-subtitle">@genreList • @movie.Duration phút</p>
+                </div>
+            }
+        </div>
+    </section>
+}
+
+<section id="now-showing" class="cz-movie-section reveal-target @(isSearch ? "cz-search-result-section" : "")">
+    <div class="cz-section-head">
+        <div>
+            @if (isSearch)
+            {
+                <h2>Kết Quả Tìm Kiếm</h2>
+                <p>Danh sách phim phù hợp với từ khóa hoặc thể loại bạn đã chọn</p>
+            }
+            else
+            {
+                <h2>Phim Đang Chiếu</h2>
+                <p>Đặt vé nhanh, chọn ghế đẹp, thanh toán tiện lợi</p>
+            }
+        </div>
+    </div>
+
+    @if (isSearch)
+    {
+        <div class="cz-search-summary mb-4">
+            <div>
+                <strong>Kết quả tìm kiếm</strong>
+
+                @if (!string.IsNullOrWhiteSpace(ViewBag.SearchKeyword as string))
+                {
+                    <span> cho từ khóa "@ViewBag.SearchKeyword"</span>
+                }
+
+                @if (ViewBag.SelectedGenreId != null)
+                {
+                    <span> theo thể loại đã chọn</span>
+                }
+            </div>
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="cz-clear-search text-decoration-none">
+                Xóa bộ lọc
+            </a>
+        </div>
+    }
+
+    @if (!showingMovies.Any())
+    {
+        <div class="cz-empty-search">
+            <span class="material-symbols-outlined">movie_off</span>
+
+            <h4>Không tìm thấy phim phù hợp</h4>
+
+            <p>Thử đổi từ khóa tìm kiếm hoặc chọn thể loại khác.</p>
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="btn btn-danger rounded-pill px-4 fw-bold mt-2">
+                Quay lại danh sách phim
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="cz-movie-slider-wrap">
+            <button type="button"
+                    class="cz-slider-btn cz-slider-prev"
+                    data-slider-target="nowShowingSlider">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+
+            <div id="nowShowingSlider" class="cz-movie-slider-track">
+                @foreach (var movie in showingMovies)
+                {
+                    string displayAge = !string.IsNullOrEmpty(movie.AgeRating)
+                        ? (movie.AgeRating == "P" || movie.AgeRating == "K" ? movie.AgeRating : "T" + movie.AgeRating)
+                        : "P";
+
+                    string badgeColorClass = displayAge == "P" ? "bg-success" : (displayAge == "K" ? "bg-info" : "bg-danger");
+
+                    string genreList = movie.MovieGenres != null && movie.MovieGenres.Any()
+                        ? string.Join(", ", movie.MovieGenres.Select(mg => mg.Genre?.Name))
+                        : "Phim";
+
+                    string shortDescription = !string.IsNullOrEmpty(movie.Description)
+                        ? (movie.Description.Length > 95 ? movie.Description.Substring(0, 95) + "..." : movie.Description)
+                        : "Xem thông tin chi tiết và đặt vé ngay.";
+
+                    <div class="cz-slider-movie-item">
+                        <div class="cz-movie-card">
+                            <div class="cz-poster-wrap">
+                                <img src="@movie.ImageUrl" alt="@movie.Title" />
+
+                                <div class="cz-age-badge badge @badgeColorClass">
+                                    @displayAge
+                                </div>
+
+                                <div class="cz-rating-badge">
+                                    <span class="material-symbols-outlined">star</span>
+                                    @movie.Rating
+                                </div>
+
+                                <div class="cz-card-overlay">
+                                    <div class="cz-card-info">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <span class="badge bg-warning text-dark fw-bold">
+                                                <span class="material-symbols-outlined align-middle" style="font-size: 15px;">star</span>
+                                                @movie.Rating
+                                            </span>
+
+                                            <span class="badge bg-dark bg-opacity-75 text-white">
+                                                @movie.Duration phút
+                                            </span>
+                                        </div>
+
+                                        <h6>@movie.Title</h6>
+
+                                        <p class="cz-genre">@genreList</p>
+
+                                        <p class="cz-movie-desc">@shortDescription</p>
+
+                                        <div class="d-flex gap-2">
+                                            <a asp-controller="Bookings"
+                                               asp-action="Create"
+                                               asp-route-movieId="@movie.Id"
+                                               class="btn btn-sm btn-danger rounded-pill px-3 fw-bold text-decoration-none">
+                                                Đặt vé
+                                            </a>
+
+                                            <a asp-controller="Movies"
+                                               asp-action="Details"
+                                               asp-route-id="@movie.Id"
+                                               class="btn btn-sm btn-outline-light rounded-pill px-3 text-decoration-none">
+                                                Chi tiết
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a asp-controller="Movies"
+                               asp-action="Details"
+                               asp-route-id="@movie.Id"
+                               class="text-decoration-none">
+                                <h5 class="cz-card-title">@movie.Title</h5>
+                            </a>
+
+                            <p class="cz-card-subtitle">@genreList • @movie.Duration phút</p>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <button type="button"
+                    class="cz-slider-btn cz-slider-next"
+                    data-slider-target="nowShowingSlider">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+        </div>
+    }
+</section>
+
+@if (!isSearch)
+{
+    @if (upcomingMovies.Any())
+    {
+        <section id="upcoming" class="cz-upcoming-section reveal-target">
+            <div class="cz-section-head">
+                <div>
+                    <h2>Phim Sắp Chiếu</h2>
+                    <p>Đón chờ những bộ phim sắp ra mắt tại CineZone</p>
+                </div>
+            </div>
+
+            <div class="cz-movie-slider-wrap">
+                <button type="button"
+                        class="cz-slider-btn cz-slider-prev"
+                        data-slider-target="upcomingSlider">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+
+                <div id="upcomingSlider" class="cz-upcoming-slider-track">
+                    @foreach (var movie in upcomingMovies)
+                    {
+                        string displayAge = !string.IsNullOrEmpty(movie.AgeRating)
+                            ? (movie.AgeRating == "P" || movie.AgeRating == "K" ? movie.AgeRating : "T" + movie.AgeRating)
+                            : "P";
+
+                        string genreList = movie.MovieGenres != null && movie.MovieGenres.Any()
+                            ? string.Join(", ", movie.MovieGenres.Select(mg => mg.Genre?.Name))
+                            : "Phim";
+
+                        <div class="cz-upcoming-slider-item">
+                            <div class="cz-upcoming-card">
+                                <div class="cz-upcoming-poster">
+                                    <img src="@movie.ImageUrl" alt="@movie.Title" />
+
+                                    <div class="cz-upcoming-date">
+                                        <span>Khởi chiếu</span>
+                                        <strong>@movie.ReleaseDate.ToString("dd/MM")</strong>
+                                    </div>
+                                </div>
+
+                                <div class="cz-upcoming-content">
+                                    <span class="cz-upcoming-tag">Sắp chiếu</span>
+
+                                    <h3>@movie.Title</h3>
+
+                                    <p>
+                                        @genreList • @movie.Duration phút • @displayAge
+                                    </p>
+
+                                    <a asp-controller="Movies"
+                                       asp-action="Details"
+                                       asp-route-id="@movie.Id"
+                                       class="cz-upcoming-btn text-decoration-none">
+                                        Xem thông tin
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <button type="button"
+                        class="cz-slider-btn cz-slider-next"
+                        data-slider-target="upcomingSlider">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </section>
+    }
+
+    <section class="cz-offer-strip reveal-target">
+        <div class="cz-offer-card">
+            <div class="cz-offer-left">
+                <span class="cz-offer-kicker">CineZone Member</span>
+
+                <h2>Ưu đãi dành riêng cho thành viên</h2>
+
+                <p>
+                    Đăng ký tài khoản CineZone để nhận mã giảm giá, combo bắp nước tiết kiệm,
+                    quà sinh nhật và thông báo phim mới sớm nhất.
+                </p>
+
+                <div class="cz-offer-actions">
+                    <a asp-area="Identity"
+                       asp-page="/Account/Register"
+                       class="cz-offer-main text-decoration-none">
+                        Đăng ký thành viên
+                    </a>
+
+                    <a href="#contact"
+                       class="cz-offer-sub text-decoration-none">
+                        Tư vấn thêm
+                    </a>
+                </div>
+            </div>
+
+            <div class="cz-offer-right">
+                <div class="cz-benefit-item">
+                    <span class="material-symbols-outlined">confirmation_number</span>
+
+                    <div>
+                        <strong>Giảm giá vé</strong>
+                        <small>Ưu đãi theo từng tuần</small>
+                    </div>
+                </div>
+
+                <div class="cz-benefit-item">
+                    <span class="material-symbols-outlined">local_cafe</span>
+
+                    <div>
+                        <strong>Combo tiết kiệm</strong>
+                        <small>Bắp nước giá tốt hơn</small>
+                    </div>
+                </div>
+
+                <div class="cz-benefit-item">
+                    <span class="material-symbols-outlined">cake</span>
+
+                    <div>
+                        <strong>Quà sinh nhật</strong>
+                        <small>Ưu đãi riêng trong tháng sinh nhật</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cz-bento-section reveal-target">
+        <div class="text-center mb-5">
+            <h2>Trải Nghiệm & Ưu Đãi</h2>
+            <p>Đặc quyền thành viên, combo tiết kiệm và ưu đãi mỗi tháng</p>
+        </div>
+
+        <div class="container-fluid p-0">
+            <div class="row g-4" style="min-height: 600px;">
+                <div class="col-lg-6 d-flex">
+                    <div class="cz-bento-box cz-bento-large">
+                        <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1000&auto=format&fit=crop" alt="IMAX Event">
+
+                        <div class="cz-bento-content">
+                            <span>Member Special</span>
+                            <h3>Ngày Hội IMAX</h3>
+                            <p>Giảm giá 50% vé xem phim định dạng IMAX cho thành viên mới đăng ký trong tháng này.</p>
+                            <button class="btn btn-outline-danger rounded-pill fw-bold px-4">
+                                Nhận Ưu Đãi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 d-flex flex-column gap-4">
+                    <div class="cz-bento-box flex-grow-1" style="min-height: 250px;">
+                        <img src="https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=1000&auto=format&fit=crop" alt="Popcorn Combo">
+
+                        <div class="cz-bento-content">
+                            <h4>Combo Siêu Tiết Kiệm</h4>
+                            <p>Đặt trước combo qua web giảm 20%</p>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 flex-grow-1">
+                        <div class="col-6 d-flex">
+                            <div class="cz-bento-box w-100" style="min-height: 200px;">
+                                <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1000&auto=format&fit=crop" alt="Movie Tickets">
+
+                                <div class="cz-bento-content">
+                                    <h5>Thẻ Thành Viên</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 d-flex">
+                            <div class="cz-bento-box w-100">
+                                <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=1000&auto=format&fit=crop" alt="Birthday Gift">
+
+                                <div class="cz-bento-content">
+                                    <h5>Quà Tặng Sinh Nhật</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="cz-contact-section reveal-target">
+        <div class="cz-contact-card">
+            <div class="cz-contact-info">
+                <span class="cz-contact-kicker">Liên hệ với chúng tôi</span>
+
+                <h2>Cần hỗ trợ đặt vé?</h2>
+
+                <p>
+                    CineZone luôn sẵn sàng hỗ trợ bạn về đặt vé, thanh toán,
+                    chọn ghế và các chương trình ưu đãi.
+                </p>
+
+                <div class="cz-contact-list">
+                    <div>
+                        <span class="material-symbols-outlined">call</span>
+
+                        <div>
+                            <strong>Hotline</strong>
+                            <small>1900 9999</small>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="material-symbols-outlined">mail</span>
+
+                        <div>
+                            <strong>Email</strong>
+                            <small>support@cinezone.vn</small>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="material-symbols-outlined">location_on</span>
+
+                        <div>
+                            <strong>Địa chỉ</strong>
+                            <small>TP. Hồ Chí Minh, Việt Nam</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form class="cz-contact-form">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="text"
+                               class="form-control cz-contact-input"
+                               placeholder="Họ và tên" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <input type="email"
+                               class="form-control cz-contact-input"
+                               placeholder="Email" />
+                    </div>
+
+                    <div class="col-12">
+                        <input type="text"
+                               class="form-control cz-contact-input"
+                               placeholder="Tiêu đề cần hỗ trợ" />
+                    </div>
+
+                    <div class="col-12">
+                        <textarea class="form-control cz-contact-input"
+                                  rows="4"
+                                  placeholder="Nội dung liên hệ"></textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="button" class="cz-contact-btn">
+                            Gửi liên hệ
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+}
+
+<style>
+    body {
+        background: #0c0c0f;
+    }
+
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+    .cz-premiere-hero {
+        position: relative;
+        min-height: 680px;
+        overflow: hidden;
+        isolation: isolate;
+        background: radial-gradient(circle at 50% 0%, rgba(229,9,20,0.20), transparent 32%), linear-gradient(180deg, #050506 0%, #101014 60%, #0f0f11 100%);
+    }
+
+    .cz-hero-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center center;
+        filter: brightness(1.03) saturate(1.12) contrast(1.04);
+    }
+
+    .cz-hero-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        background: linear-gradient(90deg, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.54) 30%, rgba(0,0,0,0.18) 58%, rgba(0,0,0,0.40) 100%), linear-gradient(0deg, #0f0f11 0%, rgba(15,15,17,0.48) 14%, transparent 42%);
+    }
+
+    .cz-bg-light-sweep {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        background: linear-gradient(115deg, transparent 0%, transparent 38%, rgba(255,255,255,0.16) 47%, rgba(255,255,255,0.06) 54%, transparent 66%);
+        transform: translateX(-120%) skewX(-12deg);
+        mix-blend-mode: screen;
+        animation: czHeroSweep 5.4s ease-in-out infinite;
+    }
+
+    .cz-bg-color-orb {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0.45;
+        background: radial-gradient(circle at 72% 34%, rgba(255,255,255,0.12), transparent 18%), radial-gradient(circle at 58% 68%, rgba(229,9,20,0.18), transparent 24%), radial-gradient(circle at 80% 72%, rgba(90,190,255,0.13), transparent 20%);
+        mix-blend-mode: screen;
+        animation: czColorDrift 7s ease-in-out infinite alternate;
+    }
+
+    .cz-stage-light {
+        position: absolute;
+        top: -26%;
+        width: 44%;
+        height: 125%;
+        z-index: 4;
+        pointer-events: none;
+        background: linear-gradient(180deg, rgba(255,255,255,0.11), transparent 74%);
+        clip-path: polygon(47% 0, 56% 0, 100% 100%, 0 100%);
+        filter: blur(2px);
+        opacity: 0.34;
+        animation: czSpotlightMove 6s ease-in-out infinite alternate;
+    }
+
+    .cz-stage-light-left {
+        left: 2%;
+        transform: rotate(-16deg);
+    }
+
+    .cz-stage-light-right {
+        right: 4%;
+        transform: rotate(14deg);
+        animation-delay: 1.1s;
+    }
+
+    .cz-film-strip {
+        position: absolute;
+        left: -8%;
+        right: -8%;
+        height: 72px;
+        z-index: 4;
+        opacity: 0.08;
+        pointer-events: none;
+        background: repeating-linear-gradient(90deg, rgba(255,255,255,0.26) 0 18px, transparent 18px 34px);
+        animation: czFilmMove 18s linear infinite;
+    }
+
+    .cz-film-strip-top {
+        top: 122px;
+        transform: rotate(-5deg);
+    }
+
+    .cz-film-strip-bottom {
+        bottom: 94px;
+        transform: rotate(5deg);
+        animation-direction: reverse;
+    }
+
+    .cz-hero-particles {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        pointer-events: none;
+        opacity: 0.24;
+        background-image: radial-gradient(circle, rgba(255,255,255,0.7) 0 1px, transparent 1.8px), radial-gradient(circle, rgba(255,89,100,0.7) 0 1px, transparent 1.7px), radial-gradient(circle, rgba(90,190,255,0.6) 0 1px, transparent 1.7px);
+        background-size: 150px 150px, 220px 220px, 280px 280px;
+        background-position: 0 0, 90px 120px, 160px 50px;
+        mix-blend-mode: screen;
+        animation: czParticleSurface 15s linear infinite;
+    }
+
+    .cz-hero-layout {
+        position: relative;
+        z-index: 8;
+        min-height: 680px;
+        width: min(1240px, 100%);
+        margin: 0 auto;
+        padding: 96px 54px 48px;
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+        gap: 34px;
+        align-items: center;
+    }
+
+    .cz-hero-left {
+        position: relative;
+        z-index: 3;
+        max-width: 620px;
+    }
+
+    .cz-hero-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        width: fit-content;
+        padding: 9px 14px;
+        border-radius: 999px;
+        color: #fff;
+        background: rgba(229,9,20,0.78);
+        border: 1px solid rgba(255,255,255,0.18);
+        box-shadow: 0 12px 26px rgba(0,0,0,0.42);
+        font-size: 0.82rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 18px;
+        backdrop-filter: blur(10px);
+    }
+
+        .cz-hero-kicker .material-symbols-outlined {
+            font-size: 18px;
+        }
+
+    .cz-hero-title {
+        color: #fff;
+        font-size: clamp(2.35rem, 4.1vw, 4.25rem);
+        font-weight: 950;
+        line-height: 0.98;
+        letter-spacing: -0.055em;
+        margin-bottom: 18px;
+        text-shadow: 0 8px 28px rgba(0,0,0,0.95), 0 0 24px rgba(229,9,20,0.25);
+    }
+
+    .cz-hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-bottom: 18px;
+    }
+
+        .cz-hero-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            color: rgba(255,255,255,0.96);
+            background: rgba(0,0,0,0.32);
+            border: 1px solid rgba(255,255,255,0.13);
+            font-size: 0.82rem;
+            font-weight: 780;
+            backdrop-filter: blur(8px);
+        }
+
+        .cz-hero-meta .material-symbols-outlined {
+            color: #ff5964;
+            font-size: 17px;
+        }
+
+    .cz-hero-desc {
+        color: rgba(255,255,255,0.92);
+        font-size: 1.04rem;
+        line-height: 1.72;
+        max-width: 570px;
+        margin-bottom: 30px;
+        font-weight: 640;
+        text-shadow: 0 3px 14px rgba(0,0,0,0.86);
+    }
+
+    .cz-hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .cz-btn-book,
+    .cz-btn-trailer {
+        min-height: 54px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        border-radius: 999px;
+        padding: 0 30px;
+        font-size: 1rem;
+        font-weight: 950;
+        transition: 0.24s ease;
+    }
+
+    .cz-btn-book {
+        position: relative;
+        overflow: hidden;
+        color: #fff;
+        border: none;
+        background: linear-gradient(135deg, #ff9f99 0%, #e50914 68%, #9f050d 100%);
+        box-shadow: 0 18px 42px rgba(229,9,20,0.36);
+    }
+
+        .cz-btn-book::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -90px;
+            width: 72px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.54), transparent);
+            transform: skewX(-22deg);
+            animation: czButtonShimmer 2.4s ease-in-out infinite;
+        }
+
+        .cz-btn-book:hover {
+            color: #fff;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 24px 58px rgba(229,9,20,0.50);
+        }
+
+    .cz-btn-trailer {
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.26);
+        background: rgba(0,0,0,0.24);
+        backdrop-filter: blur(8px);
+    }
+
+        .cz-btn-trailer:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.14);
+            transform: translateY(-3px);
+        }
+
+    .carousel-item.active .cz-hero-kicker {
+        animation: czFadeUp 0.78s ease both;
+    }
+
+    .carousel-item.active .cz-hero-title {
+        animation: czTitleReveal 0.95s cubic-bezier(.2,.9,.2,1) 0.1s both;
+    }
+
+    .carousel-item.active .cz-hero-meta,
+    .carousel-item.active .cz-hero-desc,
+    .carousel-item.active .cz-hero-actions {
+        animation: czFadeUp 0.85s ease 0.24s both;
+    }
+
+    .cz-hero-right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 0;
+    }
+
+    .cz-poster-stage {
+        position: relative;
+        width: min(360px, 86vw);
+        height: 500px;
+        perspective: 1000px;
+        animation: czPosterStageIn 0.9s cubic-bezier(.2,.9,.2,1) both;
+    }
+
+    .cz-main-poster-card {
+        position: absolute;
+        inset: 0;
+        border-radius: 34px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.20);
+        background: #111;
+        box-shadow: 0 34px 100px rgba(0,0,0,0.62), 0 0 70px rgba(229,9,20,0.23);
+        transform: rotateY(-8deg) rotateX(4deg);
+        animation: czPosterFloat 4.2s ease-in-out infinite alternate;
+    }
+
+        .cz-main-poster-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(1.02) saturate(1.1) contrast(1.04);
+        }
+
+    .cz-poster-glare {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(115deg, transparent 0%, transparent 36%, rgba(255,255,255,0.24) 47%, rgba(255,255,255,0.08) 54%, transparent 66%);
+        transform: translateX(-120%) skewX(-12deg);
+        mix-blend-mode: screen;
+        animation: czPosterGlare 4.8s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .cz-poster-bottom {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        padding: 14px 15px;
+        border-radius: 20px;
+        background: rgba(0,0,0,0.58);
+        border: 1px solid rgba(255,255,255,0.13);
+        backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+        .cz-poster-bottom strong {
+            display: block;
+            color: #fff;
+            font-size: 0.98rem;
+            font-weight: 950;
+            line-height: 1.1;
+        }
+
+        .cz-poster-bottom span {
+            display: block;
+            color: #aaa;
+            font-size: 0.78rem;
+            font-weight: 700;
+            margin-top: 3px;
+        }
+
+    .cz-mini-rating {
+        flex-shrink: 0;
+        color: #fff;
+        font-weight: 950;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: rgba(229,9,20,0.76);
+    }
+
+        .cz-mini-rating .material-symbols-outlined {
+            color: #facc15;
+            font-size: 17px;
+        }
+
+    .cz-poster-back-card {
+        position: absolute;
+        inset: 28px;
+        border-radius: 32px;
+        border: 1px solid rgba(255,255,255,0.13);
+        background: linear-gradient(135deg, rgba(229,9,20,0.48), rgba(0,0,0,0.82));
+        filter: blur(0.2px);
+    }
+
+    .cz-poster-back-1 {
+        transform: translate(42px, -30px) rotate(7deg);
+        opacity: 0.42;
+    }
+
+    .cz-poster-back-2 {
+        transform: translate(-38px, 36px) rotate(-7deg);
+        opacity: 0.32;
+        background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(0,0,0,0.80));
+    }
+
+    .cz-ticket-card {
+        position: absolute;
+        right: -54px;
+        bottom: 70px;
+        width: 168px;
+        height: 82px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,211,211,0.95));
+        color: #141414;
+        box-shadow: 0 20px 58px rgba(0,0,0,0.34);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 22px;
+        transform: rotate(-7deg);
+        animation: czTicketFloat 3.8s ease-in-out infinite alternate;
+    }
+
+        .cz-ticket-card::before,
+        .cz-ticket-card::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            background: #0f0f11;
+            transform: translateY(-50%);
+        }
+
+        .cz-ticket-card::before {
+            left: -9px;
+        }
+
+        .cz-ticket-card::after {
+            right: -9px;
+        }
+
+        .cz-ticket-card span {
+            font-size: 0.72rem;
+            font-weight: 950;
+            color: #e50914;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cz-ticket-card strong {
+            font-size: 1.12rem;
+            font-weight: 950;
+            letter-spacing: -0.04em;
+        }
+
+    .cz-hero-indicators {
+        margin-bottom: 2rem;
+        z-index: 14;
+    }
+
+        .cz-hero-indicators button {
+            width: 34px !important;
+            height: 5px !important;
+            border: none !important;
+            border-radius: 999px !important;
+            background-color: rgba(255,255,255,0.45) !important;
+            transition: 0.25s ease;
+        }
+
+            .cz-hero-indicators button.active {
+                width: 58px !important;
+                background: linear-gradient(90deg, #ff9f99, #e50914) !important;
+                box-shadow: 0 0 22px rgba(229,9,20,0.58);
+            }
+
+    .cz-movie-section {
+        position: relative;
+        padding: 72px 48px 34px;
+        overflow: hidden;
+    }
+
+    .cz-section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        margin-bottom: 28px;
+    }
+
+        .cz-section-head h2,
+        .cz-bento-section h2 {
+            position: relative;
+            display: inline-block;
+            color: #fff;
+            font-size: clamp(1.8rem, 3vw, 2.65rem);
+            font-weight: 950;
+            letter-spacing: -0.045em;
+            margin-bottom: 0;
+        }
+
+            .cz-section-head h2::after,
+            .cz-bento-section h2::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -10px;
+                width: 64px;
+                height: 4px;
+                border-radius: 999px;
+                background: linear-gradient(90deg, #ff9f99, #e50914);
+                box-shadow: 0 0 22px rgba(229,9,20,0.5);
+                animation: czTitleLine 2.4s ease-in-out infinite alternate;
+            }
+
+            .cz-bento-section h2::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+        .cz-section-head p,
+        .cz-bento-section p {
+            color: #8d8d93;
+            margin-top: 12px;
+            margin-bottom: 0;
+        }
+
+    .reveal-target {
+        opacity: 0;
+        transform: translateY(34px);
+        transition: opacity 0.85s ease, transform 0.85s cubic-bezier(.2,.9,.2,1);
+    }
+
+        .reveal-target.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    .horizontal-scroll {
+        scroll-behavior: smooth;
+        padding-top: 10px;
+        mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+    }
+
+    .cz-movie-card {
+        position: relative;
+        opacity: 0;
+        transform: translateY(28px) scale(0.98);
+        animation: czCardIn 0.75s cubic-bezier(.2,.9,.2,1) both;
+        transition: transform 0.35s ease;
+    }
+
+        .cz-movie-card:hover {
+            transform: translateY(-12px) scale(1.015);
+        }
+
+    .cz-poster-wrap {
+        position: relative;
+        height: 330px;
+        margin-bottom: 14px;
+        border-radius: 22px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.10);
+        background: #111;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        transition: box-shadow 0.35s ease;
+    }
+
+    .cz-movie-card:hover .cz-poster-wrap {
+        box-shadow: 0 20px 55px rgba(229,9,20,0.32), 0 0 0 1px rgba(229,9,20,0.24);
+    }
+
+    .cz-poster-wrap::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.16) 48%, transparent 70%);
+        transform: translateX(-120%);
+        transition: 0.65s ease;
+        pointer-events: none;
+    }
+
+    .cz-movie-card:hover .cz-poster-wrap::before {
+        transform: translateX(120%);
+    }
+
+    .cz-poster-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.55s ease, filter 0.55s ease;
+    }
+
+    .cz-movie-card:hover .cz-poster-wrap img {
+        transform: scale(1.08);
+        filter: brightness(0.65);
+    }
+
+    .cz-age-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 6;
+        font-size: 0.75rem;
+        padding: 6px 8px;
+        font-weight: 900;
+    }
+
+    .cz-rating-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 6;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 9px;
+        border-bottom-left-radius: 12px;
+        color: #fff;
+        background: rgba(0,0,0,0.68);
+        backdrop-filter: blur(10px);
+        font-weight: 800;
+        font-size: 0.85rem;
+    }
+
+        .cz-rating-badge .material-symbols-outlined {
+            color: #facc15;
+            font-size: 17px;
+        }
+
+    .cz-card-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        display: flex;
+        align-items: end;
+        padding: 14px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(18px);
+        transition: 0.35s ease;
+        background: linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.72) 48%, rgba(0,0,0,0.15) 100%);
+        backdrop-filter: blur(2px);
+    }
+
+    .cz-movie-card:hover .cz-card-overlay {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .cz-card-info {
+        transform: translateY(10px);
+        transition: transform 0.35s ease;
+    }
+
+    .cz-movie-card:hover .cz-card-info {
+        transform: translateY(0);
+    }
+
+    .cz-card-info h6 {
+        color: #fff;
+        font-weight: 900;
+        margin-bottom: 4px;
+    }
+
+    .cz-genre {
+        color: #ff5964;
+        font-size: 0.82rem;
+        font-weight: 800;
+        margin-bottom: 6px;
+    }
+
+    .cz-movie-desc {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        color: rgba(255,255,255,0.86);
+        font-size: 0.82rem;
+        margin-bottom: 12px;
+    }
+
+    .cz-card-title {
+        color: #fff;
+        font-size: 1.05rem;
+        font-weight: 900;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: color 0.25s ease;
+    }
+
+    .cz-movie-card:hover .cz-card-title {
+        color: #ff5964;
+    }
+
+    .cz-card-subtitle {
+        color: #85858d;
+        font-size: 0.84rem;
+        margin-bottom: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .cz-bento-section {
+        position: relative;
+        padding: 78px 48px 88px;
+        overflow: hidden;
+    }
+
+        .cz-bento-section::before {
+            content: "";
+            position: absolute;
+            width: 480px;
+            height: 480px;
+            right: -160px;
+            top: 120px;
+            border-radius: 999px;
+            background: rgba(229,9,20,0.13);
+            filter: blur(90px);
+            pointer-events: none;
+            animation: czBentoGlow 5s ease-in-out infinite alternate;
+        }
+
+    .cz-bento-box {
+        position: relative;
+        width: 100%;
+        min-height: 100%;
+        overflow: hidden;
+        border-radius: 22px;
+        border: 1px solid rgba(255,255,255,0.10);
+        background: #111;
+        box-shadow: 0 18px 48px rgba(0,0,0,0.38);
+        transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+
+        .cz-bento-box::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: linear-gradient(115deg, transparent, rgba(255,255,255,0.13), transparent);
+            transform: translateX(-120%);
+            transition: 0.75s ease;
+            pointer-events: none;
+        }
+
+        .cz-bento-box:hover {
+            transform: translateY(-8px) scale(1.012);
+            border-color: rgba(229,9,20,0.42);
+            box-shadow: 0 28px 72px rgba(229,9,20,0.22);
+        }
+
+            .cz-bento-box:hover::after {
+                transform: translateX(120%);
+            }
+
+        .cz-bento-box img {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.55);
+            transition: transform 0.75s ease, filter 0.5s ease;
+        }
+
+        .cz-bento-box:hover img {
+            transform: scale(1.08);
+            filter: brightness(0.72) saturate(1.12);
+        }
+
+    .cz-bento-content {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        min-height: inherit;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        padding: 28px;
+        background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 75%);
+    }
+
+    .cz-bento-large .cz-bento-content {
+        padding: 42px;
+    }
+
+    .cz-bento-content span {
+        color: #ff5964;
+        font-size: 0.82rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        margin-bottom: 8px;
+    }
+
+    .cz-bento-content h3,
+    .cz-bento-content h4,
+    .cz-bento-content h5 {
+        color: #fff;
+        font-weight: 950;
+        margin-bottom: 8px;
+    }
+
+    .cz-bento-content h3 {
+        font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    .cz-bento-content p {
+        color: rgba(255,255,255,0.74);
+        max-width: 560px;
+        margin-bottom: 18px;
+    }
+
+    .cz-bento-content > * {
+        transform: translateY(8px);
+        transition: transform 0.35s ease;
+    }
+
+    .cz-bento-box:hover .cz-bento-content > * {
+        transform: translateY(0);
+    }
+
+    @@keyframes czHeroSweep {
+        0% {
+            transform: translateX(-120%) skewX(-12deg);
+            opacity: 0;
+        }
+
+        20% {
+            opacity: 0.55;
+        }
+
+        48% {
+            transform: translateX(120%) skewX(-12deg);
+            opacity: 0.35;
+        }
+
+        100% {
+            transform: translateX(120%) skewX(-12deg);
+            opacity: 0;
+        }
+    }
+
+    @@keyframes czColorDrift {
+        from {
+            transform: translate3d(-20px, -12px, 0) scale(1);
+            opacity: 0.34;
+        }
+
+        to {
+            transform: translate3d(24px, 18px, 0) scale(1.05);
+            opacity: 0.55;
+        }
+    }
+
+    @@keyframes czSpotlightMove {
+        from {
+            opacity: 0.25;
+            translate: -28px 0;
+        }
+
+        to {
+            opacity: 0.55;
+            translate: 38px 0;
+        }
+    }
+
+    @@keyframes czFilmMove {
+        from {
+            background-position-x: 0;
+        }
+
+        to {
+            background-position-x: 420px;
+        }
+    }
+
+    @@keyframes czParticleSurface {
+        from {
+            background-position: 0 0, 90px 120px, 160px 50px;
+        }
+
+        to {
+            background-position: 340px -230px, -260px -190px, 430px -270px;
+        }
+    }
+
+    @@keyframes czFadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(22px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes czTitleReveal {
+        from {
+            opacity: 0;
+            transform: translateY(34px) scale(0.97);
+            filter: blur(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+    }
+
+    @@keyframes czButtonShimmer {
+        0% {
+            left: -90px;
+        }
+
+        45%, 100% {
+            left: calc(100% + 90px);
+        }
+    }
+
+    @@keyframes czPosterStageIn {
+        from {
+            opacity: 0;
+            transform: translateX(40px) scale(0.96);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+    }
+
+    @@keyframes czPosterFloat {
+        from {
+            translate: 0 0;
+        }
+
+        to {
+            translate: 0 -18px;
+        }
+    }
+
+    @@keyframes czPosterGlare {
+        0% {
+            transform: translateX(-120%) skewX(-12deg);
+            opacity: 0;
+        }
+
+        20% {
+            opacity: 0.65;
+        }
+
+        46% {
+            transform: translateX(120%) skewX(-12deg);
+            opacity: 0.35;
+        }
+
+        100% {
+            transform: translateX(120%) skewX(-12deg);
+            opacity: 0;
+        }
+    }
+
+    @@keyframes czTicketFloat {
+        from {
+            translate: 0 0;
+        }
+
+        to {
+            translate: 0 -16px;
+        }
+    }
+
+    @@keyframes czTitleLine {
+        from {
+            transform: scaleX(0.65);
+            opacity: 0.65;
+        }
+
+        to {
+            transform: scaleX(1.15);
+            opacity: 1;
+        }
+    }
+
+    @@keyframes czCardIn {
+        from {
+            opacity: 0;
+            transform: translateY(28px) scale(0.98);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @@keyframes czBentoGlow {
+        from {
+            transform: translate(0, 0) scale(1);
+            opacity: 0.45;
+        }
+
+        to {
+            transform: translate(-40px, 30px) scale(1.12);
+            opacity: 0.85;
+        }
+    }
+
+    @@media (max-width: 991.98px) {
+        .cz-premiere-hero {
+            min-height: auto;
+        }
+
+        .cz-hero-layout {
+            min-height: auto;
+            grid-template-columns: 1fr;
+            padding: 120px 26px 70px;
+        }
+
+        .cz-hero-right {
+            order: -1;
+        }
+
+        .cz-poster-stage {
+            width: min(330px, 80vw);
+            height: 460px;
+        }
+
+        .cz-ticket-card {
+            right: -20px;
+        }
+
+        .cz-movie-section,
+        .cz-bento-section {
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .cz-hero-layout {
+            padding: 106px 16px 54px;
+        }
+
+        .cz-hero-title {
+            font-size: 2.35rem;
+        }
+
+        .cz-hero-desc {
+            font-size: 0.95rem;
+        }
+
+        .cz-btn-book,
+        .cz-btn-trailer {
+            width: 100%;
+        }
+
+        .cz-poster-stage {
+            width: min(280px, 80vw);
+            height: 390px;
+        }
+
+        .cz-ticket-card {
+            display: none;
+        }
+
+        .cz-movie-section,
+        .cz-bento-section {
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+    }
+
+    .cz-upcoming-section,
+    .cz-offer-strip,
+    .cz-contact-section {
+        position: relative;
+        padding: 78px 48px 34px;
+        overflow: hidden;
+    }
+
+    .cz-upcoming-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+    }
+
+    .cz-upcoming-card {
+        position: relative;
+        display: grid;
+        grid-template-columns: 150px minmax(0, 1fr);
+        gap: 18px;
+        padding: 18px;
+        border-radius: 28px;
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.16), transparent 35%), rgba(255,255,255,0.055);
+        border: 1px solid rgba(255,255,255,0.10);
+        box-shadow: 0 22px 58px rgba(0,0,0,0.35);
+        transition: 0.3s ease;
+        overflow: hidden;
+    }
+
+        .cz-upcoming-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(229,9,20,0.38);
+            box-shadow: 0 30px 76px rgba(229,9,20,0.22);
+        }
+
+    .cz-upcoming-poster {
+        position: relative;
+        height: 210px;
+        border-radius: 20px;
+        overflow: hidden;
+        background: #111;
+    }
+
+        .cz-upcoming-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.55s ease;
+        }
+
+    .cz-upcoming-card:hover .cz-upcoming-poster img {
+        transform: scale(1.08);
+        filter: brightness(0.78);
+    }
+
+    .cz-upcoming-date {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        padding: 9px 11px;
+        border-radius: 14px;
+        color: #fff;
+        background: rgba(0,0,0,0.62);
+        border: 1px solid rgba(255,255,255,0.14);
+        backdrop-filter: blur(10px);
+    }
+
+        .cz-upcoming-date span {
+            display: block;
+            color: #ff5964;
+            font-size: 0.68rem;
+            font-weight: 950;
+            text-transform: uppercase;
+        }
+
+        .cz-upcoming-date strong {
+            display: block;
+            font-size: 1rem;
+            font-weight: 950;
+        }
+
+    .cz-upcoming-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .cz-upcoming-tag {
+        width: fit-content;
+        padding: 7px 10px;
+        border-radius: 999px;
+        color: #ff5964;
+        background: rgba(229,9,20,0.13);
+        border: 1px solid rgba(229,9,20,0.28);
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+    }
+
+    .cz-upcoming-content h3 {
+        color: #fff;
+        font-weight: 950;
+        letter-spacing: -0.04em;
+        margin-bottom: 8px;
+    }
+
+    .cz-upcoming-content p {
+        color: #9b9ba2;
+        font-size: 0.88rem;
+        margin-bottom: 18px;
+    }
+
+    .cz-upcoming-btn {
+        width: fit-content;
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.14);
+        font-weight: 850;
+        transition: 0.25s ease;
+    }
+
+        .cz-upcoming-btn:hover {
+            color: #fff;
+            background: rgba(229,9,20,0.72);
+            transform: translateY(-2px);
+        }
+
+    .cz-offer-card {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 28px;
+        padding: 42px;
+        border-radius: 34px;
+        background: radial-gradient(circle at 78% 18%, rgba(229,9,20,0.24), transparent 32%), linear-gradient(135deg, rgba(28,28,34,0.96), rgba(5,5,7,0.98));
+        border: 1px solid rgba(255,255,255,0.12);
+        box-shadow: 0 30px 90px rgba(0,0,0,0.48);
+        overflow: hidden;
+    }
+
+        .cz-offer-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(115deg, transparent, rgba(255,255,255,0.10), transparent);
+            transform: translateX(-120%);
+            animation: czOfferShine 4.8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+    .cz-offer-kicker,
+    .cz-contact-kicker {
+        display: inline-block;
+        color: #ff5964;
+        font-size: 0.82rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        margin-bottom: 12px;
+    }
+
+    .cz-offer-left h2,
+    .cz-contact-info h2 {
+        color: #fff;
+        font-size: clamp(2rem, 4vw, 3.4rem);
+        font-weight: 950;
+        line-height: 1;
+        letter-spacing: -0.06em;
+        margin-bottom: 16px;
+    }
+
+    .cz-offer-left p,
+    .cz-contact-info p {
+        color: #b0b0b7;
+        line-height: 1.75;
+        max-width: 650px;
+        margin-bottom: 26px;
+    }
+
+    .cz-offer-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .cz-offer-main,
+    .cz-offer-sub {
+        min-height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        padding: 0 22px;
+        font-weight: 900;
+        transition: 0.25s ease;
+    }
+
+    .cz-offer-main {
+        color: #fff;
+        background: linear-gradient(135deg, #ff9f99, #e50914);
+        box-shadow: 0 16px 36px rgba(229,9,20,0.32);
+    }
+
+    .cz-offer-sub {
+        color: #fff;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.14);
+    }
+
+        .cz-offer-main:hover,
+        .cz-offer-sub:hover {
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+    .cz-offer-right {
+        display: grid;
+        gap: 14px;
+    }
+
+    .cz-benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px;
+        border-radius: 22px;
+        background: rgba(255,255,255,0.065);
+        border: 1px solid rgba(255,255,255,0.10);
+        backdrop-filter: blur(10px);
+    }
+
+        .cz-benefit-item .material-symbols-outlined {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            background: rgba(229,9,20,0.78);
+        }
+
+        .cz-benefit-item strong {
+            display: block;
+            color: #fff;
+            font-weight: 950;
+        }
+
+        .cz-benefit-item small {
+            color: #9d9da4;
+        }
+
+    .cz-contact-card {
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+        gap: 30px;
+        padding: 42px;
+        border-radius: 34px;
+        background: radial-gradient(circle at 18% 16%, rgba(229,9,20,0.20), transparent 30%), rgba(255,255,255,0.055);
+        border: 1px solid rgba(255,255,255,0.11);
+        box-shadow: 0 30px 90px rgba(0,0,0,0.42);
+    }
+
+    .cz-contact-list {
+        display: grid;
+        gap: 14px;
+    }
+
+        .cz-contact-list > div {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .cz-contact-list .material-symbols-outlined {
+            width: 44px;
+            height: 44px;
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff5964;
+            background: rgba(229,9,20,0.13);
+            border: 1px solid rgba(229,9,20,0.26);
+        }
+
+        .cz-contact-list strong {
+            display: block;
+            color: #fff;
+            font-weight: 900;
+        }
+
+        .cz-contact-list small {
+            color: #9d9da4;
+        }
+
+    .cz-contact-form {
+        position: relative;
+        padding: 24px;
+        border-radius: 28px;
+        background: rgba(0,0,0,0.26);
+        border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .cz-contact-input {
+        min-height: 50px;
+        color: #fff !important;
+        background: rgba(10,10,13,0.92) !important;
+        border: 1px solid rgba(255,255,255,0.13) !important;
+        border-radius: 16px !important;
+    }
+
+        .cz-contact-input::placeholder {
+            color: #777;
+        }
+
+        .cz-contact-input:focus {
+            box-shadow: 0 0 0 0.22rem rgba(229,9,20,0.16) !important;
+            border-color: rgba(229,9,20,0.58) !important;
+        }
+
+    .cz-contact-btn {
+        width: 100%;
+        min-height: 52px;
+        border: none;
+        border-radius: 18px;
+        color: #fff;
+        background: linear-gradient(135deg, #ff9f99, #e50914);
+        font-weight: 950;
+        box-shadow: 0 16px 34px rgba(229,9,20,0.32);
+    }
+
+    @@keyframes czOfferShine {
+        0%, 45% {
+            transform: translateX(-120%);
+        }
+
+        100% {
+            transform: translateX(120%);
+        }
+    }
+
+    @@media (max-width: 991.98px) {
+        .cz-upcoming-grid,
+        .cz-offer-card,
+        .cz-contact-card {
+            grid-template-columns: 1fr;
+        }
+
+        .cz-upcoming-section,
+        .cz-offer-strip,
+        .cz-contact-section {
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .cz-upcoming-card {
+            grid-template-columns: 1fr;
+        }
+
+        .cz-upcoming-poster {
+            height: 280px;
+        }
+
+        .cz-offer-card,
+        .cz-contact-card {
+            padding: 24px;
+            border-radius: 26px;
+        }
+
+        .cz-upcoming-section,
+        .cz-offer-strip,
+        .cz-contact-section {
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+    }
+
+    @@media (max-height: 760px) and (min-width: 992px) {
+        .cz-premiere-hero {
+            min-height: 620px;
+        }
+
+        .cz-hero-layout {
+            min-height: 620px;
+            padding-top: 86px;
+            padding-bottom: 38px;
+        }
+
+        .cz-poster-stage {
+            width: 330px;
+            height: 460px;
+        }
+
+        .cz-hero-title {
+            font-size: clamp(2.2rem, 3.7vw, 3.75rem);
+            margin-bottom: 14px;
+        }
+
+        .cz-hero-desc {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 22px;
+        }
+
+        .cz-ticket-card {
+            bottom: 46px;
+            width: 148px;
+            height: 72px;
+        }
+
+        .cz-hero-indicators {
+            margin-bottom: 1.3rem;
+        }
+    }
+
+    .cz-search-result-section {
+        min-height: calc(100vh - 82px);
+        padding-top: 130px !important;
+    }
+
+    .cz-search-summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 18px 20px;
+        border-radius: 22px;
+        color: #fff;
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.18), transparent 34%), rgba(255,255,255,0.055);
+        border: 1px solid rgba(229,9,20,0.32);
+        box-shadow: 0 18px 46px rgba(0,0,0,0.26);
+    }
+
+        .cz-search-summary strong {
+            color: #fff;
+            font-weight: 950;
+        }
+
+        .cz-search-summary span {
+            color: #cfcfd5;
+            font-weight: 750;
+        }
+
+    .cz-clear-search {
+        flex-shrink: 0;
+        min-height: 38px;
+        padding: 0 16px;
+        border-radius: 999px;
+        color: #fff;
+        background: rgba(229,9,20,0.20);
+        border: 1px solid rgba(229,9,20,0.42);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 850;
+        transition: 0.22s ease;
+    }
+
+        .cz-clear-search:hover {
+            color: #fff;
+            background: rgba(229,9,20,0.78);
+            transform: translateY(-2px);
+        }
+
+    .cz-empty-search {
+        min-height: 360px;
+        border-radius: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #9d9da4;
+        text-align: center;
+        background: rgba(255,255,255,0.045);
+        border: 1px dashed rgba(255,255,255,0.16);
+    }
+
+        .cz-empty-search .material-symbols-outlined {
+            font-size: 64px;
+            color: #ff5964;
+            margin-bottom: 12px;
+        }
+
+        .cz-empty-search h4 {
+            color: #fff;
+            font-weight: 950;
+        }
+
+    @@media (max-width: 575.98px) {
+        .cz-search-summary {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .cz-search-result-section {
+            padding-top: 110px !important;
+        }
+    }
+
+
+    .cz-movie-slider-wrap {
+        position: relative;
+        width: 100%;
+    }
+
+    .cz-movie-slider-track {
+        display: flex;
+        gap: 26px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        padding: 6px 6px 18px;
+        scrollbar-width: none;
+    }
+
+        .cz-movie-slider-track::-webkit-scrollbar {
+            display: none;
+        }
+
+    .cz-slider-movie-item {
+        flex: 0 0 245px;
+        max-width: 245px;
+    }
+
+        .cz-slider-movie-item .cz-movie-card {
+            width: 100%;
+        }
+
+        .cz-slider-movie-item .cz-poster-wrap {
+            height: 390px;
+        }
+
+        .cz-slider-movie-item .cz-card-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cz-slider-movie-item .cz-card-subtitle {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+    .cz-slider-btn {
+        position: absolute;
+        top: 38%;
+        z-index: 20;
+        width: 48px;
+        height: 48px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.18);
+        color: #fff;
+        background: rgba(0,0,0,0.72);
+        backdrop-filter: blur(10px);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.22s ease;
+        box-shadow: 0 16px 38px rgba(0,0,0,0.45);
+    }
+
+        .cz-slider-btn:hover {
+            background: #e50914;
+            border-color: rgba(229,9,20,0.85);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .cz-slider-btn .material-symbols-outlined {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+    .cz-slider-prev {
+        left: -18px;
+        transform: translateY(-50%);
+    }
+
+    .cz-slider-next {
+        right: -18px;
+        transform: translateY(-50%);
+    }
+    
+    @@media (max-width: 991.98px) {
+        .cz-slider-movie-item {
+            flex-basis: 210px;
+            max-width: 210px;
+        }
+
+            .cz-slider-movie-item .cz-poster-wrap {
+                height: 330px;
+            }
+
+        .cz-slider-btn {
+            width: 42px;
+            height: 42px;
+        }
+
+        .cz-slider-prev {
+            left: -8px;
+        }
+
+        .cz-slider-next {
+            right: -8px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .cz-movie-slider-track {
+            gap: 18px;
+        }
+
+        .cz-slider-movie-item {
+            flex-basis: 175px;
+            max-width: 175px;
+        }
+
+            .cz-slider-movie-item .cz-poster-wrap {
+                height: 270px;
+            }
+    }
+
+    .cz-upcoming-slider-track {
+        display: flex;
+        gap: 24px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        padding: 6px 6px 18px;
+        scrollbar-width: none;
+    }
+
+        .cz-upcoming-slider-track::-webkit-scrollbar {
+            display: none;
+        }
+
+    .cz-upcoming-slider-item {
+        flex: 0 0 560px;
+        max-width: 560px;
+    }
+
+        .cz-upcoming-slider-item .cz-upcoming-card {
+            height: 100%;
+        }
+
+    @@media (max-width: 991.98px) {
+        .cz-upcoming-slider-item {
+            flex-basis: 460px;
+            max-width: 460px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .cz-upcoming-slider-item {
+            flex-basis: 310px;
+            max-width: 310px;
+        }
+    }
+
+</style>
+
+
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const revealTargets = document.querySelectorAll(".reveal-target");
+
+            const observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-visible");
+                    }
+                });
+            }, {
+                threshold: 0.14
+            });
+
+            revealTargets.forEach(function (section) {
+                observer.observe(section);
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".cz-slider-btn").forEach(function (button) {
+                button.addEventListener("click", function () {
+                    const targetId = button.getAttribute("data-slider-target");
+                    const slider = document.getElementById(targetId);
+
+                    if (!slider) return;
+
+                   const card = slider.querySelector(".cz-slider-movie-item, .cz-upcoming-slider-item");
+                    const cardWidth = card ? card.offsetWidth + 26 : 300;
+
+                    if (button.classList.contains("cz-slider-next")) {
+                        slider.scrollBy({
+                            left: cardWidth * 3,
+                            behavior: "smooth"
+                        });
+                    } else {
+                        slider.scrollBy({
+                            left: -(cardWidth * 3),
+                            behavior: "smooth"
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,1569 @@
+﻿@model WebMTB.Models.Booking
+
+@{
+    ViewData["Title"] = "Đặt vé - " + ViewBag.MovieTitle;
+
+    string movieTitle = ViewBag.MovieTitle ?? "Tên phim";
+    string movieImage = ViewBag.MovieImage ?? "";
+    string ageRating = ViewBag.AgeRating ?? "P";
+
+    string displayAge = ageRating == "P" || ageRating == "K"
+        ? ageRating
+        : "T" + ageRating;
+
+    string ageClass = displayAge == "P"
+        ? "age-green"
+        : (displayAge == "K" ? "age-blue" : "age-red");
+
+    var seats = ViewBag.Seats as List<WebMTB.Models.Seat> ?? new List<WebMTB.Models.Seat>();
+    var soldSeatIds = ViewBag.SoldSeatIds as List<int> ?? new List<int>();
+    var heldSeatIds = ViewBag.HeldSeatIds as List<int> ?? new List<int>();
+
+    int showtimeId = ViewBag.ShowtimeId ?? 0;
+    var showtime = ViewBag.Showtime as WebMTB.Models.Showtime;
+    decimal pricePerSeat = showtime?.BasePrice ?? 0;
+
+    var showtimes = ViewBag.Showtimes as List<WebMTB.Models.Showtime> ?? new List<WebMTB.Models.Showtime>();
+
+    string cinemaName = showtime?.Room?.Cinema?.Name ?? "Chưa chọn rạp";
+    string cinemaAddress = showtime?.Room?.Cinema?.Address ?? "";
+    string roomName = showtime?.Room?.Name ?? "Chưa chọn phòng";
+
+    var weekDates = ViewBag.WeekDates as List<DateTime>
+        ?? Enumerable.Range(0, 7).Select(i => DateTime.Today.AddDays(i)).ToList();
+
+    DateTime selectedDate = ViewBag.SelectedDate is DateTime d
+        ? d.Date
+        : DateTime.Today;
+
+    var viCulture = new System.Globalization.CultureInfo("vi-VN");
+
+    var cinemaGroups = showtimes
+        .GroupBy(s => new
+        {
+            CinemaId = s.Room?.Cinema?.Id ?? 0,
+            CinemaName = s.Room?.Cinema?.Name ?? "Chưa có rạp",
+            CinemaAddress = s.Room?.Cinema?.Address ?? ""
+        })
+        .OrderBy(g => g.Key.CinemaName)
+        .ToList();
+}
+
+<div class="booking-page">
+    <div class="container-fluid px-4 px-lg-5 py-4">
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger border-0 rounded-4 mb-4" role="alert"
+                 style="background: rgba(229, 9, 20, 0.15); color: #ffb4ba;">
+                <span class="material-symbols-outlined align-middle me-1">warning</span>
+                @TempData["Error"]
+            </div>
+        }
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success border-0 rounded-4 mb-4" role="alert"
+                 style="background: rgba(25, 135, 84, 0.15); color: #b7ffd2;">
+                <span class="material-symbols-outlined align-middle me-1">check_circle</span>
+                @TempData["Success"]
+            </div>
+        }
+
+        <div class="booking-hero mb-4">
+            <div class="booking-movie-info">
+                <div class="booking-poster">
+                    @if (!string.IsNullOrWhiteSpace(movieImage))
+                    {
+                        <img src="@movieImage" alt="@movieTitle" />
+                    }
+                    else
+                    {
+                        <div class="poster-empty">
+                            <span class="material-symbols-outlined">image_not_supported</span>
+                        </div>
+                    }
+                </div>
+
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined text-danger">confirmation_number</span>
+                        <span class="booking-eyebrow">Ticket Booking</span>
+                    </div>
+
+                    <h1 class="booking-title">@movieTitle</h1>
+
+                    <p class="booking-subtitle mb-3">
+                        Chọn ngày, rạp, suất chiếu và vị trí ghế yêu thích.
+                    </p>
+
+                    <div class="booking-badges">
+                        @if (ViewBag.MovieGenres != null)
+                        {
+                            foreach (var mg in (IEnumerable<WebMTB.Models.MovieGenre>)ViewBag.MovieGenres)
+                            {
+                                <span class="movie-genre-badge">
+                                    @mg.Genre?.Name
+                                </span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="movie-genre-badge">Phim</span>
+                        }
+
+                        <span class="age-badge @ageClass">@displayAge</span>
+                    </div>
+                </div>
+            </div>
+
+            <a asp-controller="Home" asp-action="Index" class="btn booking-back-btn">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Quay lại
+            </a>
+        </div>
+
+        <form asp-action="Create" id="bookingForm" method="post">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <input type="hidden" name="movieId" value="@ViewBag.MovieId" />
+            <input type="hidden" name="showtimeId" value="@showtimeId" />
+            <input type="hidden" name="selectedSeatIds" id="hiddenSeats" value="" />
+            <input type="hidden" id="hiddenTotalAmount" value="0" />
+
+            <div class="row g-4 booking-content">
+
+                <div class="col-xl-4">
+                    <div class="booking-card sticky-xl-top">
+                        <div class="booking-card-header">
+                            <div>
+                                <h5>1. Lịch chiếu</h5>
+                                <p>Chọn ngày, rạp và giờ chiếu phù hợp.</p>
+                            </div>
+                            <span class="material-symbols-outlined">schedule</span>
+                        </div>
+
+                        <div class="booking-card-body">
+                            <div class="cinema-card">
+                                <div class="cinema-heading">
+                                    <div class="cinema-icon">
+                                        <span class="material-symbols-outlined">location_on</span>
+                                    </div>
+
+                                    <div>
+                                        <h6>Chọn rạp & suất chiếu</h6>
+                                        <p>Hiển thị lịch chiếu trong 7 ngày tới.</p>
+                                    </div>
+                                </div>
+
+                                <div class="week-date-tabs">
+                                    @foreach (var day in weekDates)
+                                    {
+                                        bool isSelectedDay = day.Date == selectedDate.Date;
+                                        int showtimeCount = showtimes.Count(s => s.StartTime.Date == day.Date);
+
+                                        string dayLabel = day.Date == DateTime.Today
+                                            ? "Hôm nay"
+                                            : viCulture.TextInfo.ToTitleCase(day.ToString("dddd", viCulture));
+
+                                        <a asp-action="Create"
+                                           asp-route-movieId="@ViewBag.MovieId"
+                                           asp-route-selectedDate="@day.ToString("yyyy-MM-dd")"
+                                           class="date-tab @(isSelectedDay ? "active" : "")">
+
+                                            <span>@dayLabel</span>
+                                            <strong>@day.ToString("dd/MM")</strong>
+
+                                            @if (showtimeCount > 0)
+                                            {
+                                                <small>@showtimeCount suất</small>
+                                            }
+                                            else
+                                            {
+                                                <small>Không có</small>
+                                            }
+                                        </a>
+                                    }
+                                </div>
+
+                                <div class="cinema-showtime-list">
+                                    @if (cinemaGroups.Any())
+                                    {
+                                        foreach (var cinemaGroup in cinemaGroups)
+                                        {
+                                            var dayShowtimes = cinemaGroup
+                                                .Where(s => s.StartTime.Date == selectedDate.Date)
+                                                .OrderBy(s => s.Room?.Name)
+                                                .ThenBy(s => s.StartTime)
+                                                .ToList();
+
+                                            <div class="cinema-schedule-card">
+                                                <div class="cinema-schedule-header">
+                                                    <div class="cinema-schedule-icon">
+                                                        <span class="material-symbols-outlined">location_on</span>
+                                                    </div>
+
+                                                    <div>
+                                                        <h6>@cinemaGroup.Key.CinemaName</h6>
+
+                                                        @if (!string.IsNullOrWhiteSpace(cinemaGroup.Key.CinemaAddress))
+                                                        {
+                                                            <p>@cinemaGroup.Key.CinemaAddress</p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p>Chưa cập nhật địa chỉ</p>
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                @if (dayShowtimes.Any())
+                                                {
+                                                    var roomGroups = dayShowtimes
+                                                        .GroupBy(s => new
+                                                        {
+                                                            RoomId = s.Room?.Id ?? 0,
+                                                            RoomName = s.Room?.Name ?? "Chưa có phòng"
+                                                        })
+                                                        .OrderBy(g => g.Key.RoomName)
+                                                        .ToList();
+
+                                                    foreach (var roomGroup in roomGroups)
+                                                    {
+                                                        <div class="room-showtime-group">
+                                                            <div class="room-label">
+                                                                <span class="material-symbols-outlined">meeting_room</span>
+                                                                @roomGroup.Key.RoomName · 2D Phụ Đề
+                                                            </div>
+
+                                                            <div class="time-chip-list">
+                                                                @foreach (var item in roomGroup)
+                                                                {
+                                                                    bool isActive = item.Id == showtimeId;
+
+                                                                    <a asp-action="Create"
+                                                                       asp-route-movieId="@ViewBag.MovieId"
+                                                                       asp-route-selectedDate="@selectedDate.ToString("yyyy-MM-dd")"
+                                                                       asp-route-showtimeId="@item.Id"
+                                                                       class="time-chip @(isActive ? "active" : "")">
+
+                                                                        <strong>@item.StartTime.ToString("HH:mm")</strong>
+                                                                        <small>@item.BasePrice.ToString("N0")đ</small>
+                                                                    </a>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <div class="no-showtime-box">
+                                                        <span class="material-symbols-outlined">event_busy</span>
+                                                        Không có lịch chiếu trong ngày này.
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="no-showtime-box">
+                                            <span class="material-symbols-outlined">event_busy</span>
+                                            Phim này chưa có lịch chiếu trong 7 ngày tới.
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="booking-note mt-4">
+                                <span class="material-symbols-outlined">info</span>
+                                <p>
+                                    @if (showtime != null)
+                                    {
+                                        <span>
+                                            Suất đang chọn:
+                                            <strong>@cinemaName · @roomName · @showtime.StartTime.ToString("HH:mm - dd/MM/yyyy")</strong>.
+                                            Giá vé: <strong>@pricePerSeat.ToString("N0") VNĐ / ghế</strong>.
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            Vui lòng chọn ngày và suất chiếu để tiếp tục chọn ghế.
+                                        </span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-8">
+                    <div class="booking-card">
+                        <div class="booking-card-header">
+                            <div>
+                                <h5>2. Chọn ghế</h5>
+                                <p>Chọn vị trí ngồi yêu thích của bạn.</p>
+                            </div>
+                            <span class="material-symbols-outlined">event_seat</span>
+                        </div>
+
+                        <div class="booking-card-body seat-area">
+                            @if (showtime == null)
+                            {
+                                <div class="text-center text-secondary py-5">
+                                    <span class="material-symbols-outlined d-block mb-2" style="font-size: 52px; color:#ff5964;">
+                                        event_busy
+                                    </span>
+
+                                    <h5 class="text-white fw-bold">Chưa có suất chiếu trong ngày này</h5>
+                                    <p class="mb-0">
+                                        Vui lòng chọn ngày khác hoặc rạp khác có lịch chiếu.
+                                    </p>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="screen-wrap">
+                                    <div class="screen-glow"></div>
+                                    <div class="screen-line"></div>
+                                    <span>Màn hình</span>
+                                </div>
+
+                                <div class="seat-map">
+                                    @if (seats.Any())
+                                    {
+                                        int maxRow = seats.Max(s => s.GridRow);
+                                        int maxCol = seats.Max(s => s.GridColumn);
+
+                                        for (int r = 1; r <= maxRow; r++)
+                                        {
+                                            var rowSeats = seats.Where(s => s.GridRow == r).ToList();
+                                            string rowName = rowSeats.FirstOrDefault()?.Row ?? "";
+
+                                            <div class="seat-row">
+                                                <span class="row-label">@rowName</span>
+
+                                                @for (int c = 1; c <= maxCol; c++)
+                                                {
+                                                    var seat = seats.FirstOrDefault(s => s.GridRow == r && s.GridColumn == c);
+
+                                                    if (seat == null)
+                                                    {
+                                                        <div class="seat-empty-space"></div>
+                                                    }
+                                                    else
+                                                    {
+                                                        bool isSold = soldSeatIds.Contains(seat.Id);
+                                                        bool isHeld = heldSeatIds.Contains(seat.Id);
+                                                        bool isDisabled = isSold || isHeld;
+
+                                                        string seatName = $"{seat.Row}{seat.Number}";
+                                                        string seatTypeClass = seat.SeatType?.ToLower() ?? "normal";
+
+                                                        <input type="checkbox"
+                                                               class="seat-checkbox d-none"
+                                                               id="seat-@seat.Id"
+                                                               data-seat-id="@seat.Id"
+                                                               data-seat-name="@seatName"
+                                                        @(isDisabled ? "disabled" : "") />
+
+                                                        <label for="seat-@seat.Id"
+                                                               class="seat-label @seatTypeClass @(isSold ? "sold" : "") @(isHeld ? "seat-holding" : "")"
+                                                               data-seat-id="@seat.Id"
+                                                               data-seat-name="@seatName">
+                                                            @seat.Number
+                                                        </label>
+                                                    }
+                                                }
+
+                                                <span class="row-label">@rowName</span>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="text-center text-secondary py-5">
+                                            <span class="material-symbols-outlined d-block mb-2" style="font-size: 48px;">event_seat</span>
+                                            <p class="mb-0">Chưa có ghế trong phòng chiếu này.</p>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="seat-legend-wrap">
+                                    <div class="legend-item">
+                                        <span class="seat-legend available"></span>
+                                        <p>Ghế thường</p>
+                                    </div>
+
+                                    <div class="legend-item">
+                                        <span class="seat-legend vip"></span>
+                                        <p>VIP</p>
+                                    </div>
+
+                                    <div class="legend-item">
+                                        <span class="seat-legend couple"></span>
+                                        <p>Ghế đôi</p>
+                                    </div>
+
+                                    <div class="legend-item">
+                                        <span class="seat-legend selected"></span>
+                                        <p>Đang chọn</p>
+                                    </div>
+
+                                    <div class="legend-item">
+                                        <span class="seat-legend holding"></span>
+                                        <p>Đang giữ</p>
+                                    </div>
+
+                                    <div class="legend-item">
+                                        <span class="seat-legend sold"></span>
+                                        <p>Đã bán</p>
+                                    </div>
+
+                                    <div class="legend-item">
+                                        <span class="seat-legend empty"></span>
+                                        <p>Lối đi</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="booking-checkout-bar">
+                <div class="container-fluid px-4 px-lg-5">
+                    <div class="checkout-inner">
+                        <div class="checkout-left">
+                            <div>
+                                <p>Ghế đã chọn</p>
+                                <h5 id="display-seats">---</h5>
+                            </div>
+                        </div>
+
+                        <div class="checkout-right">
+                            <div class="checkout-total">
+                                <p>Tạm tính</p>
+                                <h4 id="display-total">0 VNĐ</h4>
+                            </div>
+
+                            <button type="submit" class="btn checkout-btn" id="checkoutBtn" disabled>
+                                <span class="material-symbols-outlined">payments</span>
+                                Thanh toán
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<style>
+    body {
+        padding-bottom: 118px;
+    }
+
+    .booking-page {
+        min-height: 100vh;
+        color: #fff;
+        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.12), transparent 30%), #131313;
+    }
+
+    .booking-hero {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 26px;
+        padding: 24px;
+        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.22), transparent 34%), linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+    }
+
+        .booking-hero::after {
+            content: "";
+            position: absolute;
+            top: -90px;
+            right: -80px;
+            width: 240px;
+            height: 240px;
+            border-radius: 999px;
+            background: rgba(229, 9, 20, 0.16);
+            filter: blur(12px);
+            pointer-events: none;
+        }
+
+    .booking-movie-info {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .booking-poster {
+        width: 96px;
+        height: 140px;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #222;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 16px 38px rgba(0, 0, 0, 0.38);
+        flex-shrink: 0;
+    }
+
+        .booking-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .poster-empty {
+        width: 100%;
+        height: 100%;
+        color: #777;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .poster-empty span {
+            font-size: 34px;
+        }
+
+    .booking-eyebrow {
+        color: #ff6b73;
+        font-size: 0.78rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+    }
+
+    .booking-title {
+        color: #fff;
+        font-size: clamp(1.8rem, 4vw, 3.2rem);
+        font-weight: 950;
+        line-height: 1;
+        letter-spacing: -0.055em;
+        margin-bottom: 8px;
+    }
+
+    .booking-subtitle {
+        color: #a7a7a7;
+        font-size: 0.95rem;
+    }
+
+    .booking-badges {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .movie-genre-badge,
+    .age-badge {
+        min-height: 28px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 900;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid currentColor;
+    }
+
+    .movie-genre-badge {
+        color: #ff5964;
+        background: rgba(229, 9, 20, 0.13);
+    }
+
+    .age-green {
+        color: #37d67a;
+        background: rgba(25, 135, 84, 0.12);
+    }
+
+    .age-blue {
+        color: #49c7ff;
+        background: rgba(13, 202, 240, 0.12);
+    }
+
+    .age-red {
+        color: #ff5b66;
+        background: rgba(229, 9, 20, 0.14);
+    }
+
+    .booking-back-btn {
+        position: relative;
+        z-index: 2;
+        min-height: 44px;
+        padding: 0 18px;
+        border-radius: 999px;
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+        .booking-back-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+    .booking-card {
+        overflow: hidden;
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(18, 18, 22, 0.88);
+        box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    .booking-card-header {
+        padding: 20px 22px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+        .booking-card-header h5 {
+            color: #fff;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .booking-card-header p {
+            color: #929292;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .booking-card-header > span {
+            color: #ff5964;
+            font-size: 30px;
+        }
+
+    .booking-card-body {
+        padding: 22px;
+    }
+
+    .cinema-card {
+        padding: 18px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.075);
+    }
+
+    .cinema-heading {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .cinema-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: rgba(229, 9, 20, 0.15);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .cinema-icon span {
+            font-size: 26px;
+        }
+
+    .cinema-heading h6 {
+        color: #fff;
+        font-weight: 900;
+        margin-bottom: 3px;
+    }
+
+    .cinema-heading p {
+        color: #8f8f8f;
+        font-size: 0.82rem;
+        margin: 0;
+    }
+
+    .week-date-tabs {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(92px, 1fr));
+        gap: 10px;
+        margin-bottom: 18px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    .date-tab {
+        min-height: 82px;
+        padding: 11px 10px;
+        border-radius: 18px;
+        color: #ddd;
+        text-decoration: none;
+        background: rgba(255,255,255,0.055);
+        border: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 3px;
+        text-align: center;
+    }
+
+        .date-tab:hover {
+            color: #fff;
+            background: rgba(229,9,20,0.14);
+            border-color: rgba(229,9,20,0.32);
+        }
+
+        .date-tab.active {
+            color: #fff;
+            background: linear-gradient(135deg, rgba(229,9,20,0.72), rgba(105,9,18,0.9));
+            border-color: rgba(229,9,20,0.65);
+        }
+
+        .date-tab span {
+            font-size: 0.76rem;
+            font-weight: 950;
+            text-transform: uppercase;
+        }
+
+        .date-tab strong {
+            font-size: 1rem;
+            font-weight: 950;
+        }
+
+        .date-tab small {
+            color: rgba(255,255,255,0.72);
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+
+    .cinema-showtime-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .cinema-schedule-card {
+        padding: 15px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .cinema-schedule-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding-bottom: 14px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid rgba(255,255,255,0.075);
+    }
+
+    .cinema-schedule-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: rgba(229,9,20,0.15);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .cinema-schedule-header h6 {
+        color: #fff;
+        font-weight: 950;
+        margin-bottom: 4px;
+    }
+
+    .cinema-schedule-header p {
+        color: #999;
+        font-size: 0.82rem;
+        line-height: 1.45;
+        margin: 0;
+    }
+
+    .room-showtime-group {
+        margin-top: 12px;
+    }
+
+    .room-label {
+        color: #cfcfcf;
+        font-size: 0.82rem;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 9px;
+    }
+
+        .room-label .material-symbols-outlined {
+            color: #ff5964;
+            font-size: 18px;
+        }
+
+    .time-chip-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+    }
+
+    .time-chip {
+        min-width: 88px;
+        min-height: 48px;
+        padding: 7px 10px;
+        border-radius: 14px;
+        color: #fff;
+        text-decoration: none;
+        background: rgba(255,255,255,0.065);
+        border: 1px solid rgba(255,255,255,0.10);
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .time-chip:hover {
+            color: #fff;
+            background: rgba(229,9,20,0.18);
+            border-color: rgba(229,9,20,0.38);
+        }
+
+        .time-chip.active {
+            background: linear-gradient(135deg, #ff5964, #e50914);
+            border-color: rgba(229,9,20,0.70);
+            box-shadow: 0 10px 22px rgba(229,9,20,0.26);
+        }
+
+        .time-chip strong {
+            font-size: 1rem;
+            font-weight: 950;
+        }
+
+        .time-chip small {
+            color: rgba(255,255,255,0.78);
+            font-size: 0.7rem;
+            font-weight: 800;
+        }
+
+    .no-showtime-box {
+        min-height: 54px;
+        padding: 13px 14px;
+        border-radius: 16px;
+        color: #aaa;
+        background: rgba(255,255,255,0.04);
+        border: 1px dashed rgba(255,255,255,0.13);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+    }
+
+        .no-showtime-box .material-symbols-outlined {
+            color: #ff5964;
+        }
+
+    .booking-note {
+        padding: 16px;
+        border-radius: 18px;
+        background: rgba(255, 193, 7, 0.08);
+        border: 1px solid rgba(255, 193, 7, 0.16);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+        .booking-note span {
+            color: #ffc94a;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .booking-note p {
+            color: #c9c9c9;
+            font-size: 0.86rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .booking-note strong {
+            color: #fff;
+        }
+
+    .seat-area {
+        overflow-x: auto;
+    }
+
+    .screen-wrap {
+        position: relative;
+        width: min(100%, 720px);
+        margin: 0 auto 44px;
+        text-align: center;
+        padding-top: 14px;
+    }
+
+    .screen-glow {
+        position: absolute;
+        top: 2px;
+        left: 50%;
+        width: 70%;
+        height: 45px;
+        transform: translateX(-50%);
+        background: radial-gradient(ellipse at center, rgba(255,255,255,0.18), transparent 68%);
+        pointer-events: none;
+    }
+
+    .screen-line {
+        width: 72%;
+        height: 5px;
+        margin: 0 auto 12px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, transparent, #fff, transparent);
+        box-shadow: 0 8px 28px rgba(255, 255, 255, 0.55);
+    }
+
+    .screen-wrap span {
+        color: #8f8f8f;
+        font-size: 0.76rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .seat-map {
+        min-width: 620px;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        align-items: center;
+        padding: 4px 0 2px;
+    }
+
+    .seat-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .row-label {
+        width: 24px;
+        color: #8e8e8e;
+        font-size: 0.76rem;
+        font-weight: 950;
+        text-align: center;
+    }
+
+    .seat-empty-space {
+        width: 38px;
+        height: 36px;
+        flex: 0 0 38px;
+        border-radius: 10px;
+        border: 1px dashed rgba(255, 255, 255, 0.08);
+        opacity: 0.35;
+    }
+
+    .seat-label {
+        width: 38px;
+        height: 36px;
+        flex: 0 0 38px;
+        border-radius: 11px 11px 7px 7px;
+        color: #d7d7d7;
+        background: linear-gradient(180deg, #3b3b3b, #262626);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 4px solid #151515;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.76rem;
+        font-weight: 900;
+        cursor: pointer;
+        transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+        user-select: none;
+    }
+
+        .seat-label:hover {
+            color: #fff;
+            transform: translateY(-3px) scale(1.04);
+            filter: brightness(1.15);
+            box-shadow: 0 10px 22px rgba(255, 255, 255, 0.08);
+        }
+
+        .seat-label.normal {
+            color: #d7d7d7;
+            background: linear-gradient(180deg, #3b3b3b, #262626);
+            border-color: rgba(255, 255, 255, 0.08);
+            border-bottom-color: #151515;
+        }
+
+        .seat-label.vip {
+            color: #fff;
+            background: linear-gradient(180deg, #d99a22, #a96508);
+            border-color: rgba(217, 154, 34, 0.65);
+            border-bottom-color: #6f4206;
+            box-shadow: 0 8px 18px rgba(217, 154, 34, 0.12);
+        }
+
+        .seat-label.couple {
+            color: #fff;
+            background: linear-gradient(180deg, #a855f7, #7e22ce);
+            border-color: rgba(147, 51, 234, 0.75);
+            border-bottom-color: #581c87;
+            box-shadow: 0 8px 18px rgba(147, 51, 234, 0.2);
+        }
+
+    .seat-checkbox:checked + .seat-label {
+        color: #fff;
+        background: linear-gradient(180deg, #ff6b73, #e50914) !important;
+        border-color: rgba(229, 9, 20, 0.7) !important;
+        border-bottom-color: #8c060d !important;
+        box-shadow: 0 10px 22px rgba(229, 9, 20, 0.32);
+        transform: translateY(-3px) scale(1.04);
+    }
+
+    .seat-checkbox:disabled + .seat-label {
+        color: #777;
+        background: #202020 !important;
+        border-bottom-color: #151515 !important;
+        cursor: not-allowed;
+        opacity: 0.55;
+        box-shadow: none;
+    }
+
+    .seat-label.seat-holding {
+        color: #fff !important;
+        background: linear-gradient(180deg, #ff9f1c, #e87500) !important;
+        border-color: rgba(232, 117, 0, 0.75) !important;
+        border-bottom-color: #9a4b00 !important;
+        cursor: not-allowed !important;
+        pointer-events: none;
+        opacity: 1 !important;
+        box-shadow: 0 8px 18px rgba(232, 117, 0, 0.22);
+    }
+
+    .seat-label.sold {
+        color: #777 !important;
+        background: #6c757d !important;
+        border-bottom-color: #343a40 !important;
+        cursor: not-allowed !important;
+        opacity: 0.65 !important;
+        box-shadow: none !important;
+    }
+
+    .seat-legend-wrap {
+        margin-top: 34px;
+        padding-top: 22px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 22px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .legend-item p {
+            color: #aaa;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .seat-legend {
+        width: 18px;
+        height: 18px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+
+        .seat-legend.available {
+            background: linear-gradient(180deg, #3b3b3b, #262626);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .seat-legend.vip {
+            background: linear-gradient(180deg, #d99a22, #a96508);
+            border: 1px solid rgba(217, 154, 34, 0.65);
+        }
+
+        .seat-legend.couple {
+            background: linear-gradient(180deg, #a855f7, #7e22ce);
+            border: 1px solid rgba(147, 51, 234, 0.65);
+        }
+
+        .seat-legend.selected {
+            background: linear-gradient(180deg, #ff6b73, #e50914);
+            border: 1px solid rgba(229, 9, 20, 0.7);
+        }
+
+        .seat-legend.holding {
+            background: linear-gradient(180deg, #ff9f1c, #e87500);
+            border: 1px solid rgba(232, 117, 0, 0.75);
+        }
+
+        .seat-legend.sold {
+            background: #6c757d;
+            border: 1px solid rgba(108, 117, 125, 0.7);
+        }
+
+        .seat-legend.empty {
+            background: transparent;
+            border: 1px dashed rgba(255, 255, 255, 0.45);
+        }
+
+    .booking-checkout-bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1030;
+        padding: 14px 0;
+        background: rgba(10, 10, 12, 0.86);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border-top: 1px solid rgba(255, 255, 255, 0.09);
+        box-shadow: 0 -18px 50px rgba(0, 0, 0, 0.45);
+    }
+
+    .checkout-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+    }
+
+    .checkout-left p,
+    .checkout-total p {
+        color: #8f8f8f;
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin: 0 0 4px;
+    }
+
+    .checkout-left h5 {
+        color: #fff;
+        font-size: 1.05rem;
+        font-weight: 900;
+        margin: 0;
+    }
+
+    .checkout-right {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .checkout-total {
+        text-align: right;
+    }
+
+        .checkout-total h4 {
+            color: #ff4d57;
+            font-size: 1.5rem;
+            font-weight: 950;
+            margin: 0;
+        }
+
+    .checkout-btn {
+        min-height: 48px;
+        padding: 0 28px;
+        border-radius: 999px;
+        border: none;
+        color: #fff;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+        box-shadow: 0 12px 28px rgba(229, 9, 20, 0.28);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.35px;
+        transition: all 0.25s ease;
+    }
+
+        .checkout-btn:hover:not(:disabled) {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 18px 38px rgba(229, 9, 20, 0.4);
+        }
+
+        .checkout-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+    @@media (max-width: 1199.98px) {
+        .week-date-tabs {
+            grid-template-columns: repeat(7, 110px);
+        }
+    }
+
+    @@media (max-width: 991.98px) {
+        body {
+            padding-bottom: 160px;
+        }
+
+        .booking-hero {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .booking-back-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .booking-movie-info {
+            align-items: flex-start;
+        }
+
+        .booking-card.sticky-xl-top {
+            position: static !important;
+        }
+
+        .checkout-inner {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .checkout-right {
+            justify-content: space-between;
+        }
+
+        .checkout-btn {
+            min-width: 190px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        body {
+            padding-bottom: 185px;
+        }
+
+        .booking-page .container-fluid {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+        }
+
+        .booking-hero,
+        .booking-card {
+            border-radius: 20px;
+        }
+
+        .booking-hero {
+            padding: 20px;
+        }
+
+        .booking-poster {
+            width: 74px;
+            height: 108px;
+            border-radius: 14px;
+        }
+
+        .booking-title {
+            font-size: 1.65rem;
+            letter-spacing: -0.04em;
+        }
+
+        .seat-map {
+            min-width: 560px;
+        }
+
+        .seat-label {
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
+        }
+
+        .seat-empty-space {
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
+        }
+
+        .checkout-right {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+        }
+
+        .checkout-total {
+            text-align: left;
+        }
+
+        .checkout-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+        const pricePerSeat = @pricePerSeat.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        const currentShowtimeId = @showtimeId;
+        const currentUserId = "@ViewBag.CurrentUserId";
+        const $checkoutBtn = $('#checkoutBtn');
+        let isSubmittingBooking = false;
+
+        function updateBookingSummary() {
+        let selectedSeatIds = [];
+        let selectedSeatNames = [];
+
+        $('.seat-checkbox:checked:not(:disabled)').each(function () {
+        selectedSeatIds.push($(this).data('seat-id'));
+        selectedSeatNames.push($(this).data('seat-name'));
+        });
+
+        const total = selectedSeatIds.length * pricePerSeat;
+
+        $('#display-seats').text(selectedSeatNames.length > 0 ? selectedSeatNames.join(', ') : '---');
+        $('#display-total').text(total.toLocaleString('vi-VN') + ' VNĐ');
+        $('#hiddenTotalAmount').val(total);
+        $('#hiddenSeats').val(selectedSeatIds.join(','));
+
+        $checkoutBtn.prop('disabled', selectedSeatIds.length === 0 || currentShowtimeId <= 0);
+        }
+
+        function markSeatHolding(seatId, message) {
+        const $checkbox = $("#seat-" + seatId);
+        const $seatLabel = $('label[for="seat-' + seatId + '"]');
+
+        if (!$checkbox.length || !$seatLabel.length) {
+        return;
+        }
+
+        $checkbox.prop("checked", false);
+        $checkbox.prop("disabled", true);
+
+        $seatLabel.removeClass("sold");
+        $seatLabel.addClass("seat-holding");
+        $seatLabel.attr("title", message || "Ghế đang được người khác giữ");
+        }
+
+        function releaseSeatUi(seatId) {
+        const $checkbox = $("#seat-" + seatId);
+        const $seatLabel = $('label[for="seat-' + seatId + '"]');
+
+        if (!$checkbox.length || !$seatLabel.length) {
+        return;
+        }
+
+        if (!$seatLabel.hasClass("sold")) {
+        $checkbox.prop("disabled", false);
+        $seatLabel.removeClass("seat-holding");
+        $seatLabel.removeAttr("title");
+        }
+        }
+
+        function markSeatSold(seatId) {
+        const $checkbox = $("#seat-" + seatId);
+        const $seatLabel = $('label[for="seat-' + seatId + '"]');
+
+        if (!$checkbox.length || !$seatLabel.length) {
+        return;
+        }
+
+        $checkbox.prop("checked", false);
+        $checkbox.prop("disabled", true);
+
+        $seatLabel.removeClass("seat-holding");
+        $seatLabel.addClass("sold");
+        $seatLabel.attr("title", "Ghế đã bán");
+        }
+
+        if (currentShowtimeId <= 0) {
+        $checkoutBtn.prop('disabled', true);
+        updateBookingSummary();
+        return;
+        }
+
+        const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/ticketHub")
+        .withAutomaticReconnect()
+        .build();
+
+        connection.start()
+        .then(function () {
+        console.log("SignalR Connected!");
+        return connection.invoke("JoinShowtimeRoom", currentShowtimeId);
+        })
+        .then(function () {
+        console.log("Joined showtime room:", currentShowtimeId);
+        })
+        .catch(function (err) {
+        console.error("SignalR Connection Error:", err);
+        });
+
+        connection.on("SeatHeld", function (seatId, userId) {
+        if (userId === currentUserId) {
+        return;
+        }
+
+        markSeatHolding(seatId, "Ghế đang được người khác giữ");
+        updateBookingSummary();
+        });
+
+        connection.on("SeatReleased", function (seatId, userId) {
+        if (userId === currentUserId) {
+        return;
+        }
+
+        releaseSeatUi(seatId);
+        updateBookingSummary();
+        });
+
+        connection.on("SeatReleasedBatch", function (data) {
+        if (!data || !data.seatIds) {
+        return;
+        }
+
+        data.seatIds.forEach(function (seatId) {
+        releaseSeatUi(seatId);
+        });
+
+        updateBookingSummary();
+        });
+
+        connection.on("SeatSold", function (data) {
+        if (!data || !data.seatIds) {
+        return;
+        }
+
+        data.seatIds.forEach(function (seatId) {
+        markSeatSold(seatId);
+        });
+
+        updateBookingSummary();
+        });
+
+        $('.seat-checkbox').on('change', function () {
+        const $checkbox = $(this);
+        const seatId = $checkbox.data('seat-id');
+        const $seatLabel = $('label[for="seat-' + seatId + '"]');
+
+        if ($checkbox.is(':checked')) {
+        if (connection.state !== signalR.HubConnectionState.Connected) {
+        $checkbox.prop('checked', false);
+        updateBookingSummary();
+        alert("Kết nối giữ ghế chưa sẵn sàng. Vui lòng thử lại.");
+        return;
+        }
+
+        $checkbox.prop('disabled', true);
+
+        connection.invoke("HoldSeat", currentShowtimeId, seatId)
+        .then(function (result) {
+        if (!result || !result.success) {
+        $checkbox.prop('checked', false);
+        markSeatHolding(seatId, result ? result.message : "Ghế này đang được giữ.");
+        alert(result ? result.message : "Ghế này không còn khả dụng.");
+        } else {
+        $checkbox.prop('disabled', false);
+        $seatLabel.removeClass("seat-holding");
+        $seatLabel.removeAttr("title");
+        }
+
+        updateBookingSummary();
+        })
+        .catch(function (err) {
+        console.error(err);
+        $checkbox.prop('checked', false);
+        $checkbox.prop('disabled', false);
+        updateBookingSummary();
+        alert("Có lỗi khi giữ ghế. Vui lòng thử lại.");
+        });
+        } else {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+        connection.invoke("ReleaseSeat", currentShowtimeId, seatId)
+        .catch(function (err) {
+        console.error(err);
+        });
+        }
+
+        updateBookingSummary();
+        }
+        });
+
+        $('#bookingForm').on('submit', function (e) {
+        updateBookingSummary();
+
+        if (currentShowtimeId <= 0) {
+        e.preventDefault();
+        alert("Vui lòng chọn suất chiếu trước.");
+        return false;
+        }
+
+        if (!$('#hiddenSeats').val()) {
+        e.preventDefault();
+        alert("Vui lòng chọn ít nhất một ghế.");
+        return false;
+        }
+
+        isSubmittingBooking = true;
+
+        $checkoutBtn.prop('disabled', true);
+        $checkoutBtn.html('<span class="material-symbols-outlined">hourglass_top</span> Đang xử lý...');
+        });
+
+        window.addEventListener("beforeunload", function () {
+        if (isSubmittingBooking) {
+        return;
+        }
+
+        $('.seat-checkbox:checked:not(:disabled)').each(function () {
+        const seatId = $(this).data('seat-id');
+
+        if (connection.state === signalR.HubConnectionState.Connected) {
+        connection.invoke("ReleaseSeat", currentShowtimeId, seatId)
+        .catch(function () { });
+        }
+        });
+        });
+
+        window.addEventListener("pageshow", function (event) {
+        const navEntries = performance.getEntriesByType("navigation");
+        const navType = navEntries.length > 0 ? navEntries[0].type : "";
+
+        if (event.persisted || navType === "back_forward") {
+        window.location.reload();
+        }
+        });
+
+        updateBookingSummary();
+        });
+    </script>
+}

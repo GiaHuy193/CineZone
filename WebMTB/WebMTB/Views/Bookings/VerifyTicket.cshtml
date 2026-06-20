@@ -1,0 +1,291 @@
+﻿@model WebMTB.Models.Booking
+
+@{
+    ViewData["Title"] = "Xác minh vé điện tử";
+
+    bool isValidTicket = ViewBag.IsValidTicket == true;
+
+    var tickets = Model.Tickets?.ToList() ?? new List<WebMTB.Models.Ticket>();
+    var firstTicket = tickets.FirstOrDefault();
+
+    var showtime = firstTicket?.Showtime;
+    var movie = showtime?.Movie;
+    var room = showtime?.Room;
+    var cinema = room?.Cinema;
+
+    string movieTitle = movie?.Title ?? "Thông tin phim";
+    string cinemaName = cinema?.Name ?? "Chưa có rạp";
+    string roomName = room?.Name ?? "Chưa có phòng";
+
+    string seatNames = tickets.Any()
+        ? string.Join(", ", tickets
+            .Where(t => t.Seat != null)
+            .OrderBy(t => t.Seat!.Row)
+            .ThenBy(t => t.Seat!.Number)
+            .Select(t => $"{t.Seat!.Row}{t.Seat!.Number}"))
+        : "---";
+}
+
+<div class="verify-ticket-page">
+    <div class="container py-5">
+
+        <div class="verify-card">
+
+            @if (isValidTicket)
+            {
+                <div class="verify-status success">
+                    <span class="material-symbols-outlined">verified</span>
+                    <div>
+                        <h1>Vé hợp lệ</h1>
+                        <p>Mã QR đã được xác minh thành công.</p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="verify-status danger">
+                    <span class="material-symbols-outlined">gpp_bad</span>
+                    <div>
+                        <h1>Vé không hợp lệ</h1>
+                        <p>Mã QR sai, vé chưa thanh toán hoặc booking đã bị hủy.</p>
+                    </div>
+                </div>
+            }
+
+            <div class="ticket-main mt-4">
+                <div class="ticket-code">
+                    <span>Mã vé</span>
+                    <strong>CZ-@Model.Id.ToString("D6")</strong>
+                </div>
+
+                <div class="ticket-info">
+                    <h2>@movieTitle</h2>
+
+                    <div class="info-line">
+                        <span class="material-symbols-outlined">location_on</span>
+                        @cinemaName · @roomName
+                    </div>
+
+                    <div class="info-line">
+                        <span class="material-symbols-outlined">schedule</span>
+                        Suất chiếu:
+                        @(showtime != null ? showtime.StartTime.ToString("HH:mm - dd/MM/yyyy") : "Chưa có suất chiếu")
+                    </div>
+
+                    <div class="info-line">
+                        <span class="material-symbols-outlined">event_seat</span>
+                        Ghế: @seatNames
+                    </div>
+
+                    <div class="info-line">
+                        <span class="material-symbols-outlined">payments</span>
+                        Tổng tiền: @Model.TotalAmount.ToString("N0") VNĐ
+                    </div>
+
+                    <div class="info-line">
+                        <span class="material-symbols-outlined">fact_check</span>
+                        Trạng thái booking: @Model.Status
+                    </div>
+                </div>
+            </div>
+
+            <div class="ticket-actions mt-4">
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="btn back-home-btn">
+                    Về trang chủ
+                </a>
+
+                <a asp-controller="Bookings"
+                   asp-action="Details"
+                   asp-route-id="@Model.Id"
+                   class="btn detail-btn">
+                    Xem chi tiết booking
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .verify-ticket-page {
+        min-height: 100vh;
+        color: #fff;
+        background: radial-gradient(circle at top left, rgba(229,9,20,0.18), transparent 34%), #0c0c0f;
+    }
+
+    .verify-card {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 34px;
+        border-radius: 32px;
+        background: rgba(18,18,22,0.92);
+        border: 1px solid rgba(255,255,255,0.10);
+        box-shadow: 0 28px 80px rgba(0,0,0,0.42);
+    }
+
+    .verify-status {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 22px;
+        border-radius: 26px;
+    }
+
+        .verify-status span {
+            width: 68px;
+            height: 68px;
+            border-radius: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+        }
+
+        .verify-status h1 {
+            font-weight: 950;
+            letter-spacing: -0.04em;
+            margin-bottom: 4px;
+        }
+
+        .verify-status p {
+            margin: 0;
+            color: #cfcfcf;
+        }
+
+        .verify-status.success {
+            background: rgba(25,135,84,0.14);
+            border: 1px solid rgba(25,135,84,0.28);
+        }
+
+            .verify-status.success span {
+                color: #37d67a;
+                background: rgba(25,135,84,0.18);
+            }
+
+        .verify-status.danger {
+            background: rgba(229,9,20,0.14);
+            border: 1px solid rgba(229,9,20,0.28);
+        }
+
+            .verify-status.danger span {
+                color: #ff5964;
+                background: rgba(229,9,20,0.18);
+            }
+
+    .ticket-main {
+        display: grid;
+        grid-template-columns: 210px 1fr;
+        gap: 22px;
+    }
+
+    .ticket-code {
+        min-height: 210px;
+        border-radius: 26px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.035));
+        border: 1px solid rgba(255,255,255,0.12);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .ticket-code span {
+            color: #999;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            margin-bottom: 8px;
+        }
+
+        .ticket-code strong {
+            color: #ff5964;
+            font-size: 1.65rem;
+            font-weight: 950;
+            letter-spacing: 0.5px;
+        }
+
+    .ticket-info {
+        padding: 24px;
+        border-radius: 26px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+        .ticket-info h2 {
+            font-weight: 950;
+            letter-spacing: -0.04em;
+            margin-bottom: 18px;
+        }
+
+    .info-line {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #d8d8d8;
+        padding: 9px 0;
+        font-weight: 700;
+    }
+
+        .info-line span {
+            color: #ff5964;
+        }
+
+    .ticket-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .back-home-btn,
+    .detail-btn {
+        min-height: 46px;
+        padding: 0 20px;
+        border-radius: 999px;
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+    }
+
+    .back-home-btn {
+        background: linear-gradient(135deg, #ff8a85, #e50914);
+        border: none;
+    }
+
+    .detail-btn {
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.14);
+    }
+
+        .back-home-btn:hover,
+        .detail-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    @@media (max-width: 767.98px) {
+        .verify-card {
+            padding: 22px;
+        }
+
+        .verify-status {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .ticket-main {
+            grid-template-columns: 1fr;
+        }
+
+        .ticket-code {
+            min-height: 140px;
+        }
+
+        .ticket-actions a {
+            width: 100%;
+        }
+    }
+</style>

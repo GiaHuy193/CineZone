@@ -1,0 +1,791 @@
+﻿@model WebMTB.Models.Booking
+
+@{
+    ViewData["Title"] = "Vé điện tử - CineZone";
+
+    var tickets = Model.Tickets?.ToList() ?? new List<WebMTB.Models.Ticket>();
+    var firstTicket = tickets.FirstOrDefault();
+
+    var showtime = firstTicket?.Showtime;
+    var movie = showtime?.Movie;
+    var room = showtime?.Room;
+    var cinema = room?.Cinema;
+
+    string movieTitle = movie?.Title ?? "Thông tin phim";
+    string cinemaName = cinema?.Name ?? "Chưa có rạp";
+    string roomName = room?.Name ?? "Chưa có phòng";
+    DateTime? expiresAt = Model.ExpiresAt;
+
+    bool isPending = Model.Status == "Pending";
+    bool isExpired = Model.Status == "Expired";
+
+    bool isPendingExpired =
+        Model.Status == "Pending" &&
+        expiresAt.HasValue &&
+        expiresAt.Value <= DateTime.Now;
+
+    string statusClass = Model.Status == "Completed" ? "status-success"
+        : Model.Status == "Cancelled" || Model.Status == "Expired" ? "status-danger"
+        : "status-warning";
+}
+
+<div class="booking-detail-page">
+    <div class="container py-5">
+
+        <div class="detail-header mb-4">
+            <div>
+                <div class="detail-eyebrow">
+                    <span class="material-symbols-outlined">confirmation_number</span>
+                    Booking Confirmation
+                </div>
+
+                <h1>Vé điện tử</h1>
+
+                <p>
+                    Thông tin vé và hóa đơn đặt vé của bạn.
+                </p>
+            </div>
+
+            <a asp-controller="Home" asp-action="Index" class="btn back-btn">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Về trang chủ
+            </a>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="detail-card">
+                    <div class="detail-card-header">
+                        <div>
+                            <h5>Thông tin vé</h5>
+                            <p>Phim, rạp, suất chiếu và ghế đã chọn.</p>
+                        </div>
+
+                        <span class="booking-status @statusClass">
+                            @Model.Status
+                        </span>
+                    </div>
+
+                    <div class="detail-card-body">
+                        <div class="movie-summary mb-4">
+                            <div class="movie-icon">
+                                <span class="material-symbols-outlined">movie</span>
+                            </div>
+
+                            <div>
+                                <h3>@movieTitle</h3>
+                                <p>
+                                    @cinemaName · @roomName
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <span class="material-symbols-outlined">calendar_month</span>
+                                <div>
+                                    <p>Ngày đặt</p>
+                                    <h6>@Model.BookingDate.ToString("HH:mm - dd/MM/yyyy")</h6>
+                                </div>
+                            </div>
+
+                            <div class="info-box">
+                                <span class="material-symbols-outlined">schedule</span>
+                                <div>
+                                    <p>Suất chiếu</p>
+                                    <h6>
+                                        @(showtime != null ? showtime.StartTime.ToString("HH:mm - dd/MM/yyyy") : "Chưa có suất chiếu")
+                                    </h6>
+                                </div>
+                            </div>
+
+                            <div class="info-box">
+                                <span class="material-symbols-outlined">location_on</span>
+                                <div>
+                                    <p>Rạp chiếu</p>
+                                    <h6>@cinemaName</h6>
+                                </div>
+                            </div>
+
+                            <div class="info-box">
+                                <span class="material-symbols-outlined">meeting_room</span>
+                                <div>
+                                    <p>Phòng chiếu</p>
+                                    <h6>@roomName</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="seat-section mt-4">
+                            <div class="section-title">
+                                <span class="material-symbols-outlined">event_seat</span>
+                                Ghế đã chọn
+                            </div>
+
+                            @if (tickets.Any())
+                            {
+                                <div class="selected-seat-list">
+                                    @foreach (var ticket in tickets.OrderBy(t => t.Seat?.Row).ThenBy(t => t.Seat?.Number))
+                                    {
+                                        string seatName = ticket.Seat != null ? $"{ticket.Seat.Row}{ticket.Seat.Number}" : "N/A";
+                                        string seatType = ticket.Seat?.SeatType ?? "Normal";
+                                        string seatTypeClass = seatType.ToLower();
+
+                                        <div class="selected-seat-item @seatTypeClass">
+                                            <strong>@seatName</strong>
+                                            <span>@seatType</span>
+                                            <small>@ticket.Price.ToString("N0") VNĐ</small>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="empty-message">
+                                    Chưa có ghế nào trong booking này.
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="payment-card">
+                    <div class="payment-card-header">
+                        <span class="material-symbols-outlined">payments</span>
+                        <div>
+                            <h5>Thanh toán</h5>
+                            <p>Mã đặt vé #@Model.Id</p>
+                        </div>
+                    </div>
+
+                    <div class="payment-body">
+                        <div class="payment-row">
+                            <span>Số lượng vé</span>
+                            <strong>@tickets.Count</strong>
+                        </div>
+
+                        <div class="payment-row">
+                            <span>Tổng tiền</span>
+                            <strong>@Model.TotalAmount.ToString("N0") VNĐ</strong>
+                        </div>
+
+                        <div class="payment-row">
+                            <span>Trạng thái</span>
+                            <strong class="@statusClass">@Model.Status</strong>
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.PayPalTransactionId))
+                        {
+                            <div class="payment-row">
+                                <span>Mã PayPal</span>
+                                <strong>@Model.PayPalTransactionId</strong>
+                            </div>
+                        }
+
+                        @if (Model.Status == "Completed")
+                        {
+                            <div class="ticket-qr-card">
+                                <div class="qr-frame">
+                                    <img src="@Url.Action("QrCode", "Bookings", new { id = Model.Id })"
+                                         alt="QR Code vé điện tử" />
+                                </div>
+
+                                <div class="qr-info">
+                                    <h6>Mã QR vé điện tử</h6>
+                                    <p>Đưa mã này cho nhân viên rạp để quét và xác minh vé.</p>
+                                    <span>CZ-@Model.Id.ToString("D6")</span>
+                                </div>
+                            </div>
+                        }
+
+                        <hr />
+
+                        @if (Model.Status == "Pending")
+                        {
+                            if (isPendingExpired)
+                            {
+                                <div class="danger-box">
+                                    <span class="material-symbols-outlined">timer_off</span>
+                                    Thời gian giữ ghế đã hết. Vui lòng chọn ghế lại.
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="warning-box countdown-box mb-3">
+                                    <span class="material-symbols-outlined">schedule</span>
+
+                                    <div>
+                                        <div>Booking đang chờ thanh toán.</div>
+
+                                        @if (expiresAt != null)
+                                        {
+                                            <strong class="countdown-line">
+                                                Thời gian giữ ghế còn:
+                                                <span id="holdCountdown" class="countdown-time">--:--</span>
+                                            </strong>
+                                        }
+                                        else
+                                        {
+                                            <small>Booking này chưa có thời gian hết hạn.</small>
+                                        }
+                                    </div>
+                                </div>
+
+                                <a asp-controller="Bookings"
+                                   asp-action="Checkout"
+                                   asp-route-id="@Model.Id"
+                                   id="continuePaymentButton"
+                                   class="btn paypal-btn w-100">
+                                    <span class="material-symbols-outlined">payments</span>
+                                    Tiếp tục thanh toán
+                                </a>
+
+                                <form asp-controller="Bookings"
+                                      asp-action="CancelPending"
+                                      asp-route-id="@Model.Id"
+                                      method="post"
+                                      class="mt-3">
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit" class="btn cancel-hold-btn w-100">
+                                        <span class="material-symbols-outlined">event_busy</span>
+                                        Hủy giữ ghế
+                                    </button>
+                                </form>
+
+                                <p class="payment-note mt-3">
+                                    Ghế chỉ được giữ trong thời gian hiển thị. Hết thời gian, hệ thống sẽ tự nhả ghế.
+                                </p>
+                            }
+                        }
+                        else if (Model.Status == "Completed")
+                        {
+                            <div class="success-box">
+                                <span class="material-symbols-outlined">check_circle</span>
+                                Vé đã được thanh toán thành công.
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="danger-box">
+                                <span class="material-symbols-outlined">cancel</span>
+                                Booking đã bị hủy.
+                            </div>
+                        }
+
+                        <a asp-action="Index" class="btn outline-btn w-100 mt-3">
+                            Xem lịch sử đặt vé
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+
+
+    .booking-detail-page {
+        min-height: 100vh;
+        color: #fff;
+        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.14), transparent 32%), #111;
+    }
+
+    .detail-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .detail-eyebrow {
+        color: #ff5964;
+        font-size: 0.8rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+
+    .detail-header h1 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        font-weight: 950;
+        letter-spacing: -0.05em;
+        margin-bottom: 8px;
+    }
+
+    .detail-header p {
+        color: #999;
+        margin: 0;
+    }
+
+    .back-btn,
+    .outline-btn {
+        border-radius: 999px;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.16);
+        background: rgba(255,255,255,0.06);
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 18px;
+    }
+
+        .back-btn:hover,
+        .outline-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.12);
+        }
+
+    .detail-card,
+    .payment-card {
+        border-radius: 26px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(18,18,22,0.9);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.32);
+        overflow: hidden;
+    }
+
+    .detail-card-header {
+        padding: 22px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+    }
+
+        .detail-card-header h5,
+        .payment-card-header h5 {
+            font-weight: 900;
+            margin-bottom: 4px;
+        }
+
+        .detail-card-header p,
+        .payment-card-header p {
+            color: #999;
+            margin: 0;
+            font-size: 0.86rem;
+        }
+
+    .detail-card-body,
+    .payment-body {
+        padding: 24px;
+    }
+
+    .booking-status {
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+
+    .status-success {
+        color: #37d67a;
+        background: rgba(25,135,84,0.14);
+    }
+
+    .status-warning {
+        color: #ffc94a;
+        background: rgba(255,193,7,0.12);
+    }
+
+    .status-danger {
+        color: #ff5964;
+        background: rgba(229,9,20,0.14);
+    }
+
+    .movie-summary {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .movie-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+        background: rgba(229,9,20,0.15);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .movie-icon span {
+            font-size: 34px;
+        }
+
+    .movie-summary h3 {
+        font-weight: 950;
+        margin-bottom: 4px;
+    }
+
+    .movie-summary p {
+        color: #999;
+        margin: 0;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .info-box {
+        padding: 16px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.075);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .info-box > span {
+            color: #ff5964;
+            font-size: 28px;
+        }
+
+        .info-box p {
+            color: #999;
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 0 0 4px;
+        }
+
+        .info-box h6 {
+            font-weight: 900;
+            margin: 0;
+        }
+
+    .section-title {
+        color: #fff;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+
+        .section-title span {
+            color: #ff5964;
+        }
+
+    .selected-seat-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .selected-seat-item {
+        min-width: 96px;
+        padding: 12px;
+        border-radius: 16px;
+        background: linear-gradient(180deg, #3b3b3b, #262626);
+        border: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+        .selected-seat-item.vip {
+            background: linear-gradient(180deg, #d99a22, #a96508);
+            border-color: rgba(217,154,34,0.65);
+        }
+
+        .selected-seat-item.couple {
+            background: linear-gradient(180deg, #a855f7, #7e22ce);
+            border-color: rgba(147,51,234,0.65);
+        }
+
+        .selected-seat-item strong {
+            font-size: 1.15rem;
+            font-weight: 950;
+        }
+
+        .selected-seat-item span,
+        .selected-seat-item small {
+            color: rgba(255,255,255,0.78);
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+    .payment-card {
+        position: sticky;
+        top: 90px;
+    }
+
+    .payment-card-header {
+        padding: 22px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: linear-gradient(135deg, rgba(229,9,20,0.12), rgba(255,255,255,0.02));
+    }
+
+        .payment-card-header > span {
+            color: #ff5964;
+            font-size: 32px;
+        }
+
+    .payment-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        gap: 16px;
+    }
+
+        .payment-row span {
+            color: #999;
+            font-weight: 700;
+        }
+
+        .payment-row strong {
+            color: #fff;
+            text-align: right;
+        }
+
+    .paypal-btn {
+        min-height: 48px;
+        border-radius: 999px;
+        border: none;
+        color: #fff;
+        background: linear-gradient(135deg, #0070ba, #003087);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 950;
+        text-transform: uppercase;
+        box-shadow: 0 12px 28px rgba(0,112,186,0.26);
+    }
+
+        .paypal-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 18px 38px rgba(0,112,186,0.34);
+        }
+
+    .payment-note {
+        color: #aaa;
+        font-size: 0.82rem;
+        line-height: 1.6;
+        text-align: center;
+    }
+
+    .success-box,
+    .danger-box,
+    .empty-message {
+        padding: 14px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+    }
+
+    .success-box {
+        color: #9ff3bd;
+        background: rgba(25,135,84,0.14);
+        border: 1px solid rgba(25,135,84,0.22);
+    }
+
+    .danger-box {
+        color: #ffb4ba;
+        background: rgba(229,9,20,0.14);
+        border: 1px solid rgba(229,9,20,0.22);
+    }
+
+    .empty-message {
+        color: #aaa;
+        background: rgba(255,255,255,0.05);
+    }
+
+    .ticket-qr-card {
+        margin-top: 18px;
+        padding: 18px;
+        border-radius: 22px;
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.18), transparent 36%), rgba(255,255,255,0.055);
+        border: 1px solid rgba(255,255,255,0.10);
+        text-align: center;
+    }
+
+    .qr-frame {
+        width: 190px;
+        height: 190px;
+        margin: 0 auto 14px;
+        padding: 12px;
+        border-radius: 24px;
+        background: #fff;
+        box-shadow: 0 18px 38px rgba(0,0,0,0.32);
+    }
+
+        .qr-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+    .qr-info h6 {
+        color: #fff;
+        font-weight: 950;
+        margin-bottom: 6px;
+    }
+
+    .qr-info p {
+        color: #aaa;
+        font-size: 0.84rem;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
+    .qr-info span {
+        display: inline-flex;
+        padding: 7px 12px;
+        border-radius: 999px;
+        color: #ff5964;
+        background: rgba(229,9,20,0.13);
+        border: 1px solid rgba(229,9,20,0.28);
+        font-size: 0.82rem;
+        font-weight: 900;
+        letter-spacing: 0.6px;
+    }
+
+    @@media (max-width: 991.98px) {
+        .detail-header {
+            flex-direction: column;
+        }
+
+        .back-btn {
+            width: 100%;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .payment-card {
+            position: static;
+        }
+    }
+
+    .warning-box {
+        color: #ffe4a3;
+        background: rgba(255,193,7,0.12);
+        border: 1px solid rgba(255,193,7,0.2);
+    }
+
+    .countdown-box {
+        padding: 14px;
+        border-radius: 16px;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        font-weight: 800;
+    }
+
+    .countdown-line {
+        display: block;
+        margin-top: 5px;
+        color: #fff;
+        font-size: 0.95rem;
+    }
+
+    .countdown-time {
+        color: #ff5964;
+        font-weight: 950;
+        font-size: 1.15rem;
+    }
+
+    .cancel-hold-btn {
+        min-height: 48px;
+        border-radius: 999px;
+        color: #ffb4ba;
+        background: rgba(229,9,20,0.12);
+        border: 1px solid rgba(229,9,20,0.28);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 950;
+        text-transform: uppercase;
+    }
+
+        .cancel-hold-btn:hover {
+            color: #fff;
+            background: rgba(229,9,20,0.25);
+        }
+
+    .paypal-btn.disabled,
+    .paypal-btn[aria-disabled="true"] {
+        opacity: 0.55;
+        pointer-events: none;
+    }
+
+</style>
+
+@section Scripts {
+    @if (Model.Status == "Pending" && expiresAt != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const countdownEl = document.getElementById("holdCountdown");
+                const continueButton = document.getElementById("continuePaymentButton");
+
+                const expireAt = new Date("@expiresAt.Value.ToString("yyyy-MM-ddTHH:mm:ss")").getTime();
+
+                function updateCountdown() {
+                    const now = new Date().getTime();
+                    const distance = expireAt - now;
+
+                    if (distance <= 0) {
+                        if (countdownEl) {
+                            countdownEl.textContent = "00:00";
+                        }
+
+                        if (continueButton) {
+                            continueButton.classList.add("disabled");
+                            continueButton.setAttribute("aria-disabled", "true");
+                            continueButton.removeAttribute("href");
+                            continueButton.innerHTML =
+                                '<span class="material-symbols-outlined">timer_off</span> Hết thời gian giữ ghế';
+                        }
+
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1200);
+
+                        return;
+                    }
+
+                    const minutes = Math.floor(distance / 1000 / 60);
+                    const seconds = Math.floor((distance / 1000) % 60);
+
+                    if (countdownEl) {
+                        countdownEl.textContent =
+                            String(minutes).padStart(2, "0") + ":" +
+                            String(seconds).padStart(2, "0");
+                    }
+                }
+
+                updateCountdown();
+                setInterval(updateCountdown, 1000);
+            });
+        </script>
+    }
+}

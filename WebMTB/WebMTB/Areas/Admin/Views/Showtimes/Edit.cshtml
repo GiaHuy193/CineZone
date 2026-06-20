@@ -1,0 +1,715 @@
+﻿@model WebMTB.Models.Showtime
+
+@{
+    ViewData["Title"] = "Sửa suất chiếu";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var movies = ViewBag.Movies as List<WebMTB.Models.Movie> ?? new List<WebMTB.Models.Movie>();
+    var rooms = ViewBag.Rooms as List<WebMTB.Models.Room> ?? new List<WebMTB.Models.Room>();
+
+    var selectedMovie = movies.FirstOrDefault(m => m.Id == Model.MovieId);
+    var selectedRoom = rooms.FirstOrDefault(r => r.Id == Model.RoomId);
+}
+
+<div class="showtime-edit-page">
+    <div class="showtime-edit-hero mb-4">
+        <div>
+            <div class="showtime-eyebrow">
+                <span class="material-symbols-outlined">edit_calendar</span>
+                CineZone Admin
+            </div>
+
+            <h1>Sửa suất chiếu</h1>
+            <p>
+                Cập nhật phim, phòng chiếu, thời gian, giá vé và trạng thái ngày lễ của suất chiếu.
+            </p>
+        </div>
+
+        <a asp-action="Index" class="btn back-btn">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Quay lại
+        </a>
+    </div>
+
+    <div class="showtime-edit-layout">
+        <section class="form-panel">
+            <div class="form-panel-header">
+                <div>
+                    <h4>Thông tin suất chiếu</h4>
+                    <p>Cập nhật dữ liệu cho suất chiếu #@Model.Id.</p>
+                </div>
+
+                <span class="material-symbols-outlined">schedule</span>
+            </div>
+
+            <form asp-action="Edit" method="post" class="showtime-form">
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="Id" />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="showtime-id-box mb-4">
+                    <span class="material-symbols-outlined">tag</span>
+                    <div>
+                        <small>Mã suất chiếu</small>
+                        <strong>#@Model.Id</strong>
+                    </div>
+                </div>
+
+                <div class="form-group-cine mb-4">
+                    <label asp-for="MovieId" class="form-label">
+                        <span class="material-symbols-outlined">movie</span>
+                        Phim
+                    </label>
+
+                    <select asp-for="MovieId" class="form-select cine-select">
+                        <option value="">-- Chọn phim --</option>
+                        @foreach (var movie in movies)
+                        {
+                            <option value="@movie.Id">@movie.Title</option>
+                        }
+                    </select>
+
+                    <span asp-validation-for="MovieId" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group-cine mb-4">
+                    <label asp-for="RoomId" class="form-label">
+                        <span class="material-symbols-outlined">meeting_room</span>
+                        Phòng chiếu
+                    </label>
+
+                    <select asp-for="RoomId" class="form-select cine-select">
+                        <option value="">-- Chọn phòng --</option>
+                        @foreach (var room in rooms)
+                        {
+                            <option value="@room.Id">@room.Name - @room.Cinema?.Name</option>
+                        }
+                    </select>
+
+                    <span asp-validation-for="RoomId" class="text-danger small"></span>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group-cine mb-4">
+                        <label asp-for="StartTime" class="form-label">
+                            <span class="material-symbols-outlined">calendar_month</span>
+                            Thời gian chiếu
+                        </label>
+
+                        <input asp-for="StartTime"
+                               type="datetime-local"
+                               class="form-control cine-input" />
+
+                        <span asp-validation-for="StartTime" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-group-cine mb-4">
+                        <label asp-for="BasePrice" class="form-label">
+                            <span class="material-symbols-outlined">payments</span>
+                            Giá vé
+                        </label>
+
+                        <input asp-for="BasePrice"
+                               type="number"
+                               min="0"
+                               step="1000"
+                               class="form-control cine-input"
+                               placeholder="Ví dụ: 95000" />
+
+                        <span asp-validation-for="BasePrice" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="holiday-box mb-4">
+                    <div>
+                        <span class="material-symbols-outlined">celebration</span>
+                        <div>
+                            <strong>Suất chiếu ngày lễ</strong>
+                            <p>Nếu bật, suất chiếu sẽ được đánh dấu là ngày lễ trong trang quản lý.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-check form-switch m-0">
+                        <input asp-for="IsHoliday" class="form-check-input holiday-switch" />
+                    </div>
+                </div>
+
+                <div class="form-tip mb-4">
+                    <span class="material-symbols-outlined">info</span>
+                    <div>
+                        <strong>Lưu ý:</strong>
+                        Nếu suất chiếu đã có khách đặt vé, bạn nên hạn chế đổi phim/phòng/thời gian để tránh sai thông tin vé.
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn save-btn">
+                        <span class="material-symbols-outlined">save</span>
+                        Lưu thay đổi
+                    </button>
+
+                    <a asp-action="Index" class="btn cancel-btn">
+                        <span class="material-symbols-outlined">close</span>
+                        Hủy
+                    </a>
+                </div>
+            </form>
+        </section>
+
+        <aside class="preview-panel">
+            <div class="preview-image">
+                <div class="preview-overlay"></div>
+
+                <div class="preview-badges">
+                    <span>Showtime</span>
+
+                    @if (Model.IsHoliday)
+                    {
+                        <span>Holiday</span>
+                    }
+                    else
+                    {
+                        <span>Normal Day</span>
+                    }
+
+                    <span>Active</span>
+                </div>
+
+                <div class="preview-status">
+                    <span></span>
+                    Schedule
+                </div>
+            </div>
+
+            <div class="preview-content">
+                <div class="preview-title-row">
+                    <div>
+                        <p>Preview suất chiếu</p>
+                        <h4>@(selectedMovie?.Title ?? Model.Movie?.Title ?? "Chưa chọn phim")</h4>
+                    </div>
+
+                    <span class="material-symbols-outlined">movie_filter</span>
+                </div>
+
+                <div class="preview-line">
+                    <span class="material-symbols-outlined">meeting_room</span>
+                    @(selectedRoom?.Name ?? Model.Room?.Name ?? "Chưa chọn phòng")
+                </div>
+
+                <div class="preview-line">
+                    <span class="material-symbols-outlined">schedule</span>
+                    @Model.StartTime.ToString("HH:mm - dd/MM/yyyy")
+                </div>
+
+                <div class="preview-meta">
+                    <span>
+                        <span class="material-symbols-outlined">tag</span>
+                        ID #@Model.Id
+                    </span>
+
+                    <span>
+                        <span class="material-symbols-outlined">payments</span>
+                        @Model.BasePrice.ToString("N0") VNĐ
+                    </span>
+
+                    <span>
+                        <span class="material-symbols-outlined">celebration</span>
+                        @(Model.IsHoliday ? "Ngày lễ" : "Ngày thường")
+                    </span>
+                </div>
+
+                <div class="preview-note">
+                    Suất chiếu là dữ liệu kết nối giữa <strong>phim</strong>, <strong>phòng</strong>, <strong>giờ chiếu</strong> và <strong>giá vé</strong>.
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<style>
+    .showtime-edit-page {
+        min-height: 100vh;
+        color: #fff;
+        padding: 28px;
+        background: radial-gradient(circle at 5% 5%, rgba(229, 9, 20, 0.16), transparent 26%), radial-gradient(circle at 95% 15%, rgba(255,255,255,0.05), transparent 24%), #101012;
+    }
+
+    .showtime-edit-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 30px;
+        border-radius: 30px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: linear-gradient(90deg, rgba(0,0,0,0.84), rgba(0,0,0,0.48)), radial-gradient(circle at top right, rgba(229,9,20,0.35), transparent 34%), linear-gradient(135deg, #1b1b20, #09090b);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.35);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 22px;
+    }
+
+    .showtime-eyebrow {
+        color: #ff5964;
+        font-size: 0.78rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 12px;
+    }
+
+    .showtime-edit-hero h1 {
+        font-size: clamp(2.2rem, 5vw, 4.1rem);
+        font-weight: 950;
+        letter-spacing: -0.065em;
+        line-height: 1;
+        margin-bottom: 12px;
+    }
+
+    .showtime-edit-hero p {
+        color: #aaa;
+        max-width: 780px;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .back-btn,
+    .save-btn {
+        border-radius: 999px;
+        color: #fff;
+        border: none;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+        box-shadow: 0 14px 32px rgba(229,9,20,0.28);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 950;
+        white-space: nowrap;
+    }
+
+    .back-btn {
+        min-height: 48px;
+        padding: 0 22px;
+    }
+
+    .save-btn {
+        min-height: 48px;
+        padding: 0 26px;
+    }
+
+        .back-btn:hover,
+        .save-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 18px 42px rgba(229,9,20,0.38);
+        }
+
+    .showtime-edit-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 390px;
+        gap: 22px;
+        align-items: start;
+    }
+
+    .form-panel,
+    .preview-panel {
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(18,18,22,0.94);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.30);
+        overflow: hidden;
+    }
+
+    .form-panel-header {
+        padding: 22px 24px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+        .form-panel-header h4 {
+            font-weight: 950;
+            margin-bottom: 4px;
+        }
+
+        .form-panel-header p {
+            color: #999;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .form-panel-header > span {
+            color: #ff5964;
+            font-size: 34px;
+        }
+
+    .showtime-form {
+        padding: 26px;
+    }
+
+    .showtime-id-box {
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: rgba(229,9,20,0.12);
+        border: 1px solid rgba(229,9,20,0.22);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .showtime-id-box > span {
+            color: #ff5964;
+            font-size: 24px;
+        }
+
+        .showtime-id-box small {
+            color: #aaa;
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .showtime-id-box strong {
+            color: #fff;
+            font-weight: 950;
+        }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .form-group-cine .form-label {
+        color: #ddd;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+        .form-group-cine .form-label span {
+            color: #ff5964;
+            font-size: 21px;
+        }
+
+    .cine-input,
+    .cine-select {
+        min-height: 54px;
+        border-radius: 17px;
+        color: #fff;
+        background-color: rgba(0,0,0,0.30);
+        border: 1px solid rgba(255,255,255,0.12);
+        padding: 0 16px;
+        font-weight: 750;
+    }
+
+        .cine-input:focus,
+        .cine-select:focus {
+            color: #fff;
+            background-color: rgba(0,0,0,0.42);
+            border-color: rgba(229,9,20,0.50);
+            box-shadow: 0 0 0 0.2rem rgba(229,9,20,0.14);
+        }
+
+        .cine-select option {
+            background: #111;
+            color: #fff;
+        }
+
+    .holiday-box {
+        padding: 16px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.075);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+        .holiday-box > div:first-child {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+            .holiday-box > div:first-child > span {
+                color: #ffc94a;
+                font-size: 26px;
+                flex-shrink: 0;
+            }
+
+        .holiday-box strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .holiday-box p {
+            color: #aaa;
+            margin: 0;
+            font-size: 0.86rem;
+            line-height: 1.55;
+        }
+
+    .holiday-switch {
+        width: 52px !important;
+        height: 28px;
+        cursor: pointer;
+    }
+
+        .holiday-switch:checked {
+            background-color: #e50914;
+            border-color: #e50914;
+        }
+
+    .form-tip {
+        padding: 14px 16px;
+        border-radius: 18px;
+        color: #ccc;
+        background: rgba(255,193,7,0.08);
+        border: 1px solid rgba(255,193,7,0.16);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        line-height: 1.6;
+    }
+
+        .form-tip > span {
+            color: #ffc94a;
+            font-size: 24px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .form-tip strong {
+            color: #ffc94a;
+        }
+
+    .form-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .cancel-btn {
+        min-height: 48px;
+        padding: 0 22px;
+        border-radius: 999px;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.14);
+        background: rgba(255,255,255,0.07);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 900;
+    }
+
+        .cancel-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.13);
+            transform: translateY(-2px);
+        }
+
+    .preview-panel {
+        position: sticky;
+        top: 90px;
+    }
+
+    .preview-image {
+        position: relative;
+        height: 220px;
+        background: linear-gradient(135deg, rgba(0,0,0,0.14), rgba(0,0,0,0.70)), url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1000&q=80') center/cover;
+    }
+
+    .preview-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.78)), radial-gradient(circle at top right, rgba(229,9,20,0.22), transparent 34%);
+    }
+
+    .preview-badges {
+        position: absolute;
+        left: 18px;
+        bottom: 18px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+        .preview-badges span {
+            padding: 5px 10px;
+            border-radius: 999px;
+            color: #fff;
+            background: rgba(229,9,20,0.86);
+            font-size: 0.68rem;
+            font-weight: 950;
+            text-transform: uppercase;
+        }
+
+    .preview-status {
+        position: absolute;
+        right: 18px;
+        bottom: 18px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        color: #37d67a;
+        background: rgba(25,135,84,0.16);
+        border: 1px solid rgba(25,135,84,0.24);
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.75rem;
+        font-weight: 950;
+        text-transform: uppercase;
+    }
+
+        .preview-status span {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #37d67a;
+            box-shadow: 0 0 14px rgba(55,214,122,0.75);
+        }
+
+    .preview-content {
+        padding: 22px;
+    }
+
+    .preview-title-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+
+        .preview-title-row p {
+            color: #ff5964;
+            font-size: 0.72rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .preview-title-row h4 {
+            font-weight: 950;
+            margin: 0;
+        }
+
+        .preview-title-row > span {
+            color: #ff5964;
+            font-size: 30px;
+        }
+
+    .preview-line {
+        color: #aaa;
+        display: flex;
+        align-items: flex-start;
+        gap: 7px;
+        line-height: 1.6;
+        margin-bottom: 12px;
+    }
+
+        .preview-line span {
+            color: #ff5964;
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+    .preview-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        margin: 16px 0;
+    }
+
+        .preview-meta > span {
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.065);
+            color: #ddd;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            font-weight: 850;
+        }
+
+        .preview-meta .material-symbols-outlined {
+            color: #ff5964;
+            font-size: 17px;
+        }
+
+    .preview-note {
+        padding: 14px;
+        border-radius: 18px;
+        color: #aaa;
+        background: rgba(0,0,0,0.24);
+        border: 1px solid rgba(255,255,255,0.07);
+        line-height: 1.6;
+        font-size: 0.86rem;
+    }
+
+        .preview-note strong {
+            color: #fff;
+        }
+
+    @@media (max-width: 1199.98px) {
+        .showtime-edit-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .preview-panel {
+            position: static;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .showtime-edit-page {
+            padding: 18px;
+        }
+
+        .showtime-edit-hero {
+            flex-direction: column;
+            padding: 24px;
+        }
+
+        .back-btn,
+        .save-btn,
+        .cancel-btn {
+            width: 100%;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .showtime-form {
+            padding: 20px;
+        }
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

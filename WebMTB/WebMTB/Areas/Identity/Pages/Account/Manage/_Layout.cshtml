@@ -1,0 +1,61 @@
+@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="account-manage-page">
+    <div class="account-manage-container">
+        <div class="account-manage-shell">
+            <aside class="account-sidebar-wrap">
+                <partial name="_ManageNav" />
+            </aside>
+
+            <section class="account-content-wrap">
+                @RenderBody()
+            </section>
+        </div>
+    </div>
+</div>
+
+<style>
+    .account-manage-page {
+        min-height: 100vh;
+        color: #fff;
+        background: radial-gradient(circle at 10% 10%, rgba(229, 9, 20, 0.22), transparent 28%), radial-gradient(circle at 88% 18%, rgba(255, 255, 255, 0.08), transparent 24%), linear-gradient(180deg, #111 0%, #08080a 100%);
+        padding: 42px 0 70px;
+    }
+
+    .account-manage-container {
+        width: min(1320px, calc(100% - 32px));
+        margin: 0 auto;
+    }
+
+    .account-manage-shell {
+        display: grid;
+        grid-template-columns: 315px minmax(0, 1fr);
+        gap: 28px;
+        align-items: start;
+    }
+
+    .account-sidebar-wrap {
+        position: sticky;
+        top: 95px;
+    }
+
+    .account-content-wrap {
+        min-width: 0;
+    }
+
+    @@media (max-width: 991.98px) {
+        .account-manage-shell {
+            grid-template-columns: 1fr;
+        }
+
+        .account-sidebar-wrap {
+            position: static;
+        }
+    }
+</style>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}

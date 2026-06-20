@@ -1,0 +1,191 @@
+﻿@model WebMTB.Models.Movie
+
+@{
+    ViewData["Title"] = "Chi tiết phim " + Model.Title;
+}
+
+@functions {
+    // Link cho Video chạy nền (Mute, Autoplay, No Controls)
+    public string GetBackgroundVideoUrl(string url)
+    {
+        if (string.IsNullOrEmpty(url)) return "";
+        var videoId = "";
+        if (url.Contains("watch?v=")) videoId = url.Split("v=")[1].Split("&")[0];
+        else if (url.Contains("youtu.be/")) videoId = url.Split("/").Last();
+        return $"https://www.youtube.com/embed/{videoId}?autoplay=1&mute=1&loop=1&playlist={videoId}&controls=0&modestbranding=1&rel=0";
+    }
+
+    // Link cho Video xem Full (Có âm thanh, có nút điều khiển)
+    public string GetFullVideoUrl(string url)
+    {
+        if (string.IsNullOrEmpty(url)) return "";
+        var videoId = "";
+        if (url.Contains("watch?v=")) videoId = url.Split("v=")[1].Split("&")[0];
+        else if (url.Contains("youtu.be/")) videoId = url.Split("/").Last();
+        return $"https://www.youtube.com/embed/{videoId}?autoplay=1&controls=1";
+    }
+}
+
+<style>
+    :root {
+        --cine-red: #e50914;
+        --cine-dark: #131313;
+        --cine-text: #e5e2e1;
+    }
+
+    .details-page { background-color: var(--cine-dark); color: var(--cine-text); min-height: 100vh; }
+
+    /* Container Trailer */
+    .trailer-hero {
+        position: relative;
+        width: 100%;
+        height: 70vh;
+        background: #000;
+        overflow: hidden;
+        cursor: pointer; /* Hiện bàn tay để biết là click được */
+    }
+
+    .trailer-hero iframe {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 100vw; height: 56.25vw;
+        transform: translate(-50%, -50%);
+        pointer-events: none; /* Để sự kiện click rơi vào lớp phủ bên dưới */
+    }
+
+    /* Lớp phủ hứng sự kiện Click và tạo hiệu ứng mờ */
+    .trailer-clickable-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, var(--cine-dark) 0%, transparent 60%);
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s;
+    }
+
+    .trailer-hero:hover .trailer-clickable-overlay {
+        background: rgba(0,0,0,0.3);
+    }
+
+    /* Nút Play hiện ra khi hover vào trailer */
+    .play-hint {
+        opacity: 0;
+        transform: scale(0.8);
+        transition: all 0.3s;
+        text-align: center;
+    }
+
+    .trailer-hero:hover .play-hint {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* Modal Styling (Phần xem full) */
+    .modal-content { background: #000; border: none; }
+    .modal-header { border: none; padding: 0.5rem 1rem; }
+    .btn-close { filter: invert(1); }
+    .ratio-16x9 { background: #000; }
+
+    /* Nội dung chi tiết */
+    .details-content { margin-top: -150px; position: relative; z-index: 10; }
+    .poster-box {
+        width: 100%; max-width: 280px; border-radius: 12px; overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1);
+    }
+    .poster-box img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .info-card {
+        background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px;
+        border-left: 4px solid var(--cine-red); margin-bottom: 1rem;
+    }
+</style>
+
+<div class="details-page pb-5">
+    <div class="trailer-hero" data-bs-toggle="modal" data-bs-target="#videoModal">
+        <iframe src="@GetBackgroundVideoUrl(Model.TrailerUrl)" frameborder="0"></iframe>
+        
+        <div class="trailer-clickable-overlay">
+            <div class="play-hint">
+                <div class="bg-danger rounded-circle d-inline-flex align-items-center justify-content-center shadow-lg" style="width: 80px; height: 80px;">
+                    <span class="material-symbols-outlined text-white fs-1">play_arrow</span>
+                </div>
+                <p class="text-white fw-bold mt-2 text-uppercase tracking-wider">Nhấn để xem Full Trailer</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container details-content">
+        <div class="row g-5">
+            <div class="col-md-4 col-lg-3">
+                <div class="poster-box mx-auto ms-md-0">
+                    <img src="@Model.ImageUrl" alt="Poster">
+                </div>
+                <div class="mt-4 d-grid gap-2">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-danger fw-bold py-2">CHỈNH SỬA</a>
+                    <a asp-action="Index" class="btn btn-outline-light py-2">QUAY LẠI</a>
+                </div>
+            </div>
+
+            <div class="col-md-8 col-lg-9 mt-md-5">
+                <h1 class="display-3 fw-bolder text-white mb-2">@Model.Title</h1>
+                <div class="d-flex align-items-center gap-3 mb-4 fs-5 text-warning fw-bold">
+                    <span>⭐ @Model.Rating/10</span>
+                    <span class="text-white-50 small">| @Model.Duration Phút | @Model.ReleaseDate.Year</span>
+                </div>
+                
+                <p class="text-secondary fs-5 lh-lg mb-5">@Model.Description</p>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <span class="text-muted small text-uppercase d-block mb-1">Đạo diễn</span>
+                            <span class="text-white fs-5">@Model.Director</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <span class="text-muted small text-uppercase d-block mb-1">Diễn viên</span>
+                            <span class="text-white fs-5">@Model.Cast</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white small">Trailer: @Model.Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe id="fullVideoFrame" src="" title="YouTube video player" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var videoModal = document.getElementById('videoModal');
+        var fullVideoFrame = document.getElementById('fullVideoFrame');
+        var fullUrl = "@GetFullVideoUrl(Model.TrailerUrl)";
+
+        // Khi mở modal thì gán link full có tiếng vào
+        videoModal.addEventListener('show.bs.modal', function () {
+            fullVideoFrame.src = fullUrl;
+        });
+
+        // Khi đóng modal thì xóa link để dừng video (tránh tiếng vẫn kêu)
+        videoModal.addEventListener('hide.bs.modal', function () {
+            fullVideoFrame.src = "";
+        });
+    </script>
+}

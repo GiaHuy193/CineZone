@@ -1,0 +1,669 @@
+﻿@model IEnumerable<WebMTB.Models.Booking>
+
+@{
+    ViewData["Title"] = "Thanh toán - CineZone";
+
+    var bookings = Model?.ToList() ?? new List<WebMTB.Models.Booking>();
+
+    var pendingBookings = bookings
+        .Where(b => b.Status == "Pending")
+        .OrderByDescending(b => b.BookingDate)
+        .ToList();
+
+    var historyBookings = bookings
+        .Where(b => b.Status != "Pending")
+        .OrderByDescending(b => b.BookingDate)
+        .ToList();
+
+    var completedBookings = bookings.Where(b => b.Status == "Completed").ToList();
+    var cancelledBookings = bookings.Where(b => b.Status == "Cancelled").ToList();
+
+    decimal totalPaid = completedBookings.Sum(b => b.TotalAmount);
+}
+
+<div class="payment-page">
+    <div class="container py-5">
+
+        <div class="payment-hero mb-4">
+            <div>
+                <div class="payment-eyebrow">
+                    <span class="material-symbols-outlined">payments</span>
+                    CineZone Payment Center
+                </div>
+
+                <h1>Thanh toán</h1>
+                <p>Tiếp tục thanh toán các booking đang chờ và xem lịch sử giao dịch.</p>
+            </div>
+
+            <a asp-area="Identity"
+               asp-page="/Account/Manage/Index"
+               class="btn back-profile-btn">
+                <span class="material-symbols-outlined">person</span>
+                Hồ sơ
+            </a>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success rounded-4 border-0 mb-4">
+                <span class="material-symbols-outlined align-middle me-1">check_circle</span>
+                @TempData["Success"]
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger rounded-4 border-0 mb-4">
+                <span class="material-symbols-outlined align-middle me-1">warning</span>
+                @TempData["Error"]
+            </div>
+        }
+
+        <div class="payment-stats mb-4">
+            <div class="payment-stat-card warning">
+                <span class="material-symbols-outlined">schedule</span>
+                <p>Đang chờ</p>
+                <h3>@pendingBookings.Count</h3>
+            </div>
+
+            <div class="payment-stat-card success">
+                <span class="material-symbols-outlined">check_circle</span>
+                <p>Đã thanh toán</p>
+                <h3>@completedBookings.Count</h3>
+            </div>
+
+            <div class="payment-stat-card danger">
+                <span class="material-symbols-outlined">cancel</span>
+                <p>Đã hủy</p>
+                <h3>@cancelledBookings.Count</h3>
+            </div>
+
+            <div class="payment-stat-card money">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                <p>Tổng đã thanh toán</p>
+                <h3>@totalPaid.ToString("N0")</h3>
+                <small>VNĐ</small>
+            </div>
+        </div>
+
+        <div class="payment-section mb-4">
+            <div class="section-header">
+                <div>
+                    <h4>Cần thanh toán</h4>
+                    <p>Các booking đang Pending sẽ hiển thị ở đây.</p>
+                </div>
+
+                <span class="material-symbols-outlined">pending_actions</span>
+            </div>
+
+            <div class="payment-list">
+                @if (pendingBookings.Any())
+                {
+                    foreach (var booking in pendingBookings)
+                    {
+                        var tickets = booking.Tickets?.ToList() ?? new List<WebMTB.Models.Ticket>();
+                        var ticket = tickets.FirstOrDefault();
+
+                        var showtime = ticket?.Showtime;
+                        var movie = showtime?.Movie;
+                        var room = showtime?.Room;
+                        var cinema = room?.Cinema;
+
+                        string movieTitle = movie?.Title ?? "Thông tin phim";
+                        string cinemaName = cinema?.Name ?? "Chưa có rạp";
+                        string roomName = room?.Name ?? "Chưa có phòng";
+
+                        string seats = tickets.Any()
+                            ? string.Join(", ", tickets
+                                .Where(t => t.Seat != null)
+                                .OrderBy(t => t.Seat!.Row)
+                                .ThenBy(t => t.Seat!.Number)
+                                .Select(t => $"{t.Seat!.Row}{t.Seat!.Number}"))
+                            : "---";
+
+                        <div class="payment-item pending-item">
+                            <div class="payment-icon">
+                                <span class="material-symbols-outlined">movie</span>
+                            </div>
+
+                            <div class="payment-main">
+                                <div class="title-line">
+                                    <h5>@movieTitle</h5>
+                                    <span class="payment-badge pending">Pending</span>
+                                </div>
+
+                                <p>
+                                    <span class="material-symbols-outlined">location_on</span>
+                                    @cinemaName · @roomName
+                                </p>
+
+                                <p>
+                                    <span class="material-symbols-outlined">event_seat</span>
+                                    Ghế: @seats
+                                </p>
+
+                                <p>
+                                    <span class="material-symbols-outlined">schedule</span>
+                                    @(showtime != null ? showtime.StartTime.ToString("HH:mm - dd/MM/yyyy") : "Chưa có suất chiếu")
+                                </p>
+                            </div>
+
+                            <div class="payment-side">
+                                <div>
+                                    <span>Tổng tiền</span>
+                                    <strong>@booking.TotalAmount.ToString("N0") VNĐ</strong>
+                                </div>
+
+                                <small>#@booking.Id · @booking.BookingDate.ToString("dd/MM/yyyy")</small>
+
+                                <a asp-controller="Bookings"
+                                   asp-action="Checkout"
+                                   asp-route-id="@booking.Id"
+                                   class="btn pay-now-btn">
+                                    <span class="material-symbols-outlined">payments</span>
+                                    Tiếp tục thanh toán
+                                </a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="empty-box">
+                        <span class="material-symbols-outlined">task_alt</span>
+                        <h5>Không có booking chờ thanh toán</h5>
+                        <p>Các vé đang chờ thanh toán PayPal sẽ xuất hiện ở khu vực này.</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="payment-section">
+            <div class="section-header">
+                <div>
+                    <h4>Lịch sử giao dịch</h4>
+                    <p>Các booking đã thanh toán hoặc đã hủy.</p>
+                </div>
+
+                <span class="material-symbols-outlined">receipt_long</span>
+            </div>
+
+            <div class="payment-list compact">
+                @if (historyBookings.Any())
+                {
+                    foreach (var booking in historyBookings)
+                    {
+                        var tickets = booking.Tickets?.ToList() ?? new List<WebMTB.Models.Ticket>();
+                        var ticket = tickets.FirstOrDefault();
+
+                        var showtime = ticket?.Showtime;
+                        var movie = showtime?.Movie;
+                        var room = showtime?.Room;
+                        var cinema = room?.Cinema;
+
+                        string movieTitle = movie?.Title ?? "Thông tin phim";
+                        string cinemaName = cinema?.Name ?? "Chưa có rạp";
+                        string roomName = room?.Name ?? "Chưa có phòng";
+
+                        string seats = tickets.Any()
+                            ? string.Join(", ", tickets
+                                .Where(t => t.Seat != null)
+                                .OrderBy(t => t.Seat!.Row)
+                                .ThenBy(t => t.Seat!.Number)
+                                .Select(t => $"{t.Seat!.Row}{t.Seat!.Number}"))
+                            : "---";
+
+                        string statusClass = booking.Status == "Completed" ? "completed" : "cancelled";
+
+                        <div class="payment-item history-item">
+                            <div class="payment-icon">
+                                <span class="material-symbols-outlined">
+                                    @(booking.Status == "Completed" ? "check_circle" : "cancel")
+                                </span>
+                            </div>
+
+                            <div class="payment-main">
+                                <div class="title-line">
+                                    <h5>@movieTitle</h5>
+                                    <span class="payment-badge @statusClass">@booking.Status</span>
+                                </div>
+
+                                <p>
+                                    <span class="material-symbols-outlined">location_on</span>
+                                    @cinemaName · @roomName
+                                </p>
+
+                                <p>
+                                    <span class="material-symbols-outlined">event_seat</span>
+                                    Ghế: @seats
+                                </p>
+
+                                @if (!string.IsNullOrWhiteSpace(booking.PayPalTransactionId))
+                                {
+                                    <div class="paypal-code">
+                                        PayPal: @booking.PayPalTransactionId
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="payment-side">
+                                <div>
+                                    <span>Tổng tiền</span>
+                                    <strong>@booking.TotalAmount.ToString("N0") VNĐ</strong>
+                                </div>
+
+                                <small>#@booking.Id · @booking.BookingDate.ToString("dd/MM/yyyy")</small>
+
+                                <a asp-controller="Bookings"
+                                   asp-action="Details"
+                                   asp-route-id="@booking.Id"
+                                   class="btn detail-btn">
+                                    <span class="material-symbols-outlined">confirmation_number</span>
+                                    Xem vé
+                                </a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="empty-box">
+                        <span class="material-symbols-outlined">receipt_long</span>
+                        <h5>Chưa có lịch sử giao dịch</h5>
+                        <p>Sau khi thanh toán hoặc hủy PayPal, giao dịch sẽ hiển thị tại đây.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .payment-page {
+        min-height: 100vh;
+        color: #fff;
+        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.16), transparent 30%), #111;
+    }
+
+    .payment-hero {
+        padding: 34px;
+        border-radius: 30px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.32), transparent 34%), linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+        box-shadow: 0 22px 60px rgba(0,0,0,0.32);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .payment-eyebrow {
+        color: #ff5964;
+        font-size: 0.8rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 10px;
+    }
+
+    .payment-hero h1 {
+        font-size: clamp(2.3rem, 5vw, 4rem);
+        font-weight: 950;
+        letter-spacing: -0.06em;
+        margin-bottom: 10px;
+    }
+
+    .payment-hero p {
+        color: #aaa;
+        margin: 0;
+    }
+
+    .back-profile-btn {
+        border-radius: 999px;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.14);
+        background: rgba(255,255,255,0.07);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+        .back-profile-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-2px);
+        }
+
+    .payment-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .payment-stat-card {
+        padding: 20px;
+        border-radius: 24px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(18,18,22,0.92);
+        box-shadow: 0 18px 46px rgba(0,0,0,0.26);
+    }
+
+        .payment-stat-card > span {
+            color: #ff5964;
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .payment-stat-card p {
+            color: #aaa;
+            font-size: 0.76rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin: 0 0 6px;
+        }
+
+        .payment-stat-card h3 {
+            font-weight: 950;
+            margin: 0;
+        }
+
+        .payment-stat-card.success h3 {
+            color: #37d67a;
+        }
+
+        .payment-stat-card.warning h3,
+        .payment-stat-card.money h3 {
+            color: #ffc94a;
+        }
+
+        .payment-stat-card.danger h3 {
+            color: #ff5964;
+        }
+
+        .payment-stat-card small {
+            color: #999;
+            font-weight: 800;
+        }
+
+    .payment-section {
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(18,18,22,0.92);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.32);
+        overflow: hidden;
+    }
+
+    .section-header {
+        padding: 22px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+    }
+
+        .section-header h4 {
+            font-weight: 950;
+            margin-bottom: 4px;
+        }
+
+        .section-header p {
+            color: #999;
+            margin: 0;
+        }
+
+        .section-header > span {
+            color: #ff5964;
+            font-size: 32px;
+        }
+
+    .payment-list {
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .payment-item {
+        padding: 16px;
+        border-radius: 22px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.075);
+        display: grid;
+        grid-template-columns: 54px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 14px;
+        transition: all 0.2s ease;
+    }
+
+    .pending-item {
+        border-color: rgba(255,193,7,0.18);
+        background: radial-gradient(circle at right, rgba(255,193,7,0.08), transparent 32%), rgba(255,255,255,0.045);
+    }
+
+    .history-item {
+        opacity: 0.92;
+    }
+
+    .payment-item:hover {
+        background: rgba(255,255,255,0.07);
+        transform: translateY(-2px);
+    }
+
+    .payment-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 18px;
+        background: rgba(229,9,20,0.16);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .payment-icon span {
+            font-size: 32px;
+        }
+
+    .title-line {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 6px;
+    }
+
+        .title-line h5 {
+            font-size: 1.02rem;
+            font-weight: 950;
+            margin: 0;
+        }
+
+    .payment-main p {
+        color: #999;
+        margin: 4px 0 0;
+        font-size: 0.88rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .payment-main p span {
+            color: #ff5964;
+            font-size: 18px;
+        }
+
+    .paypal-code {
+        margin-top: 8px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        display: inline-block;
+        color: #8fbfff;
+        background: rgba(0,112,186,0.12);
+        font-size: 0.78rem;
+        font-weight: 800;
+        word-break: break-all;
+    }
+
+    .payment-badge {
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 950;
+        text-transform: uppercase;
+    }
+
+        .payment-badge.completed {
+            color: #37d67a;
+            background: rgba(25,135,84,0.14);
+        }
+
+        .payment-badge.pending {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.12);
+        }
+
+        .payment-badge.cancelled {
+            color: #ff5964;
+            background: rgba(229,9,20,0.14);
+        }
+
+    .payment-side {
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 7px;
+    }
+
+        .payment-side span {
+            color: #888;
+            font-size: 0.74rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .payment-side strong {
+            color: #ff5964;
+            font-size: 1.15rem;
+            font-weight: 950;
+            white-space: nowrap;
+        }
+
+        .payment-side small {
+            color: #999;
+        }
+
+    .pay-now-btn,
+    .detail-btn {
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 8px 14px;
+        font-size: 0.82rem;
+        font-weight: 900;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .pay-now-btn {
+        border: none;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+        box-shadow: 0 10px 22px rgba(229,9,20,0.26);
+    }
+
+    .detail-btn {
+        border: 1px solid rgba(255,255,255,0.14);
+        background: rgba(255,255,255,0.07);
+    }
+
+        .pay-now-btn:hover,
+        .detail-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .pay-now-btn span,
+        .detail-btn span {
+            font-size: 18px;
+        }
+
+    .empty-box {
+        padding: 44px 20px;
+        text-align: center;
+    }
+
+        .empty-box > span {
+            color: #ff5964;
+            font-size: 56px;
+            margin-bottom: 10px;
+        }
+
+        .empty-box h5 {
+            font-weight: 950;
+        }
+
+        .empty-box p {
+            color: #999;
+            margin-bottom: 0;
+        }
+
+    @@media (max-width: 991.98px) {
+        .payment-hero {
+            flex-direction: column;
+        }
+
+        .back-profile-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .payment-stats {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .payment-item {
+            grid-template-columns: 54px minmax(0, 1fr);
+        }
+
+        .payment-side {
+            grid-column: 1 / -1;
+            align-items: flex-start;
+            text-align: left;
+            padding-left: 68px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .payment-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .payment-hero {
+            padding: 24px;
+        }
+
+        .payment-side {
+            padding-left: 0;
+        }
+
+        .payment-item {
+            grid-template-columns: 1fr;
+        }
+
+        .payment-icon {
+            display: none;
+        }
+    }
+</style>

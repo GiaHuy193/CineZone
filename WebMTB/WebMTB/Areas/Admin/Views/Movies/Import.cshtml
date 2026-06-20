@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Import phim";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid px-4 py-4 text-white">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Import phim hàng loạt</h2>
+            <p class="text-secondary mb-0">
+                Tải lên file CSV để thêm nhiều phim cùng lúc vào hệ thống CineZone.
+            </p>
+        </div>
+
+        <a asp-action="Index" class="btn btn-outline-light rounded-pill px-4">
+            Quay lại
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success rounded-4">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger rounded-4">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="card bg-dark border-secondary rounded-4 p-4 mb-4">
+        <form asp-action="Import" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Chọn file CSV</label>
+                <input type="file"
+                       name="file"
+                       accept=".csv"
+                       class="form-control bg-black text-white border-secondary" />
+            </div>
+
+            <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">
+                Import phim
+            </button>
+        </form>
+    </div>
+
+    <div class="card bg-black border-secondary rounded-4 p-4">
+        <h5 class="fw-bold text-danger mb-3">Định dạng file CSV</h5>
+
+        <p class="text-secondary">
+            File CSV cần có dòng tiêu đề như sau:
+        </p>
+
+        <pre class="bg-dark text-white rounded-4 p-3 small"><code>Title,Description,Director,Cast,Duration,ReleaseDate,TrailerUrl,AgeRating,ImageUrl,CoverImageUrl,Rating,IsHot,IsActive,Genres</code></pre>
+
+        <p class="text-secondary mb-2">
+            Ví dụ dữ liệu:
+        </p>
+
+        <pre class="bg-dark text-white rounded-4 p-3 small"><code>Avenger Endgame,"Biệt đội siêu anh hùng bước vào trận chiến cuối cùng.",Anthony Russo,"Robert Downey Jr.; Chris Evans",182,26/04/2019,https://www.youtube.com/watch?v=TcMBFSGVi1c,P,https://link-poster.jpg,https://link-cover.jpg,10,true,true,"Hành Động;Khoa Học Viễn Tưởng"</code></pre>
+
+        <div class="alert alert-warning rounded-4 mt-3 mb-0">
+            Lưu ý: Nếu mô tả hoặc diễn viên có dấu phẩy, hãy đặt nội dung trong dấu ngoặc kép.
+        </div>
+    </div>
+</div>

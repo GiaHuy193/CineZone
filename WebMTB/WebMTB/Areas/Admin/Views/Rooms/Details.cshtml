@@ -1,0 +1,259 @@
+﻿@model WebMTB.Models.Room
+
+@{
+    ViewData["Title"] = "Chi tiết phòng chiếu";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var seats = ViewBag.Seats as List<WebMTB.Models.Seat> ?? new List<WebMTB.Models.Seat>();
+}
+
+<div class="container-fluid px-4 py-4 text-white">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">@Model.Name</h2>
+            <p class="text-secondary mb-0">
+                Rạp: @Model.Cinema?.Name · Tổng số ghế: @seats.Count
+            </p>
+        </div>
+
+        <a asp-action="Index" class="btn btn-outline-light rounded-pill px-4">
+            Quay lại
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success rounded-4">@TempData["Success"]</div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger rounded-4">@TempData["Error"]</div>
+    }
+
+    <div class="card bg-dark border-secondary rounded-4 p-4 mb-4">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+            <div>
+                <h5 class="fw-bold mb-1">Sơ đồ ghế trong phòng</h5>
+                <p class="text-secondary mb-0">
+                    Admin có thể tạo nhanh ghế A-F hoặc tự thiết kế sơ đồ ghế theo dạng lưới giống Excel.
+                </p>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a asp-action="SeatDesigner"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-danger rounded-pill px-4 fw-bold">
+                    Thiết kế sơ đồ ghế
+                </a>
+
+                <form asp-action="GenerateSeats" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="roomId" value="@Model.Id" />
+                    <button type="submit" class="btn btn-outline-light rounded-pill px-4">
+                        Tạo nhanh A-F
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-dark border-secondary rounded-4 p-4">
+        @if (seats.Any())
+        {
+            <div class="screen-preview mb-4">
+                <div class="screen-line"></div>
+                <span>Màn hình</span>
+            </div>
+
+            <div class="seat-preview-wrapper">
+                @{
+                    int maxRow = seats.Max(s => s.GridRow);
+                    int maxCol = seats.Max(s => s.GridColumn);
+                }
+
+                <div class="seat-preview">
+                    @for (int r = 1; r <= maxRow; r++)
+                    {
+                        var rowSeats = seats.Where(s => s.GridRow == r).ToList();
+                        string rowName = rowSeats.FirstOrDefault()?.Row ?? "";
+
+                        <div class="seat-preview-row">
+                            <span class="row-label">@rowName</span>
+
+                            @for (int c = 1; c <= maxCol; c++)
+                            {
+                                var seat = seats.FirstOrDefault(s => s.GridRow == r && s.GridColumn == c);
+
+                                if (seat == null)
+                                {
+                                    <span class="seat-empty"></span>
+                                }
+                                else
+                                {
+                                    string seatClass = seat.SeatType?.ToLower() ?? "normal";
+
+                                    <span class="seat-box @seatClass">
+                                        @seat.Row@seat.Number
+                                    </span>
+                                }
+                            }
+
+                            <span class="row-label">@rowName</span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
+                <div class="legend-item">
+                    <span class="legend-box normal"></span>
+                    Ghế thường
+                </div>
+
+                <div class="legend-item">
+                    <span class="legend-box vip"></span>
+                    VIP
+                </div>
+
+                <div class="legend-item">
+                    <span class="legend-box couple"></span>
+                    Ghế đôi
+                </div>
+
+                <div class="legend-item">
+                    <span class="legend-box empty"></span>
+                    Lối đi / Trống
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="text-center text-secondary py-5">
+                <span class="material-symbols-outlined d-block mb-2" style="font-size: 48px;">event_seat</span>
+                <p class="mb-1 fw-bold text-white">Phòng này chưa có sơ đồ ghế</p>
+                <p class="mb-0">Bấm “Thiết kế sơ đồ ghế” để tự tạo layout hoặc “Tạo nhanh A-F” để sinh ghế test.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .screen-preview {
+        width: min(100%, 720px);
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .screen-line {
+        width: 72%;
+        height: 5px;
+        margin: 0 auto 12px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, transparent, #fff, transparent);
+        box-shadow: 0 8px 28px rgba(255, 255, 255, 0.55);
+    }
+
+    .screen-preview span {
+        color: #8f8f8f;
+        font-size: 0.76rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .seat-preview-wrapper {
+        overflow-x: auto;
+        padding-bottom: 8px;
+    }
+
+    .seat-preview {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        min-width: max-content;
+    }
+
+    .seat-preview-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .row-label {
+        width: 24px;
+        color: #888;
+        font-weight: 900;
+        text-align: center;
+        font-size: 0.8rem;
+    }
+
+    .seat-box,
+    .seat-empty {
+        width: 46px;
+        height: 38px;
+        flex: 0 0 46px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 900;
+    }
+
+    .seat-empty {
+        border: 1px dashed rgba(255,255,255,0.16);
+        background: transparent;
+    }
+
+    .seat-box.normal {
+        color: #fff;
+        background: linear-gradient(180deg, #444, #2f2f2f);
+        border-bottom: 4px solid #1c1c1c;
+    }
+
+    .seat-box.vip {
+        color: #fff;
+        background: linear-gradient(180deg, #fbbf24, #d97706);
+        border-bottom: 4px solid #92400e;
+    }
+
+    .seat-box.couple {
+        color: #fff;
+        background: linear-gradient(180deg, #a855f7, #7e22ce);
+        border-bottom: 4px solid #581c87;
+    }
+
+    .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #cfcfcf;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+
+    .legend-box {
+        width: 18px;
+        height: 18px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+
+        .legend-box.normal {
+            background: #3a3a3a;
+        }
+
+        .legend-box.vip {
+            background: #f59e0b;
+        }
+
+        .legend-box.couple {
+            background: #9333ea;
+        }
+
+        .legend-box.empty {
+            border: 1px dashed rgba(255,255,255,0.35);
+            background: transparent;
+        }
+</style>

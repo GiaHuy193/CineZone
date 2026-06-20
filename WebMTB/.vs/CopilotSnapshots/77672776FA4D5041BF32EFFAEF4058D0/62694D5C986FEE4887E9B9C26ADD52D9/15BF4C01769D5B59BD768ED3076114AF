@@ -1,0 +1,93 @@
+﻿@model WebMTB.Models.Movie
+
+@{
+    ViewData["Title"] = "Thêm Phim Mới";
+}
+
+<div class="container mt-5 pt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white brand-font">Thêm Phim Mới</h1>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">
+            <span class="material-symbols-outlined fs-6">arrow_back</span> Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="card bg-dark text-white border-secondary shadow-lg">
+        <div class="card-body p-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-bold">Tên Phim</label>
+                            <input asp-for="Title" class="form-control bg-secondary bg-opacity-25 text-white border-secondary" placeholder="Nhập tên phim..." />
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-bold">Mô tả nội dung</label>
+                            <textarea asp-for="Description" class="form-control bg-secondary bg-opacity-25 text-white border-secondary" rows="5" placeholder="Viết tóm tắt nội dung phim..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Director" class="form-label fw-bold">Đạo diễn</label>
+                                <input asp-for="Director" class="form-control bg-secondary bg-opacity-25 text-white border-secondary" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Duration" class="form-label fw-bold">Thời lượng (Phút)</label>
+                                <input asp-for="Duration" class="form-control bg-secondary bg-opacity-25 text-white border-secondary" type="number" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Cast" class="form-label fw-bold">Diễn viên chính</label>
+                            <input asp-for="Cast" class="form-control bg-secondary bg-opacity-25 text-white border-secondary" placeholder="Cách nhau bằng dấu phẩy..." />
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label fw-bold">Đường dẫn ảnh Poster (URL)</label>
+                            <input asp-for="ImageUrl" class="form-control bg-secondary bg-opacity-25 text-white border-secondary" placeholder="https://..." />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TrailerUrl" class="form-label fw-bold">Đường dẫn Trailer (YouTube)</label>
+                            <input asp-for="TrailerUrl" class="form-control bg-secondary bg-opacity-25 text-white border-secondary" placeholder="https://youtube.com/..." />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ReleaseDate" class="form-label fw-bold">Ngày khởi chiếu</label>
+                            <input asp-for="ReleaseDate" class="form-control bg-secondary bg-opacity-25 text-white border-secondary" type="date" />
+                        </div>
+
+                        <div class="p-3 border border-secondary rounded bg-black bg-opacity-25 mb-4">
+                            <h6 class="text-secondary mb-3">Trạng thái phim</h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" asp-for="IsHot" />
+                                <label class="form-check-label" asp-for="IsHot">🔥 Phim Hot (Hiện trang đầu)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" asp-for="IsActive" />
+                                <label class="form-check-label" asp-for="IsActive">🎬 Đang chiếu</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-gradient w-100 py-3 fw-bold fs-5 shadow">
+                            <span class="material-symbols-outlined">save</span> LƯU PHIM MỚI
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

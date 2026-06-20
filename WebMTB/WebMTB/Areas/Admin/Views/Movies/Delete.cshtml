@@ -1,0 +1,721 @@
+﻿@model WebMTB.Models.Movie
+
+@{
+    ViewData["Title"] = "Xóa phim";
+
+    string displayAge = !string.IsNullOrEmpty(Model.AgeRating)
+        ? (Model.AgeRating == "P" || Model.AgeRating == "K" ? Model.AgeRating : "T" + Model.AgeRating)
+        : "P";
+
+    string ageClass = displayAge == "P"
+        ? "age-green"
+        : (displayAge == "K" ? "age-blue" : "age-red");
+
+    string directorText = !string.IsNullOrWhiteSpace(Model.Director) ? Model.Director : "Chưa cập nhật";
+    string castText = !string.IsNullOrWhiteSpace(Model.Cast) ? Model.Cast : "Chưa cập nhật";
+    string descriptionText = !string.IsNullOrWhiteSpace(Model.Description) ? Model.Description : "Chưa có mô tả nội dung.";
+}
+
+<div class="movie-delete-page container-fluid px-4 px-lg-5 py-4">
+
+    <div class="delete-hero mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-danger">delete_forever</span>
+                <span class="delete-eyebrow">Danger Zone</span>
+            </div>
+
+            <h1 class="delete-title mb-2">Xác nhận xóa phim</h1>
+            <p class="delete-subtitle mb-0">
+                Bạn đang chuẩn bị xóa phim khỏi hệ thống CineZone. Hành động này có thể ảnh hưởng đến dữ liệu hiển thị và đặt vé.
+            </p>
+        </div>
+
+        <a asp-action="Index" class="btn delete-back-btn">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="danger-alert mb-4">
+        <div class="danger-icon">
+            <span class="material-symbols-outlined">warning</span>
+        </div>
+
+        <div>
+            <h5>Bạn có chắc chắn muốn xóa phim này?</h5>
+            <p>
+                Hành động này sẽ gỡ bỏ phim khỏi hệ thống. Nếu phim đang được dùng ở trang chủ hoặc đặt vé,
+                bạn nên kiểm tra kỹ trước khi xác nhận.
+            </p>
+        </div>
+    </div>
+
+    <div class="delete-card">
+        <div class="row g-4 g-lg-5 align-items-stretch">
+
+            <div class="col-lg-4 col-xl-3">
+                <div class="delete-poster-panel">
+                    <div class="delete-poster">
+                        @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" alt="@Model.Title" />
+                        }
+                        else
+                        {
+                            <div class="poster-empty">
+                                <span class="material-symbols-outlined">image_not_supported</span>
+                                <p>Không có poster</p>
+                            </div>
+                        }
+
+                        <div class="rating-float">
+                            <span class="material-symbols-outlined">star</span>
+                            <strong>@Model.Rating</strong>
+                        </div>
+                    </div>
+
+                    <div class="delete-status-list mt-3">
+                        @if (Model.IsHot)
+                        {
+                            <span class="status-badge hot">
+                                <span class="material-symbols-outlined">local_fire_department</span>
+                                Phim hot
+                            </span>
+                        }
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="status-badge active">
+                                <i></i>
+                                Đang chiếu
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="status-badge inactive">
+                                <i></i>
+                                Tạm dừng
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-xl-9">
+                <div class="delete-info-panel h-100">
+
+                    <div class="movie-heading">
+                        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                            <span class="age-badge @ageClass">@displayAge</span>
+
+                            <span class="movie-meta-pill">
+                                <span class="material-symbols-outlined">schedule</span>
+                                @Model.Duration phút
+                            </span>
+
+                            <span class="movie-meta-pill">
+                                <span class="material-symbols-outlined">calendar_month</span>
+                                @Model.ReleaseDate.ToString("dd/MM/yyyy")
+                            </span>
+                        </div>
+
+                        <h2>@Model.Title</h2>
+                    </div>
+
+                    <div class="delete-info-grid">
+                        <div class="delete-info-box">
+                            <span class="material-symbols-outlined">person</span>
+                            <div>
+                                <p>Đạo diễn</p>
+                                <h6>@directorText</h6>
+                            </div>
+                        </div>
+
+                        <div class="delete-info-box">
+                            <span class="material-symbols-outlined">groups</span>
+                            <div>
+                                <p>Diễn viên chính</p>
+                                <h6>@castText</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="description-box">
+                        <div class="section-heading">
+                            <span class="material-symbols-outlined">subject</span>
+                            <h5>Tóm tắt nội dung</h5>
+                        </div>
+
+                        <p>@descriptionText</p>
+                    </div>
+
+                    <div class="delete-confirm-box">
+                        <div>
+                            <h5>Xác nhận thao tác</h5>
+                            <p>
+                                Nhấn nút bên dưới để xóa phim. Nếu chưa chắc chắn, hãy chọn hủy bỏ để quay lại danh sách.
+                            </p>
+                        </div>
+
+                        <div class="delete-actions">
+                            <form asp-action="Delete" class="m-0">
+                                <input type="hidden" asp-for="Id" />
+
+                                <button type="submit" class="btn confirm-delete-btn">
+                                    <span class="material-symbols-outlined">delete_forever</span>
+                                    Xác nhận xóa phim
+                                </button>
+                            </form>
+
+                            <a asp-action="Index" class="btn cancel-delete-btn">
+                                <span class="material-symbols-outlined">close</span>
+                                Hủy bỏ
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .movie-delete-page {
+        color: #fff;
+    }
+
+    .delete-hero {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 28px;
+        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.24), transparent 34%), linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+    }
+
+        .delete-hero::after {
+            content: "";
+            position: absolute;
+            top: -90px;
+            right: -80px;
+            width: 240px;
+            height: 240px;
+            border-radius: 999px;
+            background: rgba(229, 9, 20, 0.18);
+            filter: blur(12px);
+            pointer-events: none;
+        }
+
+    .delete-eyebrow {
+        color: #ff6b73;
+        font-size: 0.78rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+    }
+
+    .delete-title {
+        color: #fff;
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+        font-weight: 950;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+    }
+
+    .delete-subtitle {
+        color: #a7a7a7;
+        max-width: 780px;
+        font-size: 0.95rem;
+    }
+
+    .delete-back-btn {
+        position: relative;
+        z-index: 2;
+        min-height: 44px;
+        padding: 0 18px;
+        border-radius: 999px;
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+        .delete-back-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+    .danger-alert {
+        border-radius: 22px;
+        border: 1px solid rgba(229, 9, 20, 0.26);
+        background: linear-gradient(135deg, rgba(229, 9, 20, 0.14), rgba(229, 9, 20, 0.04));
+        padding: 20px 22px;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        box-shadow: 0 18px 40px rgba(229, 9, 20, 0.08);
+    }
+
+    .danger-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        background: rgba(229, 9, 20, 0.16);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        animation: warningPulse 2s infinite ease-in-out;
+    }
+
+        .danger-icon span {
+            font-size: 30px;
+        }
+
+    .danger-alert h5 {
+        color: #fff;
+        font-weight: 900;
+        margin-bottom: 5px;
+    }
+
+    .danger-alert p {
+        color: #b6b6b6;
+        margin: 0;
+        font-size: 0.93rem;
+        line-height: 1.6;
+    }
+
+    .delete-card {
+        overflow: hidden;
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(18, 18, 22, 0.88);
+        padding: 26px;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+    }
+
+    .delete-poster-panel {
+        position: sticky;
+        top: 92px;
+    }
+
+    .delete-poster {
+        position: relative;
+        width: 100%;
+        max-width: 280px;
+        aspect-ratio: 2 / 3;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 24px;
+        overflow: hidden;
+        background: #202020;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 26px 70px rgba(0, 0, 0, 0.5);
+    }
+
+        .delete-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.85);
+        }
+
+    .poster-empty {
+        width: 100%;
+        height: 100%;
+        color: #8a8a8a;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .poster-empty span {
+            font-size: 48px;
+        }
+
+        .poster-empty p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+    .rating-float {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        min-height: 34px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.72);
+        backdrop-filter: blur(8px);
+        color: #ffc94a;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        border: 1px solid rgba(255, 193, 7, 0.16);
+    }
+
+        .rating-float span {
+            font-size: 18px;
+        }
+
+    .delete-status-list {
+        max-width: 280px;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .status-badge {
+        min-height: 30px;
+        padding: 6px 11px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.74rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.35px;
+    }
+
+        .status-badge .material-symbols-outlined {
+            font-size: 16px;
+        }
+
+        .status-badge i {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            display: inline-block;
+        }
+
+        .status-badge.hot {
+            color: #ff5964;
+            background: rgba(229, 9, 20, 0.14);
+            border: 1px solid rgba(229, 9, 20, 0.28);
+        }
+
+        .status-badge.active {
+            color: #38d996;
+            background: rgba(25, 135, 84, 0.12);
+            border: 1px solid rgba(25, 135, 84, 0.25);
+        }
+
+            .status-badge.active i {
+                background: #38d996;
+                box-shadow: 0 0 10px rgba(56, 217, 150, 0.9);
+            }
+
+        .status-badge.inactive {
+            color: #b0b0b0;
+            background: rgba(255, 255, 255, 0.055);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+            .status-badge.inactive i {
+                background: #8a8a8a;
+            }
+
+    .delete-info-panel {
+        padding: 28px;
+        border-radius: 24px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+        border: 1px solid rgba(255, 255, 255, 0.075);
+    }
+
+    .movie-heading h2 {
+        color: #fff;
+        max-width: 900px;
+        font-size: clamp(2rem, 4vw, 3.9rem);
+        font-weight: 950;
+        line-height: 0.98;
+        letter-spacing: -0.055em;
+        margin-bottom: 24px;
+    }
+
+    .age-badge {
+        min-width: 40px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 900;
+        text-align: center;
+        border: 1px solid currentColor;
+    }
+
+    .age-green {
+        color: #37d67a;
+        background: rgba(25, 135, 84, 0.12);
+    }
+
+    .age-blue {
+        color: #49c7ff;
+        background: rgba(13, 202, 240, 0.12);
+    }
+
+    .age-red {
+        color: #ff5b66;
+        background: rgba(229, 9, 20, 0.14);
+    }
+
+    .movie-meta-pill {
+        min-height: 32px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        color: #cfcfcf;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.82rem;
+        font-weight: 800;
+    }
+
+        .movie-meta-pill span {
+            font-size: 17px;
+        }
+
+    .delete-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 18px;
+    }
+
+    .delete-info-box {
+        min-height: 104px;
+        padding: 18px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.075);
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+        .delete-info-box > span {
+            color: #ff5964;
+            font-size: 26px;
+            flex-shrink: 0;
+        }
+
+        .delete-info-box p {
+            color: #939393;
+            font-size: 0.76rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            margin-bottom: 5px;
+        }
+
+        .delete-info-box h6 {
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 800;
+            line-height: 1.45;
+            margin: 0;
+        }
+
+    .description-box {
+        padding: 22px;
+        border-radius: 22px;
+        background: rgba(0, 0, 0, 0.22);
+        border: 1px solid rgba(255, 255, 255, 0.075);
+        margin-bottom: 22px;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+        .section-heading span {
+            color: #ff5964;
+        }
+
+        .section-heading h5 {
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin: 0;
+        }
+
+    .description-box p {
+        color: #c0c0c0;
+        font-size: 0.98rem;
+        line-height: 1.75;
+        margin: 0;
+    }
+
+    .delete-confirm-box {
+        padding: 22px;
+        border-radius: 22px;
+        border: 1px solid rgba(229, 9, 20, 0.22);
+        background: linear-gradient(135deg, rgba(229, 9, 20, 0.1), rgba(0, 0, 0, 0.22));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+        .delete-confirm-box h5 {
+            color: #fff;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+
+        .delete-confirm-box p {
+            color: #a9a9a9;
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+    .delete-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+
+    .confirm-delete-btn,
+    .cancel-delete-btn {
+        min-height: 46px;
+        padding: 0 18px;
+        border-radius: 999px;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.32px;
+        white-space: nowrap;
+        transition: all 0.25s ease;
+    }
+
+    .confirm-delete-btn {
+        color: #fff;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+        box-shadow: 0 12px 28px rgba(229, 9, 20, 0.28);
+    }
+
+        .confirm-delete-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 18px 38px rgba(229, 9, 20, 0.4);
+        }
+
+    .cancel-delete-btn {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+        .cancel-delete-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+    @@keyframes warningPulse {
+        0% {
+            opacity: 0.68;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 1;
+            transform: scale(1.04);
+        }
+
+        100% {
+            opacity: 0.68;
+            transform: scale(1);
+        }
+    }
+
+    @@media (max-width: 991.98px) {
+        .delete-hero,
+        .delete-confirm-box {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .delete-back-btn,
+        .delete-actions,
+        .delete-actions form,
+        .confirm-delete-btn,
+        .cancel-delete-btn {
+            width: 100%;
+        }
+
+        .delete-actions {
+            flex-direction: column;
+        }
+
+        .delete-poster-panel {
+            position: static;
+        }
+
+        .delete-info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .movie-delete-page {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+        }
+
+        .delete-hero,
+        .delete-card {
+            border-radius: 20px;
+        }
+
+        .delete-hero,
+        .delete-card,
+        .delete-info-panel {
+            padding: 20px;
+        }
+
+        .delete-title {
+            font-size: 1.55rem;
+        }
+
+        .movie-heading h2 {
+            font-size: 2rem;
+            letter-spacing: -0.04em;
+        }
+
+        .danger-alert {
+            flex-direction: column;
+        }
+    }
+</style>

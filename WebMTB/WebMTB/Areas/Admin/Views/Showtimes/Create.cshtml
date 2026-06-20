@@ -1,0 +1,70 @@
+﻿@model WebMTB.Models.Showtime
+
+@{
+    ViewData["Title"] = "Tạo suất chiếu";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var movies = ViewBag.Movies as List<WebMTB.Models.Movie> ?? new List<WebMTB.Models.Movie>();
+    var rooms = ViewBag.Rooms as List<WebMTB.Models.Room> ?? new List<WebMTB.Models.Room>();
+}
+
+<div class="container-fluid px-4 py-4 text-white">
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1">Tạo suất chiếu</h2>
+        <p class="text-secondary mb-0">Chọn phim, phòng chiếu, thời gian và giá vé.</p>
+    </div>
+
+    <div class="card bg-dark border-secondary rounded-4 p-4">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="MovieId" class="form-label fw-bold">Phim</label>
+                <select asp-for="MovieId" class="form-select bg-black text-white border-secondary">
+                    <option value="">-- Chọn phim --</option>
+                    @foreach (var movie in movies)
+                    {
+                        <option value="@movie.Id">@movie.Title</option>
+                    }
+                </select>
+                <span asp-validation-for="MovieId" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="RoomId" class="form-label fw-bold">Phòng chiếu</label>
+                <select asp-for="RoomId" class="form-select bg-black text-white border-secondary">
+                    <option value="">-- Chọn phòng --</option>
+                    @foreach (var room in rooms)
+                    {
+                        <option value="@room.Id">@room.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="RoomId" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="StartTime" class="form-label fw-bold">Thời gian chiếu</label>
+                <input asp-for="StartTime" type="datetime-local" class="form-control bg-black text-white border-secondary" />
+                <span asp-validation-for="StartTime" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="BasePrice" class="form-label fw-bold">Giá vé</label>
+                <input asp-for="BasePrice" type="number" class="form-control bg-black text-white border-secondary" />
+                <span asp-validation-for="BasePrice" class="text-danger small"></span>
+            </div>
+
+            <div class="form-check mb-4">
+                <input asp-for="IsHoliday" class="form-check-input" />
+                <label asp-for="IsHoliday" class="form-check-label">Suất chiếu ngày lễ</label>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">Lưu suất chiếu</button>
+                <a asp-action="Index" class="btn btn-outline-light rounded-pill px-4">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>

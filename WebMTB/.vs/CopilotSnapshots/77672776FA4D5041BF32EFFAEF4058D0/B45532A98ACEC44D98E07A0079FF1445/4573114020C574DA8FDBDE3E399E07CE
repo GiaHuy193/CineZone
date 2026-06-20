@@ -1,0 +1,152 @@
+﻿@model IEnumerable<WebMTB.Models.Movie>
+
+@{
+    ViewData["Title"] = "Trang Chủ";
+
+    // Xử lý dữ liệu: Tránh lỗi nếu Database chưa có phim nào
+    var heroMovie = Model != null ? Model.FirstOrDefault() : null; 
+    var hotMovies = Model != null ? Model.Take(6).ToList() : new List<WebMTB.Models.Movie>();
+    var showingMovies = Model != null ? Model.ToList() : new List<WebMTB.Models.Movie>();
+}
+
+@if (heroMovie != null)
+{
+    <section class="hero-section d-flex align-items-center px-4 px-lg-5 position-relative" style="min-height: 80vh; overflow: hidden;">
+        <div class="hero-bg position-absolute w-100 h-100" style="top: 0; left: 0; background-image: url('@heroMovie.ImageUrl'); background-size: cover; background-position: center; filter: brightness(0.4); z-index: -2;">
+        </div>
+        <div class="hero-overlay position-absolute w-100 h-100" style="top: 0; left: 0; background: linear-gradient(0deg, #131313 0%, transparent 100%); z-index: -1;"></div>
+
+        <div class="hero-content w-100" style="max-width: 800px; margin-top: 50px;">
+            <span class="badge rounded-pill bg-danger bg-opacity-25 text-danger border border-danger mb-3 py-2 px-3">
+                <span class="material-symbols-outlined fs-6 me-1 align-middle">stars</span> Phim Nổi Bật
+            </span>
+            <h1 class="display-2 fw-bolder text-white mb-3 lh-1">@heroMovie.Title</h1>
+            <p class="fs-5 text-secondary mb-5">
+                @(heroMovie.Description?.Length > 200 ? heroMovie.Description.Substring(0, 200) + "..." : heroMovie.Description)
+            </p>
+            <div class="d-flex gap-3 flex-wrap">
+                <a asp-controller="Movie" asp-action="Details" asp-route-id="@heroMovie.Id" class="btn btn-gradient rounded-pill px-5 py-3 fs-5 d-flex align-items-center gap-2 text-decoration-none">
+                    <span class="material-symbols-outlined">confirmation_number</span> Đặt Vé Ngay
+                </a>
+                <button class="btn btn-outline-light rounded-pill px-5 py-3 fs-5 d-flex align-items-center gap-2 border-secondary text-white">
+                    <span class="material-symbols-outlined">play_circle</span> Xem Trailer
+                </button>
+            </div>
+        </div>
+    </section>
+}
+
+<section class="py-5 px-4 px-lg-5">
+    <div class="d-flex justify-content-between align-items-end mb-4 mt-5">
+        <div>
+            <h2 class="text-white mb-0">Phim Đang Hot</h2>
+            <p class="text-secondary mb-0 mt-1">Những bộ phim được đặt vé nhiều nhất</p>
+        </div>
+    </div>
+
+    <div class="horizontal-scroll d-flex gap-4 overflow-auto hide-scrollbar pb-3">
+        @foreach (var movie in hotMovies)
+        {
+            <div class="movie-card" style="min-width: 220px; max-width: 220px;">
+                <div class="hover-zoom aspect-2-3 mb-3 position-relative rounded overflow-hidden" style="height: 330px;">
+                    <img src="@movie.ImageUrl" alt="@movie.Title" class="w-100 h-100 object-fit-cover" />
+                    <div class="rating-badge text-white d-flex align-items-center gap-1 position-absolute top-0 end-0 p-2 bg-dark bg-opacity-75 rounded-bottom-start">
+                        <span class="material-symbols-outlined text-warning fs-6">star</span> 9.0
+                    </div>
+                </div>
+                <h5 class="text-white fw-bold mb-1 text-truncate">@movie.Title</h5>
+                <p class="text-secondary small mb-0">@movie.Genre • @movie.Duration phút</p>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="py-5 px-4 px-lg-5 mb-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 mt-4 gap-3">
+        <h2 class="text-white mb-0">Phim Đang Chiếu</h2>
+        <div class="d-flex gap-2 overflow-auto hide-scrollbar pb-2 pb-md-0">
+            <button class="btn btn-danger rounded-pill px-4 fw-bold">Tất Cả</button>
+            <button class="btn btn-dark rounded-pill px-4 text-secondary fw-bold hover-white border-0" style="background-color: #222;">Hành Động</button>
+            <button class="btn btn-dark rounded-pill px-4 text-secondary fw-bold hover-white border-0" style="background-color: #222;">Kinh Dị</button>
+            <button class="btn btn-dark rounded-pill px-4 text-secondary fw-bold hover-white border-0" style="background-color: #222;">Tình Cảm</button>
+        </div>
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-4 row-cols-xl-6 g-4">
+        @foreach (var movie in showingMovies)
+        {
+            <div class="col">
+                <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.Id" class="text-decoration-none">
+                    <div class="movie-card w-100">
+                        <div class="hover-zoom aspect-2-3 mb-2 position-relative rounded overflow-hidden" style="height: 280px;">
+                            <img src="@movie.ImageUrl" alt="@movie.Title" class="w-100 h-100 object-fit-cover" />
+                            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 opacity-0 transition-opacity" onmouseover="this.classList.remove('opacity-0')" onmouseout="this.classList.add('opacity-0')">
+                                <button class="btn btn-light rounded-circle shadow p-3 d-flex align-items-center justify-content-center">
+                                    <span class="material-symbols-outlined text-dark">play_arrow</span>
+                                </button>
+                            </div>
+                        </div>
+                        <h6 class="text-white fw-bold mb-1 text-truncate">@movie.Title</h6>
+                        <p class="text-secondary small mb-0" style="font-size: 0.8rem;">@movie.Genre • @movie.Duration m</p>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="bento-section py-5 px-4 px-lg-5">
+    <h2 class="text-white text-center mb-5 mt-4">Trải Nghiệm & Ưu Đãi</h2>
+
+    <div class="container-fluid p-0">
+        <div class="row g-4" style="min-height: 600px;">
+            <div class="col-lg-6 d-flex">
+                <div class="bento-box w-100 d-flex align-items-center justify-content-center bg-dark rounded position-relative overflow-hidden" style="border: 1px solid #333;">
+                    <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1000" class="w-100 h-100 object-fit-cover" style="filter: brightness(0.6);" />
+                    <div class="bento-overlay position-absolute bottom-0 start-0 p-4 w-100" style="background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 100%);">
+                        <span class="text-danger fw-bold tracking-widest text-uppercase small mb-2 d-block">Member Special</span>
+                        <h3 class="display-6 fw-bold text-white mb-3">Ngày Hội IMAX</h3>
+                        <p class="text-light mb-4 w-75">Giảm giá 50% vé xem phim định dạng IMAX cho thành viên mới đăng ký.</p>
+                        <button class="btn btn-outline-danger rounded-pill fw-bold px-4">Nhận Ưu Đãi</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 d-flex flex-column gap-4">
+                <div class="bento-box flex-grow-1 d-flex align-items-center justify-content-center bg-dark rounded position-relative overflow-hidden" style="min-height: 250px; border: 1px solid #333;">
+                    <img src="https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=1000" class="w-100 h-100 object-fit-cover" style="filter: brightness(0.6);" />
+                    <div class="bento-overlay position-absolute bottom-0 start-0 p-4 w-100" style="background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 100%);">
+                        <h4 class="fw-bold text-white mb-1">Combo Siêu Tiết Kiệm</h4>
+                        <p class="text-secondary small mb-0">Đặt trước combo qua web giảm 20%</p>
+                    </div>
+                </div>
+
+                <div class="row g-4 flex-grow-1">
+                    <div class="col-6 d-flex">
+                        <div class="bento-box w-100 d-flex align-items-center justify-content-center bg-dark rounded position-relative overflow-hidden" style="min-height: 200px; border: 1px solid #333;">
+                            <div class="bento-overlay position-absolute bottom-0 start-0 p-3 w-100">
+                                <h5 class="fw-bold text-white mb-0">Thẻ Thành Viên</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 d-flex">
+                        <div class="bento-box w-100 d-flex align-items-center justify-content-center bg-dark rounded position-relative overflow-hidden" style="border: 1px solid #333;">
+                            <div class="bento-overlay position-absolute bottom-0 start-0 p-3 w-100">
+                                <h5 class="fw-bold text-white mb-0">Quà Tặng Sinh Nhật</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* CSS hỗ trợ ảnh đẹp hơn */
+    .object-fit-cover { object-fit: cover; }
+    .transition-opacity { transition: opacity 0.3s ease; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hover-zoom img { transition: transform 0.5s ease; }
+    .hover-zoom:hover img { transform: scale(1.05); }
+</style>

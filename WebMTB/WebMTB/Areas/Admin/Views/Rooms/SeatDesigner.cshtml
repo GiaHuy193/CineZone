@@ -1,0 +1,982 @@
+﻿@model WebMTB.Models.Room
+
+@{
+    ViewData["Title"] = "Thiết kế sơ đồ ghế";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var seats = ViewBag.Seats as List<WebMTB.Models.Seat> ?? new List<WebMTB.Models.Seat>();
+
+    int currentRows = seats.Any() ? seats.Max(s => s.GridRow) : 6;
+    int currentColumns = seats.Any() ? seats.Max(s => s.GridColumn) : 10;
+}
+
+<div class="container-fluid px-4 py-4 text-white seat-designer-page">
+    <div class="designer-hero mb-4">
+        <div>
+            <div class="designer-kicker">CINEZONE SEAT DESIGNER</div>
+            <h2 class="designer-title mb-2">Thiết kế sơ đồ ghế</h2>
+            <p class="designer-subtitle mb-0">
+                Phòng: <strong>@Model.Name</strong> · Rạp: <strong>@Model.Cinema?.Name</strong>
+            </p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-light rounded-pill px-4">
+                Quay lại
+            </a>
+        </div>
+    </div>
+
+    <div id="messageBox"></div>
+
+    <!-- Hướng dẫn nhanh -->
+    <div class="designer-card guide-card mb-4">
+        <div class="guide-header">
+            <div>
+                <h5 class="fw-bold mb-1">Cách sử dụng</h5>
+                <p class="text-secondary mb-0">Thao tác theo 4 bước để tạo nhanh sơ đồ ghế.</p>
+            </div>
+            <span class="guide-badge">Tối đa 26 hàng · 40 cột</span>
+        </div>
+
+        <div class="guide-steps">
+            <div class="guide-step">
+                <span class="step-number">1</span>
+                <div>
+                    <strong>Nhập số hàng & số cột</strong>
+                    <small>Ví dụ: 10 hàng, 16 cột</small>
+                </div>
+            </div>
+
+            <div class="guide-step">
+                <span class="step-number">2</span>
+                <div>
+                    <strong>Bấm “Sinh sơ đồ”</strong>
+                    <small>Tạo lưới trống để bắt đầu</small>
+                </div>
+            </div>
+
+            <div class="guide-step">
+                <span class="step-number">3</span>
+                <div>
+                    <strong>Chọn loại ghế rồi vẽ</strong>
+                    <small>Click hoặc giữ chuột kéo nhiều ô</small>
+                </div>
+            </div>
+
+            <div class="guide-step">
+                <span class="step-number">4</span>
+                <div>
+                    <strong>Lưu sơ đồ ghế</strong>
+                    <small>Hệ thống sẽ lưu đúng layout đang hiển thị</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cấu hình -->
+    <div class="designer-card mb-4">
+        <div class="section-head mb-3">
+            <div>
+                <h5 class="fw-bold mb-1">Cấu hình sơ đồ</h5>
+                <p class="text-secondary mb-0">
+                    Nhập số hàng và số cột rồi bấm <strong class="text-white">Sinh sơ đồ</strong>.
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-3 align-items-end">
+            <div class="col-lg-2 col-md-3">
+                <label class="form-label fw-bold">Số hàng</label>
+                <input type="number" id="rowCount" class="form-control designer-input" value="@currentRows" min="1" max="26" />
+                <div class="input-note">Từ 1 đến 26 hàng</div>
+            </div>
+
+            <div class="col-lg-2 col-md-3">
+                <label class="form-label fw-bold">Số cột</label>
+                <input type="number" id="columnCount" class="form-control designer-input" value="@currentColumns" min="1" max="40" />
+                <div class="input-note">Từ 1 đến 40 cột</div>
+            </div>
+
+            <div class="col-lg-8 col-md-6">
+                <div class="designer-actions">
+                    <button type="button" id="generateGridBtn" class="btn btn-danger rounded-pill px-4 fw-bold">
+                        Sinh sơ đồ
+                    </button>
+
+                    <button type="button" id="fillNormalBtn" class="btn btn-outline-light rounded-pill px-4">
+                        Tô toàn bộ ghế thường
+                    </button>
+
+                    <button type="button" id="clearAllBtn" class="btn btn-outline-warning rounded-pill px-4">
+                        Xóa toàn bộ
+                    </button>
+
+                    <button type="button" id="saveLayoutBtn" class="btn btn-success rounded-pill px-4 fw-bold">
+                        Lưu sơ đồ ghế
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="preset-wrap mt-4">
+            <span class="preset-label">Mẫu nhanh:</span>
+
+            <button type="button" class="preset-btn" data-rows="8" data-columns="12">
+                Rạp nhỏ · 8 × 12
+            </button>
+
+            <button type="button" class="preset-btn" data-rows="10" data-columns="16">
+                Rạp vừa · 10 × 16
+            </button>
+
+            <button type="button" class="preset-btn" data-rows="12" data-columns="20">
+                Rạp lớn · 12 × 20
+            </button>
+        </div>
+    </div>
+
+    <!-- Thống kê -->
+    <div class="stats-grid mb-4">
+        <div class="stats-card">
+            <span class="stats-label">Tổng ô</span>
+            <strong id="statTotalCells">0</strong>
+        </div>
+
+        <div class="stats-card">
+            <span class="stats-label">Tổng ghế</span>
+            <strong id="statSeats">0</strong>
+        </div>
+
+        <div class="stats-card">
+            <span class="stats-label">Ghế thường</span>
+            <strong id="statNormal">0</strong>
+        </div>
+
+        <div class="stats-card">
+            <span class="stats-label">VIP</span>
+            <strong id="statVip">0</strong>
+        </div>
+
+        <div class="stats-card">
+            <span class="stats-label">Ghế đôi</span>
+            <strong id="statCouple">0</strong>
+        </div>
+
+        <div class="stats-card">
+            <span class="stats-label">Lối đi / Trống</span>
+            <strong id="statEmpty">0</strong>
+        </div>
+    </div>
+
+    <!-- Công cụ vẽ -->
+    <div class="designer-card mb-4">
+        <div class="section-head mb-3">
+            <div>
+                <h5 class="fw-bold mb-1">Chế độ vẽ</h5>
+                <p class="text-secondary mb-0">Chọn loại ghế muốn vẽ, sau đó click hoặc kéo chuột trên sơ đồ.</p>
+            </div>
+        </div>
+
+        <div class="paint-tool-wrap">
+            <button type="button" class="paint-tool active" data-type="Normal">
+                <span class="tool-dot normal"></span>
+                Ghế thường
+            </button>
+
+            <button type="button" class="paint-tool" data-type="VIP">
+                <span class="tool-dot vip"></span>
+                Ghế VIP
+            </button>
+
+            <button type="button" class="paint-tool" data-type="Couple">
+                <span class="tool-dot couple"></span>
+                Ghế đôi
+            </button>
+
+            <button type="button" class="paint-tool" data-type="Empty">
+                <span class="tool-dot empty"></span>
+                Lối đi / Xóa ghế
+            </button>
+        </div>
+
+        <div class="designer-tip mt-3">
+            <strong>Mẹo:</strong>
+            Nếu muốn tạo lối đi nhanh, hãy chọn <strong class="text-white">“Lối đi / Xóa ghế”</strong> rồi giữ chuột kéo qua nhiều ô.
+        </div>
+    </div>
+
+    <!-- Sơ đồ -->
+    <div class="designer-card">
+        <div class="section-head mb-4">
+            <div>
+                <h5 class="fw-bold mb-1">Preview sơ đồ ghế</h5>
+                <p class="text-secondary mb-0">Đây là bố cục thực tế sẽ được lưu cho phòng chiếu này.</p>
+            </div>
+        </div>
+
+        <div class="screen-label">
+            <div class="screen-line"></div>
+            <span>Màn hình</span>
+        </div>
+
+        <div class="layout-wrapper">
+            <div id="seatGrid" class="seat-grid"></div>
+        </div>
+
+        <div class="seat-legend-inline">
+            <div class="legend-item-inline">
+                <span class="legend-box normal"></span>
+                <span>Ghế thường</span>
+            </div>
+
+            <div class="legend-item-inline">
+                <span class="legend-box vip"></span>
+                <span>VIP</span>
+            </div>
+
+            <div class="legend-item-inline">
+                <span class="legend-box couple"></span>
+                <span>Ghế đôi</span>
+            </div>
+
+            <div class="legend-item-inline">
+                <span class="legend-box empty"></span>
+                <span>Lối đi / Trống</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .seat-designer-page {
+        --designer-red: #e50914;
+        --designer-red-soft: rgba(229, 9, 20, 0.12);
+        --designer-dark: rgba(18, 18, 22, 0.96);
+        --designer-border: rgba(255,255,255,0.09);
+    }
+
+    .designer-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 24px 28px;
+        border-radius: 24px;
+        background: radial-gradient(circle at top right, rgba(229, 9, 20, 0.16), transparent 22%), linear-gradient(135deg, rgba(18,18,22,0.98), rgba(12,12,14,0.98));
+        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.24);
+    }
+
+    .designer-kicker {
+        color: #ff7a80;
+        font-size: 0.78rem;
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+
+    .designer-title {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #fff;
+    }
+
+    .designer-subtitle {
+        color: #a5a5a5;
+        font-size: 0.98rem;
+    }
+
+    .designer-card {
+        background: var(--designer-dark);
+        border: 1px solid var(--designer-border);
+        border-radius: 22px;
+        padding: 22px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.28);
+    }
+
+    .section-head h5 {
+        color: #fff;
+    }
+
+    .guide-card {
+        background: radial-gradient(circle at top right, rgba(229, 9, 20, 0.12), transparent 24%), rgba(18, 18, 22, 0.96);
+    }
+
+    .guide-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 16px;
+        margin-bottom: 18px;
+    }
+
+    .guide-badge {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .guide-steps {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .guide-step {
+        display: flex;
+        align-items: start;
+        gap: 12px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 18px;
+        padding: 16px;
+    }
+
+        .guide-step strong {
+            display: block;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .guide-step small {
+            color: #9a9a9a;
+        }
+
+    .step-number {
+        min-width: 32px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff8d94, #e50914);
+        color: #fff;
+        font-weight: 900;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .designer-input {
+        background: #050505;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 14px;
+        min-height: 48px;
+    }
+
+        .designer-input:focus {
+            background: #050505;
+            color: #fff;
+            border-color: #e50914;
+            box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.15);
+        }
+
+    .input-note {
+        color: #8b8b8b;
+        font-size: 0.8rem;
+        margin-top: 6px;
+    }
+
+    .designer-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .preset-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .preset-label {
+        color: #aaa;
+        font-weight: 700;
+    }
+
+    .preset-btn {
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.04);
+        color: #fff;
+        border-radius: 999px;
+        padding: 8px 14px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        transition: 0.2s ease;
+    }
+
+        .preset-btn:hover {
+            background: rgba(229, 9, 20, 0.15);
+            border-color: rgba(229, 9, 20, 0.35);
+        }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .stats-card {
+        background: rgba(18, 18, 22, 0.96);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 18px;
+        padding: 16px 18px;
+    }
+
+    .stats-label {
+        display: block;
+        color: #909090;
+        font-size: 0.82rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .stats-card strong {
+        color: #fff;
+        font-size: 1.6rem;
+        font-weight: 900;
+    }
+
+    .paint-tool-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .paint-tool {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(255,255,255,0.18);
+        background: transparent;
+        color: #fff;
+        border-radius: 999px;
+        padding: 10px 16px;
+        font-weight: 700;
+        transition: all 0.18s ease;
+    }
+
+        .paint-tool:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateY(-1px);
+        }
+
+        .paint-tool.active {
+            border-color: #e50914;
+            background: rgba(229, 9, 20, 0.16);
+            box-shadow: 0 0 0 1px rgba(229, 9, 20, 0.25) inset;
+        }
+
+    .tool-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+        .tool-dot.normal {
+            background: #4b5563;
+        }
+
+        .tool-dot.vip {
+            background: #f59e0b;
+        }
+
+        .tool-dot.couple {
+            background: #9333ea;
+        }
+
+        .tool-dot.empty {
+            background: transparent;
+            border: 1px dashed rgba(255,255,255,0.5);
+        }
+
+    .designer-tip {
+        color: #b3b3b3;
+        background: rgba(255,255,255,0.03);
+        border: 1px dashed rgba(255,255,255,0.09);
+        border-radius: 16px;
+        padding: 14px 16px;
+        font-size: 0.92rem;
+    }
+
+    .screen-label {
+        width: min(100%, 720px);
+        margin: 0 auto 34px;
+        text-align: center;
+    }
+
+    .screen-line {
+        width: 72%;
+        height: 5px;
+        margin: 0 auto 12px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, transparent, #fff, transparent);
+        box-shadow: 0 8px 28px rgba(255, 255, 255, 0.55);
+    }
+
+    .screen-label span {
+        color: #8f8f8f;
+        font-size: 0.76rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .layout-wrapper {
+        overflow: auto;
+        padding-bottom: 8px;
+    }
+
+    .seat-grid {
+        display: grid;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+        min-width: max-content;
+    }
+
+    .seat-cell {
+        width: 46px;
+        height: 42px;
+        border-radius: 11px;
+        border: 1px solid rgba(255,255,255,0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.76rem;
+        font-weight: 900;
+        cursor: crosshair;
+        user-select: none;
+        transition: all 0.15s ease;
+    }
+
+        .seat-cell:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.12);
+        }
+
+        .seat-cell.empty {
+            color: rgba(255,255,255,0.25);
+            background: transparent;
+            border: 1px dashed rgba(255,255,255,0.22);
+        }
+
+        .seat-cell.normal {
+            color: #fff;
+            background: linear-gradient(180deg, #444, #2f2f2f);
+            border-bottom: 4px solid #1c1c1c;
+        }
+
+        .seat-cell.vip {
+            color: #fff;
+            background: linear-gradient(180deg, #fbbf24, #d97706);
+            border-bottom: 4px solid #92400e;
+        }
+
+        .seat-cell.couple {
+            color: #fff;
+            background: linear-gradient(180deg, #a855f7, #7e22ce);
+            border-bottom: 4px solid #581c87;
+        }
+
+    .row-title {
+        width: 28px;
+        color: #8f8f8f;
+        font-weight: 900;
+        text-align: center;
+    }
+
+    .seat-legend-inline {
+        width: min(100%, 1000px);
+        margin: 28px auto 0;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+
+    .legend-item-inline {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #d6d6d6;
+        font-weight: 700;
+    }
+
+    .legend-box {
+        width: 20px;
+        height: 20px;
+        border-radius: 7px;
+        display: inline-block;
+        border: 1px solid rgba(255,255,255,0.18);
+    }
+
+        .legend-box.normal {
+            background: #3a3a3a;
+        }
+
+        .legend-box.vip {
+            background: #f59e0b;
+        }
+
+        .legend-box.couple {
+            background: #9333ea;
+        }
+
+        .legend-box.empty {
+            background: transparent;
+            border: 1px dashed rgba(255,255,255,0.35);
+        }
+
+    @@media (max-width: 1199.98px) {
+        .stats-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .guide-steps {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .designer-hero {
+            flex-direction: column;
+            align-items: start;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .guide-steps {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .designer-actions {
+            flex-direction: column;
+        }
+
+            .designer-actions .btn {
+                width: 100%;
+            }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        const roomId = @Model.Id;
+
+        const existingSeats = [
+            @foreach (var seat in seats)
+            {
+                    <text>
+                            {
+                                gridRow: @seat.GridRow,
+                                gridColumn: @seat.GridColumn,
+                                row: "@seat.Row",
+                                number: @seat.Number,
+                                seatType: "@seat.SeatType"
+                            },
+                    </text>
+            }
+        ];
+
+        let gridData = [];
+        let currentPaintType = "Normal";
+        let isMouseDown = false;
+
+        function getRowName(rowIndex) {
+            let result = "";
+
+            while (rowIndex > 0) {
+                rowIndex--;
+                result = String.fromCharCode(65 + (rowIndex % 26)) + result;
+                rowIndex = Math.floor(rowIndex / 26);
+            }
+
+            return result;
+        }
+
+        function getTypeClass(type) {
+            if (type === "Normal") return "normal";
+            if (type === "VIP") return "vip";
+            if (type === "Couple") return "couple";
+            return "empty";
+        }
+
+        function setActiveTool(type) {
+            currentPaintType = type;
+
+            document.querySelectorAll(".paint-tool").forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+            const activeBtn = document.querySelector(`.paint-tool[data-type="${type}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add("active");
+            }
+        }
+
+        function clampInputValues() {
+            const rowInput = document.getElementById("rowCount");
+            const columnInput = document.getElementById("columnCount");
+
+            let rows = parseInt(rowInput.value) || 1;
+            let columns = parseInt(columnInput.value) || 1;
+
+            if (rows < 1) rows = 1;
+            if (rows > 26) rows = 26;
+
+            if (columns < 1) columns = 1;
+            if (columns > 40) columns = 40;
+
+            rowInput.value = rows;
+            columnInput.value = columns;
+
+            return { rows, columns };
+        }
+
+        function buildEmptyGrid(rows, columns) {
+            gridData = [];
+
+            for (let r = 1; r <= rows; r++) {
+                for (let c = 1; c <= columns; c++) {
+                    gridData.push({
+                        gridRow: r,
+                        gridColumn: c,
+                        seatType: "Empty"
+                    });
+                }
+            }
+        }
+
+        function buildExistingGrid(rows, columns) {
+            gridData = [];
+
+            for (let r = 1; r <= rows; r++) {
+                for (let c = 1; c <= columns; c++) {
+                    const existing = existingSeats.find(x => x.gridRow === r && x.gridColumn === c);
+
+                    gridData.push({
+                        gridRow: r,
+                        gridColumn: c,
+                        seatType: existing ? existing.seatType : "Empty"
+                    });
+                }
+            }
+        }
+
+        function fillAll(type) {
+            gridData.forEach(cell => {
+                cell.seatType = type;
+            });
+
+            renderGrid();
+        }
+
+        function paintCell(cell) {
+            if (!cell) return;
+            cell.seatType = currentPaintType;
+        }
+
+        function getSeatLabel(cell) {
+            if (cell.seatType === "Empty") {
+                return "";
+            }
+
+            const sameRowSeats = gridData
+                .filter(x => x.gridRow === cell.gridRow && x.seatType !== "Empty")
+                .sort((a, b) => a.gridColumn - b.gridColumn);
+
+            const seatIndex = sameRowSeats.findIndex(x => x.gridColumn === cell.gridColumn) + 1;
+
+            return getRowName(cell.gridRow) + seatIndex;
+        }
+
+        function updateStats() {
+            const totalCells = gridData.length;
+            const normal = gridData.filter(x => x.seatType === "Normal").length;
+            const vip = gridData.filter(x => x.seatType === "VIP").length;
+            const couple = gridData.filter(x => x.seatType === "Couple").length;
+            const empty = gridData.filter(x => x.seatType === "Empty").length;
+            const totalSeats = normal + vip + couple;
+
+            document.getElementById("statTotalCells").textContent = totalCells;
+            document.getElementById("statSeats").textContent = totalSeats;
+            document.getElementById("statNormal").textContent = normal;
+            document.getElementById("statVip").textContent = vip;
+            document.getElementById("statCouple").textContent = couple;
+            document.getElementById("statEmpty").textContent = empty;
+        }
+
+        function renderGrid() {
+            const { rows, columns } = clampInputValues();
+
+            const grid = document.getElementById("seatGrid");
+            grid.innerHTML = "";
+            grid.style.gridTemplateColumns = `28px repeat(${columns}, auto) 28px`;
+
+            for (let r = 1; r <= rows; r++) {
+                const leftRow = document.createElement("div");
+                leftRow.className = "row-title";
+                leftRow.textContent = getRowName(r);
+                grid.appendChild(leftRow);
+
+                for (let c = 1; c <= columns; c++) {
+                    const cell = gridData.find(x => x.gridRow === r && x.gridColumn === c);
+
+                    const div = document.createElement("div");
+                    div.className = `seat-cell ${getTypeClass(cell.seatType)}`;
+                    div.textContent = getSeatLabel(cell);
+                    div.title = `${getRowName(r)}${c} - ${cell.seatType}`;
+
+                    div.addEventListener("mousedown", function (e) {
+                        e.preventDefault();
+                        isMouseDown = true;
+                        paintCell(cell);
+                        renderGrid();
+                    });
+
+                    div.addEventListener("mouseenter", function () {
+                        if (isMouseDown) {
+                            paintCell(cell);
+                            renderGrid();
+                        }
+                    });
+
+                    grid.appendChild(div);
+                }
+
+                const rightRow = document.createElement("div");
+                rightRow.className = "row-title";
+                rightRow.textContent = getRowName(r);
+                grid.appendChild(rightRow);
+            }
+
+            updateStats();
+        }
+
+        function showMessage(type, message) {
+            const box = document.getElementById("messageBox");
+            box.innerHTML = `<div class="alert alert-${type} rounded-4">${message}</div>`;
+        }
+
+        document.addEventListener("mouseup", function () {
+            isMouseDown = false;
+        });
+
+        document.querySelectorAll(".paint-tool").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const type = this.dataset.type;
+                setActiveTool(type);
+            });
+        });
+
+        document.querySelectorAll(".preset-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const rows = this.dataset.rows;
+                const columns = this.dataset.columns;
+
+                document.getElementById("rowCount").value = rows;
+                document.getElementById("columnCount").value = columns;
+
+                showMessage("info", `Đã áp dụng mẫu nhanh: ${rows} hàng × ${columns} cột. Bấm <strong>Sinh sơ đồ</strong> để tạo lưới.`);
+            });
+        });
+
+        document.getElementById("generateGridBtn").addEventListener("click", function () {
+            const { rows, columns } = clampInputValues();
+
+            if (!confirm(`Bạn muốn sinh sơ đồ mới với ${rows} hàng và ${columns} cột?`)) {
+                return;
+            }
+
+            buildEmptyGrid(rows, columns);
+            renderGrid();
+            showMessage("success", `Đã sinh sơ đồ mới: <strong>${rows} hàng × ${columns} cột</strong>. Bây giờ bạn có thể chọn loại ghế và bắt đầu vẽ.`);
+        });
+
+        document.getElementById("fillNormalBtn").addEventListener("click", function () {
+            if (!confirm("Tô toàn bộ lưới thành ghế thường?")) {
+                return;
+            }
+
+            fillAll("Normal");
+            showMessage("success", "Đã tô toàn bộ sơ đồ thành ghế thường.");
+        });
+
+        document.getElementById("clearAllBtn").addEventListener("click", function () {
+            if (!confirm("Bạn có chắc muốn xóa toàn bộ ghế và đưa tất cả ô về lối đi / trống?")) {
+                return;
+            }
+
+            fillAll("Empty");
+            showMessage("warning", "Đã xóa toàn bộ ghế trên sơ đồ.");
+        });
+
+        document.getElementById("saveLayoutBtn").addEventListener("click", function () {
+            const { rows, columns } = clampInputValues();
+
+            const payload = {
+                roomId: roomId,
+                totalRows: rows,
+                totalColumns: columns,
+                seats: gridData
+            };
+
+            fetch('@Url.Action("SaveSeatLayout", "Rooms", new { area = "Admin" })', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage("success", data.message);
+                } else {
+                    showMessage("danger", data.message);
+                }
+            })
+            .catch(() => {
+                showMessage("danger", "Có lỗi xảy ra khi lưu sơ đồ ghế.");
+            });
+        });
+
+        document.getElementById("rowCount").addEventListener("change", clampInputValues);
+        document.getElementById("columnCount").addEventListener("change", clampInputValues);
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const { rows, columns } = clampInputValues();
+
+            if (existingSeats.length > 0) {
+                buildExistingGrid(rows, columns);
+            } else {
+                buildEmptyGrid(rows, columns);
+            }
+
+            setActiveTool("Normal");
+            renderGrid();
+        });
+    </script>
+}

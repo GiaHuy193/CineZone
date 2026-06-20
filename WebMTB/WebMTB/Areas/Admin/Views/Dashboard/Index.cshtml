@@ -1,0 +1,1445 @@
+﻿@model IEnumerable<WebMTB.Models.Booking>
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var bookings = Model?.ToList() ?? new List<WebMTB.Models.Booking>();
+
+    int totalMovies = ViewBag.TotalMovies ?? 0;
+    int totalCinemas = ViewBag.TotalCinemas ?? 0;
+    int totalRooms = ViewBag.TotalRooms ?? 0;
+    int totalSeats = ViewBag.TotalSeats ?? 0;
+    int totalShowtimes = ViewBag.TotalShowtimes ?? 0;
+    int totalBookings = ViewBag.TotalBookings ?? 0;
+
+    int pendingBookings = ViewBag.PendingBookings ?? 0;
+    int completedBookings = ViewBag.CompletedBookings ?? 0;
+    int cancelledBookings = ViewBag.CancelledBookings ?? 0;
+
+    decimal totalRevenue = ViewBag.TotalRevenue ?? 0;
+    decimal todayRevenue = ViewBag.TodayRevenue ?? 0;
+
+    string fromDateValue = ViewBag.FromDate as string ?? DateTime.Today.AddDays(-30).ToString("yyyy-MM-dd");
+    string toDateValue = ViewBag.ToDate as string ?? DateTime.Today.ToString("yyyy-MM-dd");
+    string reportRangeText = ViewBag.ReportRangeText as string ?? $"{DateTime.Today.AddDays(-30):dd/MM/yyyy} - {DateTime.Today:dd/MM/yyyy}";
+
+    var cinemas = ViewBag.Cinemas as List<WebMTB.Models.Cinema> ?? new List<WebMTB.Models.Cinema>();
+
+    int? selectedCinemaId = null;
+    if (ViewBag.SelectedCinemaId != null)
+    {
+        selectedCinemaId = Convert.ToInt32(ViewBag.SelectedCinemaId);
+    }
+
+    string selectedCinemaName = ViewBag.SelectedCinemaName as string ?? "Tất cả rạp";
+}
+
+<div class="admin-dashboard-page">
+    <div class="container-fluid px-4 py-4 text-white">
+
+        <div class="dashboard-header mb-4">
+            <div>
+                <div class="dashboard-eyebrow">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    Admin Dashboard
+                </div>
+
+                <h1>Tổng quan hệ thống</h1>
+                <p>
+                    Quản lý phim, rạp, phòng chiếu, suất chiếu, booking và doanh thu.
+                </p>
+            </div>
+        </div>
+
+        <div class="dashboard-filter-panel mb-4">
+            <div class="filter-summary">
+                <div class="summary-item">
+                    <span class="material-symbols-outlined">date_range</span>
+                    <div>
+                        <small>Khoảng báo cáo</small>
+                        <strong>@reportRangeText</strong>
+                    </div>
+                </div>
+
+                <div class="summary-item">
+                    <span class="material-symbols-outlined">apartment</span>
+                    <div>
+                        <small>Rạp đang xem</small>
+                        <strong>@selectedCinemaName</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-range">
+                <a asp-area="Admin"
+                   asp-controller="Dashboard"
+                   asp-action="Index"
+                   asp-route-fromDate="@DateTime.Today.ToString("yyyy-MM-dd")"
+                   asp-route-toDate="@DateTime.Today.ToString("yyyy-MM-dd")"
+                   asp-route-cinemaId="@selectedCinemaId">
+                    Hôm nay
+                </a>
+
+                <a asp-area="Admin"
+                   asp-controller="Dashboard"
+                   asp-action="Index"
+                   asp-route-fromDate="@DateTime.Today.AddDays(-6).ToString("yyyy-MM-dd")"
+                   asp-route-toDate="@DateTime.Today.ToString("yyyy-MM-dd")"
+                   asp-route-cinemaId="@selectedCinemaId">
+                    7 ngày
+                </a>
+
+                <a asp-area="Admin"
+                   asp-controller="Dashboard"
+                   asp-action="Index"
+                   asp-route-fromDate="@DateTime.Today.AddDays(-29).ToString("yyyy-MM-dd")"
+                   asp-route-toDate="@DateTime.Today.ToString("yyyy-MM-dd")"
+                   asp-route-cinemaId="@selectedCinemaId">
+                    30 ngày
+                </a>
+            </div>
+
+            <form asp-area="Admin"
+                  asp-controller="Dashboard"
+                  asp-action="Index"
+                  method="get"
+                  id="dashboardFilterForm"
+                  class="dashboard-filter-form">
+
+                <div class="filter-field cinema-filter-field">
+                    <label>Rạp chiếu</label>
+
+                    <input type="hidden"
+                           id="cinemaIdInput"
+                           name="cinemaId"
+                           value="@(selectedCinemaId?.ToString() ?? "")" />
+
+                    <div class="dropdown cz-cinema-dropdown">
+                        <button class="cz-cinema-btn"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+
+                            <span class="cz-cinema-current">
+                                <span class="material-symbols-outlined">apartment</span>
+                                <span id="cinemaText">@selectedCinemaName</span>
+                            </span>
+
+                            <span class="material-symbols-outlined cz-cinema-arrow">
+                                expand_more
+                            </span>
+                        </button>
+
+                        <ul class="dropdown-menu cz-cinema-menu">
+                            <li>
+                                <button type="button"
+                                        class="dropdown-item cz-cinema-item @(selectedCinemaId == null ? "active" : "")"
+                                        data-cinema-id=""
+                                        data-cinema-name="Tất cả rạp">
+                                    <span class="material-symbols-outlined">apps</span>
+                                    Tất cả rạp
+                                </button>
+                            </li>
+
+                            @foreach (var cinema in cinemas)
+                            {
+                                <li>
+                                    <button type="button"
+                                            class="dropdown-item cz-cinema-item @(selectedCinemaId == cinema.Id ? "active" : "")"
+                                            data-cinema-id="@cinema.Id"
+                                            data-cinema-name="@cinema.Name">
+                                        <span class="material-symbols-outlined">location_city</span>
+                                        @cinema.Name
+                                    </button>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="filter-field">
+                    <label>Từ ngày</label>
+
+                    <input type="text"
+                           id="fromDatePicker"
+                           name="fromDate"
+                           class="filter-input date-input"
+                           value="@fromDateValue"
+                           readonly />
+                </div>
+
+                <div class="filter-field">
+                    <label>Đến ngày</label>
+
+                    <input type="text"
+                           id="toDatePicker"
+                           name="toDate"
+                           class="filter-input date-input"
+                           value="@toDateValue"
+                           readonly />
+                </div>
+
+                <button type="submit" class="btn-filter">
+                    <span class="material-symbols-outlined">filter_alt</span>
+                    Lọc dữ liệu
+                </button>
+
+                <a asp-area="Admin"
+                   asp-controller="Dashboard"
+                   asp-action="ExportRevenueExcel"
+                   asp-route-fromDate="@fromDateValue"
+                   asp-route-toDate="@toDateValue"
+                   asp-route-cinemaId="@selectedCinemaId"
+                   class="btn-export">
+                    <span class="material-symbols-outlined">download</span>
+                    Xuất Excel
+                </a>
+            </form>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="stat-card revenue">
+                    <div>
+                        <p>Doanh thu kỳ lọc</p>
+                        <h3>@totalRevenue.ToString("N0") VNĐ</h3>
+                    </div>
+
+                    <span class="material-symbols-outlined">payments</span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="stat-card today">
+                    <div>
+                        <p>Doanh thu hôm nay</p>
+                        <h3>@todayRevenue.ToString("N0") VNĐ</h3>
+                    </div>
+
+                    <span class="material-symbols-outlined">today</span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="stat-card booking">
+                    <div>
+                        <p>Booking kỳ lọc</p>
+                        <h3>@totalBookings</h3>
+                    </div>
+
+                    <span class="material-symbols-outlined">confirmation_number</span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="stat-card showtime">
+                    <div>
+                        <p>Suất chiếu</p>
+                        <h3>@totalShowtimes</h3>
+                    </div>
+
+                    <span class="material-symbols-outlined">schedule</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-lg-3">
+                <a asp-area="Admin" asp-controller="Movies" asp-action="Index" class="mini-card">
+                    <span class="material-symbols-outlined">movie</span>
+
+                    <div>
+                        <p>Phim</p>
+                        <h4>@totalMovies</h4>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <a asp-area="Admin" asp-controller="Cinemas" asp-action="Index" class="mini-card">
+                    <span class="material-symbols-outlined">apartment</span>
+
+                    <div>
+                        <p>Rạp</p>
+                        <h4>@totalCinemas</h4>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <a asp-area="Admin" asp-controller="Rooms" asp-action="Index" class="mini-card">
+                    <span class="material-symbols-outlined">meeting_room</span>
+
+                    <div>
+                        <p>Phòng</p>
+                        <h4>@totalRooms</h4>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <a asp-area="Admin" asp-controller="Seats" asp-action="Index" class="mini-card">
+                    <span class="material-symbols-outlined">event_seat</span>
+
+                    <div>
+                        <p>Ghế</p>
+                        <h4>@totalSeats</h4>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-xl-8">
+                <div class="dashboard-panel chart-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h5>Doanh thu 7 ngày gần nhất</h5>
+                            <p>Theo booking đã thanh toán thành công.</p>
+                        </div>
+
+                        <span class="material-symbols-outlined">monitoring</span>
+                    </div>
+
+                    <div class="chart-body">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4">
+                <div class="dashboard-panel chart-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h5>Tỉ lệ trạng thái</h5>
+                            <p>Pending, Completed và Cancelled.</p>
+                        </div>
+
+                        <span class="material-symbols-outlined">donut_large</span>
+                    </div>
+
+                    <div class="chart-body chart-body-sm">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-xl-4">
+                <div class="dashboard-panel h-100">
+                    <div class="panel-header">
+                        <div>
+                            <h5>Trạng thái booking</h5>
+                            <p>Theo tình trạng thanh toán trong kỳ lọc.</p>
+                        </div>
+
+                        <span class="material-symbols-outlined">analytics</span>
+                    </div>
+
+                    <div class="booking-status-list">
+                        <div class="status-row pending">
+                            <div>
+                                <span></span>
+                                <p>Pending</p>
+                            </div>
+
+                            <strong>@pendingBookings</strong>
+                        </div>
+
+                        <div class="status-row completed">
+                            <div>
+                                <span></span>
+                                <p>Completed</p>
+                            </div>
+
+                            <strong>@completedBookings</strong>
+                        </div>
+
+                        <div class="status-row cancelled">
+                            <div>
+                                <span></span>
+                                <p>Cancelled</p>
+                            </div>
+
+                            <strong>@cancelledBookings</strong>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions mt-4">
+                        <a asp-area="Admin" asp-controller="Movies" asp-action="Create">
+                            <span class="material-symbols-outlined">add_circle</span>
+                            Thêm phim
+                        </a>
+
+                        <a asp-area="Admin" asp-controller="Showtimes" asp-action="Create">
+                            <span class="material-symbols-outlined">event_available</span>
+                            Tạo suất chiếu
+                        </a>
+
+                        <a asp-area="Admin" asp-controller="Rooms" asp-action="Index">
+                            <span class="material-symbols-outlined">grid_view</span>
+                            Thiết kế phòng
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-8">
+                <div class="dashboard-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h5>Booking gần đây</h5>
+                            <p>8 đơn đặt vé mới nhất theo rạp đang chọn.</p>
+                        </div>
+
+                        <span class="material-symbols-outlined">receipt_long</span>
+                    </div>
+
+                    @if (bookings.Any())
+                    {
+                        <div class="recent-bookings">
+                            @foreach (var booking in bookings)
+                            {
+                                var tickets = booking.Tickets?.ToList() ?? new List<WebMTB.Models.Ticket>();
+                                var firstTicket = tickets.FirstOrDefault();
+
+                                var showtime = firstTicket?.Showtime;
+                                var movie = showtime?.Movie;
+                                var room = showtime?.Room;
+                                var cinema = room?.Cinema;
+
+                                string movieTitle = movie?.Title ?? "Thông tin phim";
+                                string cinemaName = cinema?.Name ?? "Chưa có rạp";
+                                string roomName = room?.Name ?? "Chưa có phòng";
+
+                                string statusClass = booking.Status == "Completed" ? "completed"
+                                    : booking.Status == "Cancelled" ? "cancelled"
+                                    : "pending";
+
+                                <div class="recent-item">
+                                    <div class="recent-left">
+                                        <div class="recent-icon">
+                                            <span class="material-symbols-outlined">movie</span>
+                                        </div>
+
+                                        <div>
+                                            <h6>@movieTitle</h6>
+                                            <p>@cinemaName · @roomName · @tickets.Count vé</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="recent-right">
+                                        <strong>@booking.TotalAmount.ToString("N0") VNĐ</strong>
+                                        <span class="recent-status @statusClass">@booking.Status</span>
+                                        <small>@booking.BookingDate.ToString("dd/MM/yyyy HH:mm")</small>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-box">
+                            <span class="material-symbols-outlined">inbox</span>
+                            <p>Chưa có booking nào theo bộ lọc hiện tại.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .admin-dashboard-page {
+        min-height: 100vh;
+        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.22), transparent 32%), radial-gradient(circle at top right, rgba(255, 89, 100, 0.10), transparent 28%), linear-gradient(135deg, #09090b 0%, #111116 45%, #09090b 100%);
+    }
+
+    .dashboard-header {
+        padding: 30px;
+        border-radius: 28px;
+        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.32), transparent 34%), linear-gradient(135deg, rgba(35, 12, 16, 0.98), rgba(18, 18, 22, 0.98) 55%, rgba(10, 10, 12, 0.98));
+        border: 1px solid rgba(255,255,255,0.10);
+        box-shadow: 0 24px 70px rgba(0,0,0,0.35);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .dashboard-header::before {
+            content: "";
+            position: absolute;
+            right: -80px;
+            top: -90px;
+            width: 280px;
+            height: 280px;
+            border-radius: 999px;
+            background: rgba(229, 9, 20, 0.22);
+            filter: blur(18px);
+        }
+
+        .dashboard-header > div {
+            position: relative;
+            z-index: 2;
+        }
+
+    .dashboard-eyebrow {
+        width: fit-content;
+        padding: 8px 12px;
+        border-radius: 999px;
+        color: #ff7b83;
+        background: rgba(229,9,20,0.15);
+        border: 1px solid rgba(229,9,20,0.26);
+        font-size: 0.78rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 14px;
+    }
+
+    .dashboard-header h1 {
+        font-size: clamp(2.2rem, 4.2vw, 3.8rem);
+        font-weight: 950;
+        letter-spacing: -0.06em;
+        line-height: 0.98;
+        margin-bottom: 12px;
+        color: #fff;
+    }
+
+    .dashboard-header p {
+        color: #c8c8cf;
+        margin: 0;
+        max-width: 720px;
+        line-height: 1.65;
+        font-weight: 600;
+    }
+
+    .dashboard-filter-panel {
+        padding: 22px;
+        border-radius: 26px;
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.13), transparent 28%), rgba(18,18,22,0.96);
+        border: 1px solid rgba(255,255,255,0.09);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+    }
+
+    .filter-summary {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+    }
+
+    .summary-item {
+        min-height: 62px;
+        padding: 0 18px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.045));
+        border: 1px solid rgba(255,255,255,0.10);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+        .summary-item > span {
+            width: 42px;
+            height: 42px;
+            border-radius: 15px;
+            color: #ff5964;
+            background: rgba(229,9,20,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .summary-item small {
+            display: block;
+            color: #a5a5ad;
+            font-size: 0.72rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-item strong {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 950;
+        }
+
+    .quick-range {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+    }
+
+        .quick-range a {
+            min-height: 40px;
+            padding: 0 16px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.07);
+            color: #e2e2e8;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-weight: 900;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: 0.2s ease;
+        }
+
+            .quick-range a:hover {
+                background: rgba(229,9,20,0.24);
+                color: #fff;
+                border-color: rgba(229,9,20,0.35);
+            }
+
+    .dashboard-filter-form {
+        display: flex;
+        align-items: end;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .filter-field {
+        min-width: 180px;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+        .filter-field label {
+            color: #c7c7ce;
+            font-size: 0.78rem;
+            font-weight: 950;
+            text-transform: uppercase;
+        }
+
+    .filter-input,
+    .date-input,
+    .dashboard-date-alt {
+        width: 100% !important;
+        height: 48px !important;
+        padding: 0 15px !important;
+        border-radius: 15px !important;
+        color: #fff !important;
+        background: rgba(255,255,255,0.075) !important;
+        border: 1px solid rgba(255,255,255,0.13) !important;
+        outline: none !important;
+        font-weight: 850 !important;
+    }
+
+        .filter-input:focus,
+        .date-input:focus,
+        .dashboard-date-alt:focus {
+            border-color: rgba(229,9,20,0.72) !important;
+            box-shadow: 0 0 0 4px rgba(229,9,20,0.13) !important;
+        }
+
+    .btn-filter,
+    .btn-export {
+        min-height: 48px;
+        padding: 0 18px;
+        border-radius: 15px;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.12);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 950;
+        transition: 0.2s ease;
+    }
+
+    .btn-filter {
+        background: rgba(255,255,255,0.08);
+    }
+
+        .btn-filter:hover {
+            color: #fff;
+            background: rgba(229,9,20,0.22);
+        }
+
+    .btn-export {
+        background: linear-gradient(135deg, #ff8b8b, #e50914);
+        box-shadow: 0 14px 34px rgba(229,9,20,0.30);
+    }
+
+        .btn-export:hover {
+            color: #fff;
+            background: linear-gradient(135deg, #ff9d9d, #ff101b);
+            box-shadow: 0 18px 42px rgba(229,9,20,0.42);
+        }
+
+    .stat-card {
+        height: 136px;
+        padding: 22px;
+        border-radius: 24px;
+        background: radial-gradient(circle at bottom right, rgba(229,9,20,0.18), transparent 34%), rgba(18,18,22,0.96);
+        border: 1px solid rgba(255,255,255,0.09);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        box-shadow: 0 18px 46px rgba(0,0,0,0.26);
+        transition: 0.2s ease;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(229,9,20,0.30);
+            background: radial-gradient(circle at bottom right, rgba(229,9,20,0.25), transparent 36%), rgba(24,24,29,0.98);
+        }
+
+        .stat-card.today {
+            background: radial-gradient(circle at bottom right, rgba(245,158,11,0.22), transparent 34%), rgba(18,18,22,0.96);
+        }
+
+        .stat-card.booking {
+            background: radial-gradient(circle at bottom right, rgba(147,51,234,0.20), transparent 34%), rgba(18,18,22,0.96);
+        }
+
+        .stat-card.showtime {
+            background: radial-gradient(circle at bottom right, rgba(13,202,240,0.18), transparent 34%), rgba(18,18,22,0.96);
+        }
+
+        .stat-card p {
+            color: #a6a6ae;
+            font-size: 0.82rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-card h3 {
+            color: #fff;
+            font-size: 1.52rem;
+            font-weight: 950;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-card > span {
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            color: #ff5964;
+            background: rgba(229,9,20,0.16);
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+    .mini-card {
+        min-height: 102px;
+        padding: 18px;
+        border-radius: 22px;
+        color: #fff;
+        text-decoration: none;
+        background: rgba(18,18,22,0.96);
+        border: 1px solid rgba(255,255,255,0.09);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        transition: 0.2s ease;
+    }
+
+        .mini-card:hover {
+            color: #fff;
+            background: rgba(28,28,34,0.98);
+            border-color: rgba(229,9,20,0.30);
+            transform: translateY(-2px);
+        }
+
+        .mini-card > span {
+            width: 50px;
+            height: 50px;
+            border-radius: 17px;
+            background: rgba(229,9,20,0.16);
+            color: #ff5964;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 29px;
+        }
+
+        .mini-card p {
+            color: #a1a1a8;
+            margin-bottom: 2px;
+            font-size: 0.82rem;
+            font-weight: 950;
+            text-transform: uppercase;
+        }
+
+        .mini-card h4 {
+            font-weight: 950;
+            margin: 0;
+            font-size: 1.55rem;
+        }
+
+    .dashboard-panel {
+        border-radius: 26px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015)), rgba(18,18,22,0.96);
+        border: 1px solid rgba(255,255,255,0.09);
+        overflow: hidden;
+        box-shadow: 0 20px 56px rgba(0,0,0,0.28);
+    }
+
+    .panel-header {
+        padding: 22px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        background: rgba(255,255,255,0.025);
+    }
+
+        .panel-header h5 {
+            font-weight: 950;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .panel-header p {
+            color: #a5a5ad;
+            margin: 0;
+            font-size: 0.86rem;
+        }
+
+        .panel-header > span {
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            color: #ff5964;
+            background: rgba(229,9,20,0.15);
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+    .chart-body {
+        height: 320px;
+        padding: 22px;
+        position: relative;
+    }
+
+    .chart-body-sm {
+        height: 320px;
+    }
+
+    .chart-body canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .booking-status-list {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .status-row {
+        padding: 14px;
+        border-radius: 17px;
+        background: rgba(255,255,255,0.055);
+        border: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .status-row div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .status-row div span {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                display: inline-block;
+            }
+
+        .status-row.pending div span {
+            background: #ffc94a;
+        }
+
+        .status-row.completed div span {
+            background: #37d67a;
+        }
+
+        .status-row.cancelled div span {
+            background: #ff5964;
+        }
+
+        .status-row p {
+            margin: 0;
+            color: #d6d6dc;
+            font-weight: 850;
+        }
+
+        .status-row strong {
+            font-size: 1.2rem;
+            font-weight: 950;
+        }
+
+    .quick-actions {
+        padding: 0 20px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .quick-actions a {
+            min-height: 46px;
+            padding: 0 14px;
+            border-radius: 999px;
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255,255,255,0.065);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 850;
+        }
+
+            .quick-actions a:hover {
+                background: rgba(229,9,20,0.20);
+            }
+
+    .recent-bookings {
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .recent-item {
+        padding: 15px;
+        border-radius: 17px;
+        background: rgba(255,255,255,0.055);
+        border: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+    .recent-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .recent-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: rgba(229,9,20,0.15);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .recent-left h6 {
+        color: #fff;
+        font-weight: 900;
+        margin-bottom: 4px;
+    }
+
+    .recent-left p {
+        color: #999;
+        margin: 0;
+        font-size: 0.84rem;
+    }
+
+    .recent-right {
+        min-width: 150px;
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-items: flex-end;
+    }
+
+        .recent-right strong {
+            color: #ff4d57;
+            font-weight: 950;
+        }
+
+        .recent-right small {
+            color: #888;
+            font-weight: 700;
+        }
+
+    .recent-status {
+        padding: 4px 9px;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        font-weight: 950;
+        text-transform: uppercase;
+    }
+
+        .recent-status.pending {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.12);
+        }
+
+        .recent-status.completed {
+            color: #37d67a;
+            background: rgba(25,135,84,0.14);
+        }
+
+        .recent-status.cancelled {
+            color: #ff5964;
+            background: rgba(229,9,20,0.14);
+        }
+
+    .empty-box {
+        padding: 60px 20px;
+        text-align: center;
+        color: #aaa;
+    }
+
+        .empty-box span {
+            color: #ff5964;
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+
+    .flatpickr-calendar {
+        border-radius: 18px !important;
+        overflow: hidden;
+        background: #151519 !important;
+        border: 1px solid rgba(255,255,255,0.12) !important;
+        box-shadow: 0 24px 70px rgba(0,0,0,0.55) !important;
+    }
+
+    .flatpickr-months,
+    .flatpickr-weekdays {
+        background: #151519 !important;
+    }
+
+    .flatpickr-current-month,
+    .flatpickr-weekday,
+    .flatpickr-day {
+        color: #fff !important;
+    }
+
+        .flatpickr-day:hover,
+        .flatpickr-day.selected {
+            background: #e50914 !important;
+            border-color: #e50914 !important;
+        }
+
+        .flatpickr-day.today {
+            border-color: #ff5964 !important;
+        }
+
+    @@media (max-width: 991.98px) {
+        .dashboard-filter-form,
+        .filter-summary,
+        .quick-range {
+            width: 100%;
+        }
+
+        .filter-field,
+        .btn-filter,
+        .btn-export,
+        .summary-item {
+            width: 100%;
+        }
+
+        .recent-item {
+            flex-direction: column;
+        }
+
+        .recent-right {
+            min-width: 0;
+            text-align: left;
+            align-items: flex-start;
+        }
+    }
+
+    /* =========================
+       CINEMA CUSTOM DROPDOWN
+    ========================= */
+
+    .cinema-filter-field {
+        min-width: 280px;
+    }
+
+    .cz-cinema-dropdown {
+        width: 100%;
+    }
+
+    .cz-cinema-btn {
+        width: 100%;
+        height: 48px;
+        padding: 0 12px 0 14px;
+        border-radius: 15px;
+        color: #fff;
+        background: radial-gradient(circle at top left, rgba(229,9,20,0.20), transparent 34%), linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.055));
+        border: 1px solid rgba(255,255,255,0.14);
+        outline: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        font-weight: 900;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+        .cz-cinema-btn:hover,
+        .cz-cinema-btn.show {
+            border-color: rgba(229,9,20,0.65);
+            box-shadow: 0 0 0 4px rgba(229,9,20,0.12);
+        }
+
+    .cz-cinema-current {
+        min-width: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+        .cz-cinema-current .material-symbols-outlined {
+            color: #ff5964;
+            font-size: 22px;
+        }
+
+    #cinemaText {
+        display: inline-block;
+        max-width: 195px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .cz-cinema-arrow {
+        color: #d6d6dc;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+
+    .cz-cinema-btn.show .cz-cinema-arrow {
+        transform: rotate(180deg);
+    }
+
+    .cz-cinema-menu {
+        width: 100%;
+        min-width: 280px;
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 8px;
+        margin-top: 8px !important;
+        border-radius: 18px;
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.18), transparent 36%), #151519;
+        border: 1px solid rgba(255,255,255,0.12);
+        box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+    }
+
+        .cz-cinema-menu::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        .cz-cinema-menu::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.04);
+            border-radius: 999px;
+        }
+
+        .cz-cinema-menu::-webkit-scrollbar-thumb {
+            background: rgba(229,9,20,0.7);
+            border-radius: 999px;
+        }
+
+    .cz-cinema-item {
+        min-height: 42px;
+        padding: 0 11px;
+        border-radius: 13px;
+        color: #e6e6eb;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 850;
+        background: transparent;
+    }
+
+        .cz-cinema-item .material-symbols-outlined {
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            background: rgba(229,9,20,0.14);
+            color: #ff5964;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .cz-cinema-item:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.075);
+        }
+
+        .cz-cinema-item.active {
+            color: #fff;
+            background: linear-gradient(135deg, rgba(229,9,20,0.74), rgba(130,14,23,0.82));
+        }
+
+            .cz-cinema-item.active .material-symbols-outlined {
+                background: rgba(255,255,255,0.16);
+                color: #fff;
+            }
+
+    @@media (max-width: 991.98px) {
+        .cinema-filter-field,
+        .cz-cinema-menu {
+            width: 100%;
+            min-width: 100%;
+        }
+
+        #cinemaText {
+            max-width: 100%;
+        }
+    }
+</style>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/vn.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        flatpickr("#fromDatePicker", {
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "d/m/Y",
+        altInputClass: "filter-input dashboard-date-alt",
+        locale: "vn",
+        allowInput: false,
+        disableMobile: true
+        });
+
+        flatpickr("#toDatePicker", {
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "d/m/Y",
+        altInputClass: "filter-input dashboard-date-alt",
+        locale: "vn",
+        allowInput: false,
+        disableMobile: true
+        });
+        });
+
+        const chartLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.ChartLabels));
+        const revenueData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.RevenueLast7Days));
+        const bookingData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.BookingLast7Days));
+
+        const statusLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.StatusLabels));
+        const statusData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.StatusData));
+
+        const commonGridColor = 'rgba(255, 255, 255, 0.08)';
+        const commonTextColor = '#a7a7a7';
+
+        const revenueCtx = document.getElementById('revenueChart');
+
+        if (revenueCtx) {
+        new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+        labels: chartLabels,
+        datasets: [
+        {
+        label: 'Doanh thu',
+        data: revenueData,
+        tension: 0.42,
+        fill: true,
+        borderWidth: 3,
+        borderColor: '#ff5964',
+        backgroundColor: 'rgba(229, 9, 20, 0.16)',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#ff5964'
+        },
+        {
+        label: 'Booking',
+        data: bookingData,
+        tension: 0.42,
+        borderWidth: 2,
+        borderColor: '#f59e0b',
+        backgroundColor: 'rgba(245, 158, 11, 0.14)',
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        pointBackgroundColor: '#f59e0b',
+        yAxisID: 'y1'
+        }
+        ]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+        mode: 'index',
+        intersect: false
+        },
+        plugins: {
+        legend: {
+        labels: {
+        color: commonTextColor,
+        usePointStyle: true,
+        boxWidth: 8,
+        font: {
+        weight: '700'
+        }
+        }
+        },
+        tooltip: {
+        backgroundColor: 'rgba(15, 15, 18, 0.95)',
+        borderColor: 'rgba(255,255,255,0.12)',
+        borderWidth: 1,
+        titleColor: '#fff',
+        bodyColor: '#ddd',
+        padding: 12,
+        callbacks: {
+        label: function (context) {
+        if (context.dataset.label === 'Doanh thu') {
+        return ' Doanh thu: ' + Number(context.raw).toLocaleString('vi-VN') + ' VNĐ';
+        }
+
+        return ' Booking: ' + context.raw;
+        }
+        }
+        }
+        },
+        scales: {
+        x: {
+        ticks: {
+        color: commonTextColor
+        },
+        grid: {
+        color: commonGridColor
+        }
+        },
+        y: {
+        beginAtZero: true,
+        ticks: {
+        color: commonTextColor,
+        callback: function (value) {
+        return Number(value).toLocaleString('vi-VN');
+        }
+        },
+        grid: {
+        color: commonGridColor
+        }
+        },
+        y1: {
+        beginAtZero: true,
+        position: 'right',
+        ticks: {
+        color: commonTextColor,
+        precision: 0
+        },
+        grid: {
+        drawOnChartArea: false
+        }
+        }
+        }
+        }
+        });
+        }
+
+        const statusCtx = document.getElementById('statusChart');
+
+        if (statusCtx) {
+        new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+        labels: statusLabels,
+        datasets: [{
+        data: statusData,
+        borderWidth: 2,
+        borderColor: '#151519',
+        backgroundColor: [
+        '#ffc94a',
+        '#37d67a',
+        '#ff5964'
+        ],
+        hoverOffset: 8
+        }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '68%',
+        plugins: {
+        legend: {
+        position: 'bottom',
+        labels: {
+        color: commonTextColor,
+        usePointStyle: true,
+        boxWidth: 8,
+        padding: 18,
+        font: {
+        weight: '700'
+        }
+        }
+        },
+        tooltip: {
+        backgroundColor: 'rgba(15, 15, 18, 0.95)',
+        borderColor: 'rgba(255,255,255,0.12)',
+        borderWidth: 1,
+        titleColor: '#fff',
+        bodyColor: '#ddd',
+        padding: 12
+        }
+        }
+        }
+        });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+        const cinemaInput = document.getElementById("cinemaIdInput");
+        const cinemaText = document.getElementById("cinemaText");
+
+        document.querySelectorAll(".cz-cinema-item").forEach(function (item) {
+        item.addEventListener("click", function () {
+        const cinemaId = this.dataset.cinemaId || "";
+        const cinemaName = this.dataset.cinemaName || "Tất cả rạp";
+
+        if (cinemaInput) {
+        cinemaInput.value = cinemaId;
+        }
+
+        if (cinemaText) {
+        cinemaText.textContent = cinemaName;
+        }
+
+        document.querySelectorAll(".cz-cinema-item").forEach(function (x) {
+        x.classList.remove("active");
+        });
+
+        this.classList.add("active");
+        });
+        });
+        });
+
+    </script>
+}

@@ -1,0 +1,603 @@
+﻿@model WebMTB.Models.Cinema
+
+@{
+    ViewData["Title"] = "Xóa rạp";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    int roomCount = Model.Rooms?.Count ?? 0;
+    bool hasRooms = roomCount > 0;
+}
+
+<div class="cinema-delete-page">
+    <div class="delete-hero mb-4">
+        <div>
+            <div class="delete-eyebrow">
+                <span class="material-symbols-outlined">warning</span>
+                CineZone Admin
+            </div>
+
+            <h1>Xóa rạp</h1>
+            <p>
+                Kiểm tra kỹ thông tin trước khi xóa. Việc xóa rạp có thể ảnh hưởng đến phòng chiếu, sơ đồ ghế và suất chiếu liên quan.
+            </p>
+        </div>
+
+        <a asp-action="Index" class="btn back-btn">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Quay lại
+        </a>
+    </div>
+
+    <div class="delete-layout">
+        <section class="delete-panel">
+            <div class="delete-panel-header">
+                <div>
+                    <h4>Xác nhận xóa rạp</h4>
+                    <p>Hành động này cần được kiểm tra trước khi thực hiện.</p>
+                </div>
+
+                <span class="material-symbols-outlined">delete_forever</span>
+            </div>
+
+            <div class="delete-content">
+                <div class="danger-box mb-4">
+                    <span class="material-symbols-outlined">dangerous</span>
+                    <div>
+                        <h5>Bạn có chắc muốn xóa rạp này?</h5>
+                        <p>
+                            Nếu rạp đã có phòng chiếu hoặc dữ liệu liên quan, bạn nên cân nhắc xóa/chuyển phòng trước.
+                        </p>
+                    </div>
+                </div>
+
+                @if (hasRooms)
+                {
+                    <div class="warning-box mb-4">
+                        <span class="material-symbols-outlined">report</span>
+                        <div>
+                            <strong>Không nên xóa ngay</strong>
+                            <p>
+                                Rạp này đang có <b>@roomCount phòng chiếu</b>. Hãy xóa hoặc chuyển phòng chiếu trước để tránh lỗi dữ liệu.
+                            </p>
+                        </div>
+                    </div>
+                }
+
+                <div class="cinema-info-card mb-4">
+                    <div class="cinema-thumb">
+                        <span class="material-symbols-outlined">theaters</span>
+                    </div>
+
+                    <div class="cinema-detail">
+                        <div class="cinema-title-line">
+                            <h5>@Model.Name</h5>
+
+                            @if (hasRooms)
+                            {
+                                <span class="status-pill warning">Có phòng chiếu</span>
+                            }
+                            else
+                            {
+                                <span class="status-pill danger">Có thể xóa</span>
+                            }
+                        </div>
+
+                        <p>
+                            <span class="material-symbols-outlined">location_on</span>
+                            @(string.IsNullOrWhiteSpace(Model.Address) ? "Chưa cập nhật địa chỉ" : Model.Address)
+                        </p>
+
+                        <div class="info-tags">
+                            <span>
+                                <span class="material-symbols-outlined">tag</span>
+                                ID #@Model.Id
+                            </span>
+
+                            <span>
+                                <span class="material-symbols-outlined">meeting_room</span>
+                                @roomCount phòng chiếu
+                            </span>
+
+                            <span>
+                                <span class="material-symbols-outlined">database</span>
+                                Cinema record
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-action="Delete" method="post" class="delete-actions">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <button type="submit" class="btn delete-btn">
+                        <span class="material-symbols-outlined">delete</span>
+                        Xác nhận xóa
+                    </button>
+
+                    <a asp-action="Index" class="btn cancel-btn">
+                        <span class="material-symbols-outlined">close</span>
+                        Hủy
+                    </a>
+                </form>
+            </div>
+        </section>
+
+        <aside class="delete-side-panel">
+            <div class="side-image">
+                <div class="side-overlay"></div>
+
+                <div class="side-badge">
+                    <span class="material-symbols-outlined">shield</span>
+                    Safety Check
+                </div>
+            </div>
+
+            <div class="side-content">
+                <h4>Trước khi xóa</h4>
+
+                <div class="check-list">
+                    <div>
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <p>Kiểm tra rạp có phòng chiếu hay không.</p>
+                    </div>
+
+                    <div>
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <p>Kiểm tra phòng có sơ đồ ghế hoặc suất chiếu liên quan.</p>
+                    </div>
+
+                    <div>
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <p>Chỉ xóa khi chắc chắn dữ liệu không còn cần dùng.</p>
+                    </div>
+                </div>
+
+                <div class="side-note">
+                    Nếu đây là dữ liệu thật, nên ưu tiên trạng thái “ngưng hoạt động” thay vì xóa vĩnh viễn.
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<style>
+    .cinema-delete-page {
+        min-height: 100vh;
+        color: #fff;
+        padding: 28px;
+        background: radial-gradient(circle at 5% 5%, rgba(229, 9, 20, 0.18), transparent 26%), radial-gradient(circle at 95% 15%, rgba(255,255,255,0.05), transparent 24%), #101012;
+    }
+
+    .delete-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 30px;
+        border-radius: 30px;
+        border: 1px solid rgba(229,9,20,0.24);
+        background: linear-gradient(90deg, rgba(0,0,0,0.86), rgba(0,0,0,0.52)), radial-gradient(circle at top right, rgba(229,9,20,0.42), transparent 36%), linear-gradient(135deg, #1b1b20, #09090b);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.35);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 22px;
+    }
+
+    .delete-eyebrow {
+        color: #ff5964;
+        font-size: 0.78rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 12px;
+    }
+
+    .delete-hero h1 {
+        color: #fff;
+        font-size: clamp(2.2rem, 5vw, 4.1rem);
+        font-weight: 950;
+        letter-spacing: -0.065em;
+        line-height: 1;
+        margin-bottom: 12px;
+    }
+
+    .delete-hero p {
+        color: #aaa;
+        max-width: 780px;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .back-btn {
+        min-height: 48px;
+        padding: 0 22px;
+        border-radius: 999px;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.14);
+        background: rgba(255,255,255,0.08);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 950;
+        white-space: nowrap;
+    }
+
+        .back-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.14);
+            transform: translateY(-2px);
+        }
+
+    .delete-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 380px;
+        gap: 22px;
+        align-items: start;
+    }
+
+    .delete-panel,
+    .delete-side-panel {
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(18,18,22,0.94);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.30);
+        overflow: hidden;
+    }
+
+    .delete-panel-header {
+        padding: 22px 24px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(135deg, rgba(229,9,20,0.12), rgba(255,255,255,0.015));
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+        .delete-panel-header h4 {
+            font-weight: 950;
+            margin-bottom: 4px;
+        }
+
+        .delete-panel-header p {
+            color: #999;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .delete-panel-header > span {
+            color: #ff5964;
+            font-size: 36px;
+        }
+
+    .delete-content {
+        padding: 26px;
+    }
+
+    .danger-box,
+    .warning-box {
+        padding: 16px;
+        border-radius: 20px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .danger-box {
+        background: rgba(229,9,20,0.12);
+        border: 1px solid rgba(229,9,20,0.22);
+    }
+
+    .warning-box {
+        background: rgba(255,193,7,0.08);
+        border: 1px solid rgba(255,193,7,0.18);
+    }
+
+    .danger-box > span {
+        color: #ff5964;
+        font-size: 30px;
+        flex-shrink: 0;
+    }
+
+    .warning-box > span {
+        color: #ffc94a;
+        font-size: 30px;
+        flex-shrink: 0;
+    }
+
+    .danger-box h5 {
+        font-weight: 950;
+        margin-bottom: 4px;
+    }
+
+    .danger-box p,
+    .warning-box p {
+        color: #aaa;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .warning-box strong {
+        color: #ffc94a;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .cinema-info-card {
+        padding: 18px;
+        border-radius: 22px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.075);
+        display: flex;
+        gap: 14px;
+    }
+
+    .cinema-thumb {
+        width: 58px;
+        height: 70px;
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgba(229,9,20,0.20), rgba(0,0,0,0.10)), #242429;
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+        .cinema-thumb span {
+            font-size: 34px;
+        }
+
+    .cinema-detail {
+        min-width: 0;
+    }
+
+    .cinema-title-line {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 6px;
+    }
+
+        .cinema-title-line h5 {
+            font-weight: 950;
+            margin: 0;
+        }
+
+    .cinema-detail p {
+        color: #aaa;
+        margin: 0 0 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+        line-height: 1.6;
+    }
+
+        .cinema-detail p span {
+            color: #ff5964;
+            font-size: 19px;
+            margin-top: 2px;
+        }
+
+    .status-pill {
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 950;
+        text-transform: uppercase;
+    }
+
+        .status-pill.warning {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.12);
+            border: 1px solid rgba(255,193,7,0.18);
+        }
+
+        .status-pill.danger {
+            color: #ff5964;
+            background: rgba(229,9,20,0.14);
+            border: 1px solid rgba(229,9,20,0.20);
+        }
+
+    .info-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+        .info-tags > span {
+            padding: 6px 10px;
+            border-radius: 999px;
+            color: #ddd;
+            background: rgba(255,255,255,0.065);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            font-weight: 850;
+        }
+
+        .info-tags .material-symbols-outlined {
+            color: #ff5964;
+            font-size: 17px;
+        }
+
+    .delete-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .delete-btn {
+        min-height: 48px;
+        padding: 0 24px;
+        border-radius: 999px;
+        color: #fff;
+        border: none;
+        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
+        box-shadow: 0 14px 32px rgba(229,9,20,0.28);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 950;
+    }
+
+        .delete-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 18px 42px rgba(229,9,20,0.38);
+        }
+
+    .cancel-btn {
+        min-height: 48px;
+        padding: 0 22px;
+        border-radius: 999px;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.14);
+        background: rgba(255,255,255,0.07);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 900;
+    }
+
+        .cancel-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.13);
+            transform: translateY(-2px);
+        }
+
+    .delete-side-panel {
+        position: sticky;
+        top: 90px;
+    }
+
+    .side-image {
+        position: relative;
+        height: 210px;
+        background: linear-gradient(135deg, rgba(0,0,0,0.15), rgba(0,0,0,0.70)), url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1000&q=80') center/cover;
+    }
+
+    .side-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.78)), radial-gradient(circle at top right, rgba(229,9,20,0.26), transparent 34%);
+    }
+
+    .side-badge {
+        position: absolute;
+        left: 18px;
+        bottom: 18px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        color: #fff;
+        background: rgba(229,9,20,0.86);
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+    }
+
+        .side-badge span {
+            font-size: 18px;
+        }
+
+    .side-content {
+        padding: 22px;
+    }
+
+        .side-content h4 {
+            font-weight: 950;
+            margin-bottom: 16px;
+        }
+
+    .check-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+        .check-list > div {
+            padding: 12px;
+            border-radius: 16px;
+            background: rgba(0,0,0,0.22);
+            border: 1px solid rgba(255,255,255,0.065);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .check-list span {
+            color: #ff5964;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .check-list p {
+            color: #aaa;
+            margin: 0;
+            line-height: 1.55;
+            font-size: 0.86rem;
+        }
+
+    .side-note {
+        margin-top: 16px;
+        padding: 14px;
+        border-radius: 18px;
+        color: #ffc94a;
+        background: rgba(255,193,7,0.08);
+        border: 1px solid rgba(255,193,7,0.16);
+        line-height: 1.6;
+        font-size: 0.86rem;
+    }
+
+    @@media (max-width: 1199.98px) {
+        .delete-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .delete-side-panel {
+            position: static;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .cinema-delete-page {
+            padding: 18px;
+        }
+
+        .delete-hero {
+            flex-direction: column;
+            padding: 24px;
+        }
+
+        .back-btn,
+        .delete-btn,
+        .cancel-btn {
+            width: 100%;
+        }
+
+        .delete-actions {
+            flex-direction: column;
+        }
+
+        .delete-content {
+            padding: 20px;
+        }
+
+        .cinema-info-card {
+            flex-direction: column;
+        }
+    }
+</style>

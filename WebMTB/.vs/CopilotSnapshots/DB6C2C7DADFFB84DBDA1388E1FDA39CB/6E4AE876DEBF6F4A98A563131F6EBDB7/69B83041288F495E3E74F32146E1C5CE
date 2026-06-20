@@ -1,0 +1,240 @@
+﻿@model WebMTB.Models.Movie
+
+@{
+    ViewData["Title"] = "Chỉnh Sửa Phim";
+}
+
+<style>
+    /* CSS cho khung xem trước ảnh ngang */
+    .preview-cover-container {
+        width: 100%;
+        height: 150px;
+        background-color: rgba(255,255,255,0.05);
+        border: 2px dashed #555;
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #777;
+    }
+
+    /* Custom Dark Theme cho Select2 */
+    .select2-container--default .select2-selection--multiple {
+        background-color: #212529 !important; /* bg-dark */
+        border: 1px solid #6c757d !important; /* border-secondary */
+        min-height: 45px;
+        border-radius: 0.375rem;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: #dc3545 !important; /* Nền màu đỏ bg-danger */
+        border: none !important;
+        color: white !important;
+        border-radius: 20px;
+        padding: 2px 10px;
+        margin-top: 8px;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: white !important;
+        margin-right: 5px;
+    }
+    .select2-dropdown {
+        background-color: #212529 !important;
+        border: 1px solid #6c757d !important;
+        color: white !important;
+    }
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #dc3545 !important;
+    }
+    .select2-search__field {
+        color: white !important;
+    }
+</style>
+
+<div class="container mt-5 pt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white brand-font">Chỉnh Sửa: @Model.Title</h1>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">
+            <span class="material-symbols-outlined fs-6 align-middle">arrow_back</span> Quay lại
+        </a>
+    </div>
+
+    <div class="card page-card text-white shadow-lg movie-form" style="background-color: #131313; border: 1px solid #333;">
+        <div class="card-body p-4">
+            <form asp-action="Edit" asp-route-id="@Model.Id">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-bold">Tên Phim</label>
+                            <input asp-for="Title" class="form-control custom-input bg-dark text-white border-secondary" />
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-bold">Mô tả nội dung</label>
+                            <textarea asp-for="Description" class="form-control custom-input bg-dark text-white border-secondary" rows="4"></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Director" class="form-label fw-bold">Đạo diễn</label>
+                                <input asp-for="Director" class="form-control custom-input bg-dark text-white border-secondary" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Duration" class="form-label fw-bold">Thời lượng (Phút)</label>
+                                <input asp-for="Duration" class="form-control custom-input bg-dark text-white border-secondary" type="number" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Cast" class="form-label fw-bold">Diễn viên chính</label>
+                                <input asp-for="Cast" class="form-control custom-input bg-dark text-white border-secondary" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Rating" class="form-label fw-bold">Đánh giá (Sao)</label>
+                                <input asp-for="Rating" class="form-control custom-input bg-dark text-white border-secondary" type="number" step="0.1" max="10" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Thể loại phim</label>
+                            <select name="SelectedGenreIds" id="genreSelect" class="form-control" multiple="multiple" style="width: 100%;">
+                                @if (ViewBag.Genres != null)
+                                {
+                                    foreach (var genre in (IEnumerable<SelectListItem>)ViewBag.Genres)
+                                    {
+                                        if (genre.Selected)
+                                        {
+                                            <option value="@genre.Value" selected>@genre.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@genre.Value">@genre.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                            <small class="text-secondary mt-1 d-block"><span class="material-symbols-outlined fs-6 align-middle">info</span> Bấm mũi tên để chọn hoặc Gõ tên thể loại mới và nhấn Enter.</small>
+                        </div>
+
+                        <div class="mb-3 mt-4">
+                            <label asp-for="CoverImageUrl" class="form-label fw-bold text-warning">Đường dẫn ảnh Bìa Ngang (Cover/Hero)</label>
+                            <input asp-for="CoverImageUrl" id="coverInput" class="form-control custom-input bg-dark text-white border-secondary" />
+                            
+                            <div class="mt-3 preview-cover-container shadow-sm">
+                                <img id="coverPreview" src="@Model.CoverImageUrl" alt="Cover Preview" style="width: 100%; height: 100%; object-fit: cover; @(string.IsNullOrEmpty(Model.CoverImageUrl) ? "display: none;" : "")" />
+                                <div id="coverPlaceholder" style="@(!string.IsNullOrEmpty(Model.CoverImageUrl) ? "display: none;" : "")">
+                                    <span class="material-symbols-outlined d-block mb-1" style="font-size: 2rem;">panorama</span>
+                                    <p class="small m-0">Xem trước Ảnh Bìa</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label fw-bold text-danger">Đường dẫn ảnh Poster Dọc</label>
+                            <input asp-for="ImageUrl" id="imageInput" class="form-control custom-input bg-dark text-white border-secondary" />
+                            <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+
+                            <div class="mt-3 preview-cover-container shadow-sm" style="height: 250px;">
+                                <img id="imagePreview" src="@Model.ImageUrl" alt="Poster Preview" style="width: 100%; height: 100%; object-fit: cover; @(string.IsNullOrEmpty(Model.ImageUrl) ? "display: none;" : "")" />
+                                <div id="previewPlaceholder" style="@(!string.IsNullOrEmpty(Model.ImageUrl) ? "display: none;" : "")">
+                                    <span class="material-symbols-outlined d-block mb-1" style="font-size: 2rem;">portrait</span>
+                                    <p class="small m-0">Xem trước Poster</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TrailerUrl" class="form-label fw-bold">Đường dẫn Trailer (YouTube)</label>
+                            <input asp-for="TrailerUrl" class="form-control custom-input bg-dark text-white border-secondary" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ReleaseDate" class="form-label fw-bold">Ngày khởi chiếu</label>
+                            <input asp-for="ReleaseDate" class="form-control custom-input bg-dark text-white border-secondary" type="date" />
+                        </div>
+
+                        <div class="p-3 border border-secondary rounded mb-4" style="background-color: rgba(0,0,0,0.25);">
+                            <h6 class="text-secondary mb-3 border-bottom border-secondary pb-2">Trạng thái phim</h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" asp-for="IsHot" />
+                                <label class="form-check-label" asp-for="IsHot">🔥 Phim Hot (Hiện trang đầu)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" asp-for="IsActive" />
+                                <label class="form-check-label" asp-for="IsActive">🎬 Đang chiếu</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-danger w-100 py-3 fw-bold fs-5 shadow" style="background: linear-gradient(135deg, #e50914 0%, #83050b 100%); border: none;">
+                            <span class="material-symbols-outlined align-middle">save</span> LƯU THAY ĐỔI
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // 1. Khởi tạo chức năng Thể loại phim thông minh (Select2)
+            $('#genreSelect').select2({
+                tags: true, // Cho phép gõ để tạo thể loại mới
+                placeholder: "Chọn hoặc nhập thể loại...",
+                allowClear: true
+            });
+            
+            // 2. Chức năng xem trước ảnh (giữ nguyên của bạn)
+            function setupImagePreview(inputId, previewImgId, placeholderId) {
+                const $input = $('#' + inputId);
+                const $preview = $('#' + previewImgId);
+                const $placeholder = $('#' + placeholderId);
+
+                function updatePreview() {
+                    const url = $input.val().trim();
+                    if (url !== "") {
+                        $preview.attr('src', url);
+                        $preview.show();
+                        $placeholder.hide();
+                    } else {
+                        $preview.hide();
+                        $placeholder.show();
+                    }
+                }
+
+                $input.on('input propertychange', updatePreview);
+
+                $preview.on('error', function () {
+                    $(this).hide();
+                    $placeholder.show().html(
+                        '<span class="material-symbols-outlined text-danger mb-1" style="font-size: 2rem;">broken_image</span>' +
+                        '<p class="text-danger small m-0">Link ảnh lỗi!</p>'
+                    );
+                });
+
+                if($input.val()) updatePreview();
+            }
+
+            setupImagePreview('imageInput', 'imagePreview', 'previewPlaceholder');
+            setupImagePreview('coverInput', 'coverPreview', 'coverPlaceholder');
+        });
+    </script>
+}
