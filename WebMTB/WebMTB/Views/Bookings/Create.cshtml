@@ -133,302 +133,325 @@
             <input type="hidden" name="selectedSeatIds" id="hiddenSeats" value="" />
             <input type="hidden" id="hiddenTotalAmount" value="0" />
 
-            <div class="row g-4 booking-content">
+            <div class="booking-flow">
 
-                <div class="col-xl-4">
-                    <div class="booking-card sticky-xl-top">
-                        <div class="booking-card-header">
-                            <div>
-                                <h5>1. Lịch chiếu</h5>
-                                <p>Chọn ngày, rạp và giờ chiếu phù hợp.</p>
-                            </div>
-                            <span class="material-symbols-outlined">schedule</span>
+                <div class="booking-card mb-4">
+                    <div class="booking-card-header">
+                        <div>
+                            <h5>1. Chọn ngày chiếu</h5>
+                            <p>Chọn ngày bạn muốn xem phim trong 7 ngày tới.</p>
                         </div>
+                        <span class="material-symbols-outlined">calendar_month</span>
+                    </div>
 
-                        <div class="booking-card-body">
-                            <div class="cinema-card">
-                                <div class="cinema-heading">
-                                    <div class="cinema-icon">
-                                        <span class="material-symbols-outlined">location_on</span>
-                                    </div>
+                    <div class="booking-card-body">
+                        <div class="week-date-tabs horizontal-date-tabs">
+                            @foreach (var day in weekDates)
+                            {
+                                bool isSelectedDay = day.Date == selectedDate.Date;
+                                int showtimeCount = showtimes.Count(s => s.StartTime.Date == day.Date);
 
-                                    <div>
-                                        <h6>Chọn rạp & suất chiếu</h6>
-                                        <p>Hiển thị lịch chiếu trong 7 ngày tới.</p>
-                                    </div>
-                                </div>
+                                string dayLabel = day.Date == DateTime.Today
+                                    ? "Hôm nay"
+                                    : viCulture.TextInfo.ToTitleCase(day.ToString("dddd", viCulture));
 
-                                <div class="week-date-tabs">
-                                    @foreach (var day in weekDates)
+                                <a asp-action="Create"
+                                   asp-route-movieId="@ViewBag.MovieId"
+                                   asp-route-selectedDate="@day.ToString("yyyy-MM-dd")"
+                                   class="date-tab @(isSelectedDay ? "active" : "")">
+
+                                    <span>@dayLabel</span>
+                                    <strong>@day.ToString("dd/MM")</strong>
+
+                                    @if (showtimeCount > 0)
                                     {
-                                        bool isSelectedDay = day.Date == selectedDate.Date;
-                                        int showtimeCount = showtimes.Count(s => s.StartTime.Date == day.Date);
-
-                                        string dayLabel = day.Date == DateTime.Today
-                                            ? "Hôm nay"
-                                            : viCulture.TextInfo.ToTitleCase(day.ToString("dddd", viCulture));
-
-                                        <a asp-action="Create"
-                                           asp-route-movieId="@ViewBag.MovieId"
-                                           asp-route-selectedDate="@day.ToString("yyyy-MM-dd")"
-                                           class="date-tab @(isSelectedDay ? "active" : "")">
-
-                                            <span>@dayLabel</span>
-                                            <strong>@day.ToString("dd/MM")</strong>
-
-                                            @if (showtimeCount > 0)
-                                            {
-                                                <small>@showtimeCount suất</small>
-                                            }
-                                            else
-                                            {
-                                                <small>Không có</small>
-                                            }
-                                        </a>
-                                    }
-                                </div>
-
-                                <div class="cinema-showtime-list">
-                                    @if (cinemaGroups.Any())
-                                    {
-                                        foreach (var cinemaGroup in cinemaGroups)
-                                        {
-                                            var dayShowtimes = cinemaGroup
-                                                .Where(s => s.StartTime.Date == selectedDate.Date)
-                                                .OrderBy(s => s.Room?.Name)
-                                                .ThenBy(s => s.StartTime)
-                                                .ToList();
-
-                                            <div class="cinema-schedule-card">
-                                                <div class="cinema-schedule-header">
-                                                    <div class="cinema-schedule-icon">
-                                                        <span class="material-symbols-outlined">location_on</span>
-                                                    </div>
-
-                                                    <div>
-                                                        <h6>@cinemaGroup.Key.CinemaName</h6>
-
-                                                        @if (!string.IsNullOrWhiteSpace(cinemaGroup.Key.CinemaAddress))
-                                                        {
-                                                            <p>@cinemaGroup.Key.CinemaAddress</p>
-                                                        }
-                                                        else
-                                                        {
-                                                            <p>Chưa cập nhật địa chỉ</p>
-                                                        }
-                                                    </div>
-                                                </div>
-
-                                                @if (dayShowtimes.Any())
-                                                {
-                                                    var roomGroups = dayShowtimes
-                                                        .GroupBy(s => new
-                                                        {
-                                                            RoomId = s.Room?.Id ?? 0,
-                                                            RoomName = s.Room?.Name ?? "Chưa có phòng"
-                                                        })
-                                                        .OrderBy(g => g.Key.RoomName)
-                                                        .ToList();
-
-                                                    foreach (var roomGroup in roomGroups)
-                                                    {
-                                                        <div class="room-showtime-group">
-                                                            <div class="room-label">
-                                                                <span class="material-symbols-outlined">meeting_room</span>
-                                                                @roomGroup.Key.RoomName · 2D Phụ Đề
-                                                            </div>
-
-                                                            <div class="time-chip-list">
-                                                                @foreach (var item in roomGroup)
-                                                                {
-                                                                    bool isActive = item.Id == showtimeId;
-
-                                                                    <a asp-action="Create"
-                                                                       asp-route-movieId="@ViewBag.MovieId"
-                                                                       asp-route-selectedDate="@selectedDate.ToString("yyyy-MM-dd")"
-                                                                       asp-route-showtimeId="@item.Id"
-                                                                       class="time-chip @(isActive ? "active" : "")">
-
-                                                                        <strong>@item.StartTime.ToString("HH:mm")</strong>
-                                                                        <small>@item.BasePrice.ToString("N0")đ</small>
-                                                                    </a>
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    <div class="no-showtime-box">
-                                                        <span class="material-symbols-outlined">event_busy</span>
-                                                        Không có lịch chiếu trong ngày này.
-                                                    </div>
-                                                }
-                                            </div>
-                                        }
+                                        <small>@showtimeCount suất</small>
                                     }
                                     else
                                     {
-                                        <div class="no-showtime-box">
-                                            <span class="material-symbols-outlined">event_busy</span>
-                                            Phim này chưa có lịch chiếu trong 7 ngày tới.
-                                        </div>
+                                        <small>Không có</small>
                                     }
-                                </div>
-                            </div>
-
-                            <div class="booking-note mt-4">
-                                <span class="material-symbols-outlined">info</span>
-                                <p>
-                                    @if (showtime != null)
-                                    {
-                                        <span>
-                                            Suất đang chọn:
-                                            <strong>@cinemaName · @roomName · @showtime.StartTime.ToString("HH:mm - dd/MM/yyyy")</strong>.
-                                            Giá vé: <strong>@pricePerSeat.ToString("N0") VNĐ / ghế</strong>.
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span>
-                                            Vui lòng chọn ngày và suất chiếu để tiếp tục chọn ghế.
-                                        </span>
-                                    }
-                                </p>
-                            </div>
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>
 
-                <div class="col-xl-8">
-                    <div class="booking-card">
-                        <div class="booking-card-header">
-                            <div>
-                                <h5>2. Chọn ghế</h5>
-                                <p>Chọn vị trí ngồi yêu thích của bạn.</p>
-                            </div>
-                            <span class="material-symbols-outlined">event_seat</span>
+                <div class="booking-card mb-4">
+                    <div class="booking-card-header">
+                        <div>
+                            <h5>2. Chọn rạp và suất chiếu</h5>
+                            <p>Chọn rạp, phòng chiếu và giờ chiếu phù hợp.</p>
                         </div>
+                        <span class="material-symbols-outlined">theaters</span>
+                    </div>
 
-                        <div class="booking-card-body seat-area">
-                            @if (showtime == null)
+                    <div class="booking-card-body">
+                        <div class="cinema-showtime-grid">
+                            @if (cinemaGroups.Any())
                             {
-                                <div class="text-center text-secondary py-5">
-                                    <span class="material-symbols-outlined d-block mb-2" style="font-size: 52px; color:#ff5964;">
-                                        event_busy
-                                    </span>
+                                foreach (var cinemaGroup in cinemaGroups)
+                                {
+                                    var dayShowtimes = cinemaGroup
+                                        .Where(s => s.StartTime.Date == selectedDate.Date)
+                                        .OrderBy(s => s.Room?.Name)
+                                        .ThenBy(s => s.StartTime)
+                                        .ToList();
 
-                                    <h5 class="text-white fw-bold">Chưa có suất chiếu trong ngày này</h5>
-                                    <p class="mb-0">
-                                        Vui lòng chọn ngày khác hoặc rạp khác có lịch chiếu.
-                                    </p>
-                                </div>
+                                    <div class="cinema-schedule-card">
+                                        <div class="cinema-schedule-header">
+                                            <div class="cinema-schedule-icon">
+                                                <span class="material-symbols-outlined">location_on</span>
+                                            </div>
+
+                                            <div>
+                                                <h6>@cinemaGroup.Key.CinemaName</h6>
+
+                                                @if (!string.IsNullOrWhiteSpace(cinemaGroup.Key.CinemaAddress))
+                                                {
+                                                    <p>@cinemaGroup.Key.CinemaAddress</p>
+                                                }
+                                                else
+                                                {
+                                                    <p>Chưa cập nhật địa chỉ</p>
+                                                }
+                                            </div>
+                                        </div>
+
+                                        @if (dayShowtimes.Any())
+                                        {
+                                            var roomGroups = dayShowtimes
+                                                .GroupBy(s => new
+                                                {
+                                                    RoomId = s.Room?.Id ?? 0,
+                                                    RoomName = s.Room?.Name ?? "Chưa có phòng"
+                                                })
+                                                .OrderBy(g => g.Key.RoomName)
+                                                .ToList();
+
+                                            foreach (var roomGroup in roomGroups)
+                                            {
+                                                <div class="room-showtime-group">
+                                                    <div class="room-label">
+                                                        <span class="material-symbols-outlined">meeting_room</span>
+                                                        @roomGroup.Key.RoomName · 2D Phụ Đề
+                                                    </div>
+
+                                                    <div class="time-chip-list">
+                                                        @foreach (var item in roomGroup)
+                                                        {
+                                                            bool isActive = item.Id == showtimeId;
+
+                                                            <a asp-action="Create"
+                                                               asp-route-movieId="@ViewBag.MovieId"
+                                                               asp-route-selectedDate="@selectedDate.ToString("yyyy-MM-dd")"
+                                                               asp-route-showtimeId="@item.Id"
+                                                               class="time-chip @(isActive ? "active" : "")">
+
+                                                                <strong>@item.StartTime.ToString("HH:mm")</strong>
+                                                                <small>@item.BasePrice.ToString("N0")đ</small>
+                                                            </a>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="no-showtime-box">
+                                                <span class="material-symbols-outlined">event_busy</span>
+                                                Không có lịch chiếu trong ngày này.
+                                            </div>
+                                        }
+                                    </div>
+                                }
                             }
                             else
                             {
-                                <div class="screen-wrap">
-                                    <div class="screen-glow"></div>
-                                    <div class="screen-line"></div>
-                                    <span>Màn hình</span>
-                                </div>
-
-                                <div class="seat-map">
-                                    @if (seats.Any())
-                                    {
-                                        int maxRow = seats.Max(s => s.GridRow);
-                                        int maxCol = seats.Max(s => s.GridColumn);
-
-                                        for (int r = 1; r <= maxRow; r++)
-                                        {
-                                            var rowSeats = seats.Where(s => s.GridRow == r).ToList();
-                                            string rowName = rowSeats.FirstOrDefault()?.Row ?? "";
-
-                                            <div class="seat-row">
-                                                <span class="row-label">@rowName</span>
-
-                                                @for (int c = 1; c <= maxCol; c++)
-                                                {
-                                                    var seat = seats.FirstOrDefault(s => s.GridRow == r && s.GridColumn == c);
-
-                                                    if (seat == null)
-                                                    {
-                                                        <div class="seat-empty-space"></div>
-                                                    }
-                                                    else
-                                                    {
-                                                        bool isSold = soldSeatIds.Contains(seat.Id);
-                                                        bool isHeld = heldSeatIds.Contains(seat.Id);
-                                                        bool isDisabled = isSold || isHeld;
-
-                                                        string seatName = $"{seat.Row}{seat.Number}";
-                                                        string seatTypeClass = seat.SeatType?.ToLower() ?? "normal";
-
-                                                        <input type="checkbox"
-                                                               class="seat-checkbox d-none"
-                                                               id="seat-@seat.Id"
-                                                               data-seat-id="@seat.Id"
-                                                               data-seat-name="@seatName"
-                                                        @(isDisabled ? "disabled" : "") />
-
-                                                        <label for="seat-@seat.Id"
-                                                               class="seat-label @seatTypeClass @(isSold ? "sold" : "") @(isHeld ? "seat-holding" : "")"
-                                                               data-seat-id="@seat.Id"
-                                                               data-seat-name="@seatName">
-                                                            @seat.Number
-                                                        </label>
-                                                    }
-                                                }
-
-                                                <span class="row-label">@rowName</span>
-                                            </div>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <div class="text-center text-secondary py-5">
-                                            <span class="material-symbols-outlined d-block mb-2" style="font-size: 48px;">event_seat</span>
-                                            <p class="mb-0">Chưa có ghế trong phòng chiếu này.</p>
-                                        </div>
-                                    }
-                                </div>
-
-                                <div class="seat-legend-wrap">
-                                    <div class="legend-item">
-                                        <span class="seat-legend available"></span>
-                                        <p>Ghế thường</p>
-                                    </div>
-
-                                    <div class="legend-item">
-                                        <span class="seat-legend vip"></span>
-                                        <p>VIP</p>
-                                    </div>
-
-                                    <div class="legend-item">
-                                        <span class="seat-legend couple"></span>
-                                        <p>Ghế đôi</p>
-                                    </div>
-
-                                    <div class="legend-item">
-                                        <span class="seat-legend selected"></span>
-                                        <p>Đang chọn</p>
-                                    </div>
-
-                                    <div class="legend-item">
-                                        <span class="seat-legend holding"></span>
-                                        <p>Đang giữ</p>
-                                    </div>
-
-                                    <div class="legend-item">
-                                        <span class="seat-legend sold"></span>
-                                        <p>Đã bán</p>
-                                    </div>
-
-                                    <div class="legend-item">
-                                        <span class="seat-legend empty"></span>
-                                        <p>Lối đi</p>
-                                    </div>
+                                <div class="no-showtime-box">
+                                    <span class="material-symbols-outlined">event_busy</span>
+                                    Phim này chưa có lịch chiếu trong 7 ngày tới.
                                 </div>
                             }
+                        </div>
+
+                        <div class="booking-note mt-4">
+                            <span class="material-symbols-outlined">info</span>
+                            <p>
+                                @if (showtime != null)
+                                {
+                                    <span>
+                                        Suất đang chọn:
+                                        <strong>@cinemaName · @roomName · @showtime.StartTime.ToString("HH:mm - dd/MM/yyyy")</strong>.
+                                        Giá vé: <strong>@pricePerSeat.ToString("N0") VNĐ / ghế</strong>.
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        Vui lòng chọn ngày và suất chiếu để tiếp tục chọn ghế.
+                                    </span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="booking-card mb-4">
+                    <div class="booking-card-header">
+                        <div>
+                            <h5>3. Chọn ghế</h5>
+                            <p>Chọn vị trí ngồi yêu thích của bạn.</p>
+                        </div>
+                        <span class="material-symbols-outlined">event_seat</span>
+                    </div>
+
+                    <div class="booking-card-body seat-area">
+                        @if (showtime == null)
+                        {
+                            <div class="empty-step-box">
+                                <span class="material-symbols-outlined">event_busy</span>
+                                <h5>Chưa có suất chiếu trong ngày này</h5>
+                                <p>Vui lòng chọn ngày khác hoặc rạp khác có lịch chiếu.</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="screen-wrap">
+                                <div class="screen-glow"></div>
+                                <div class="screen-line"></div>
+                                <span>Màn hình</span>
+                            </div>
+
+                            <div class="seat-map">
+                                @if (seats.Any())
+                                {
+                                    int maxRow = seats.Max(s => s.GridRow);
+                                    int maxCol = seats.Max(s => s.GridColumn);
+
+                                    for (int r = 1; r <= maxRow; r++)
+                                    {
+                                        var rowSeats = seats.Where(s => s.GridRow == r).ToList();
+                                        string rowName = rowSeats.FirstOrDefault()?.Row ?? "";
+
+                                        <div class="seat-row">
+                                            <span class="row-label">@rowName</span>
+
+                                            @for (int c = 1; c <= maxCol; c++)
+                                            {
+                                                var seat = seats.FirstOrDefault(s => s.GridRow == r && s.GridColumn == c);
+
+                                                if (seat == null)
+                                                {
+                                                    <div class="seat-empty-space"></div>
+                                                }
+                                                else
+                                                {
+                                                    bool isSold = soldSeatIds.Contains(seat.Id);
+                                                    bool isHeld = heldSeatIds.Contains(seat.Id);
+                                                    bool isDisabled = isSold || isHeld;
+
+                                                    string seatName = $"{seat.Row}{seat.Number}";
+                                                    string seatTypeClass = seat.SeatType?.ToLower() ?? "normal";
+
+                                                    <input type="checkbox"
+                                                           class="seat-checkbox d-none"
+                                                           id="seat-@seat.Id"
+                                                           data-seat-id="@seat.Id"
+                                                           data-seat-name="@seatName"
+                                                           data-row="@seat.Row"
+                                                           data-number="@seat.Number"
+                                                           data-grid-row="@seat.GridRow"
+                                                           data-grid-col="@seat.GridColumn"
+                                                           data-status="@(isSold ? "Sold" : (isHeld ? "Held" : "Available"))"
+                                                    @(isDisabled ? "disabled" : "") />
+
+                                                    <label for="seat-@seat.Id"
+                                                           class="seat-label @seatTypeClass @(isSold ? "sold" : "") @(isHeld ? "seat-holding" : "")"
+                                                           data-seat-id="@seat.Id"
+                                                           data-seat-name="@seatName"
+                                                           data-row="@seat.Row"
+                                                           data-number="@seat.Number"
+                                                           data-grid-row="@seat.GridRow"
+                                                           data-grid-col="@seat.GridColumn">
+                                                        @seat.Number
+                                                    </label>
+                                                }
+                                            }
+
+                                            <span class="row-label">@rowName</span>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="empty-step-box">
+                                        <span class="material-symbols-outlined">event_seat</span>
+                                        <h5>Chưa có ghế trong phòng chiếu này</h5>
+                                        <p>Admin cần tạo sơ đồ ghế cho phòng chiếu.</p>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="seat-legend-wrap">
+                                <div class="legend-item">
+                                    <span class="seat-legend available"></span>
+                                    <p>Ghế thường</p>
+                                </div>
+
+                                <div class="legend-item">
+                                    <span class="seat-legend vip"></span>
+                                    <p>VIP</p>
+                                </div>
+
+                                <div class="legend-item">
+                                    <span class="seat-legend couple"></span>
+                                    <p>Ghế đôi</p>
+                                </div>
+
+                                <div class="legend-item">
+                                    <span class="seat-legend selected"></span>
+                                    <p>Đang chọn</p>
+                                </div>
+
+                                <div class="legend-item">
+                                    <span class="seat-legend holding"></span>
+                                    <p>Đang giữ</p>
+                                </div>
+
+                                <div class="legend-item">
+                                    <span class="seat-legend sold"></span>
+                                    <p>Đã bán</p>
+                                </div>
+
+                                <div class="legend-item">
+                                    <span class="seat-legend empty"></span>
+                                    <p>Lối đi</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="booking-card mb-4">
+                    <div class="booking-card-header">
+                        <div>
+                            <h5>4. Combo bắp nước</h5>
+                            <p>Phần này có thể phát triển thêm sau để bán kèm combo.</p>
+                        </div>
+                        <span class="material-symbols-outlined">local_drink</span>
+                    </div>
+
+                    <div class="booking-card-body">
+                        <div class="combo-coming-box">
+                            <span class="material-symbols-outlined">fastfood</span>
+                            <div>
+                                <h5>Combo bắp nước sẽ được bổ sung sau</h5>
+                                <p>
+                                    Sau này bạn có thể thêm combo bắp nước, voucher, điểm thành viên
+                                    trước khi người dùng chuyển qua thanh toán.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -472,7 +495,7 @@
     .booking-page {
         min-height: 100vh;
         color: #fff;
-        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.12), transparent 30%), #131313;
+        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.16), transparent 30%), radial-gradient(circle at top right, rgba(229, 9, 20, 0.08), transparent 24%), #131313;
     }
 
     .booking-hero {
@@ -481,7 +504,7 @@
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 26px;
         padding: 24px;
-        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.22), transparent 34%), linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+        background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.24), transparent 34%), linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -623,6 +646,10 @@
             transform: translateY(-2px);
         }
 
+    .booking-flow {
+        display: block;
+    }
+
     .booking-card {
         overflow: hidden;
         border-radius: 24px;
@@ -663,60 +690,17 @@
         padding: 22px;
     }
 
-    .cinema-card {
-        padding: 18px;
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 0.045);
-        border: 1px solid rgba(255, 255, 255, 0.075);
-    }
-
-    .cinema-heading {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 18px;
-    }
-
-    .cinema-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 14px;
-        background: rgba(229, 9, 20, 0.15);
-        color: #ff5964;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-        .cinema-icon span {
-            font-size: 26px;
-        }
-
-    .cinema-heading h6 {
-        color: #fff;
-        font-weight: 900;
-        margin-bottom: 3px;
-    }
-
-    .cinema-heading p {
-        color: #8f8f8f;
-        font-size: 0.82rem;
-        margin: 0;
-    }
-
-    .week-date-tabs {
+    .horizontal-date-tabs {
         display: grid;
-        grid-template-columns: repeat(7, minmax(92px, 1fr));
-        gap: 10px;
-        margin-bottom: 18px;
+        grid-template-columns: repeat(7, minmax(130px, 1fr));
+        gap: 12px;
         overflow-x: auto;
-        padding-bottom: 4px;
+        padding-bottom: 6px;
     }
 
     .date-tab {
-        min-height: 82px;
-        padding: 11px 10px;
+        min-height: 88px;
+        padding: 13px 12px;
         border-radius: 18px;
         color: #ddd;
         text-decoration: none;
@@ -725,7 +709,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 3px;
+        gap: 4px;
         text-align: center;
     }
 
@@ -737,8 +721,9 @@
 
         .date-tab.active {
             color: #fff;
-            background: linear-gradient(135deg, rgba(229,9,20,0.72), rgba(105,9,18,0.9));
-            border-color: rgba(229,9,20,0.65);
+            background: linear-gradient(135deg, rgba(229,9,20,0.78), rgba(105,9,18,0.94));
+            border-color: rgba(229,9,20,0.72);
+            box-shadow: 0 12px 26px rgba(229,9,20,0.22);
         }
 
         .date-tab span {
@@ -748,7 +733,7 @@
         }
 
         .date-tab strong {
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 950;
         }
 
@@ -758,15 +743,15 @@
             font-weight: 800;
         }
 
-    .cinema-showtime-list {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
+    .cinema-showtime-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
     }
 
     .cinema-schedule-card {
-        padding: 15px;
-        border-radius: 20px;
+        padding: 18px;
+        border-radius: 22px;
         background: rgba(255,255,255,0.045);
         border: 1px solid rgba(255,255,255,0.08);
     }
@@ -781,9 +766,9 @@
     }
 
     .cinema-schedule-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 14px;
+        width: 44px;
+        height: 44px;
+        border-radius: 15px;
         background: rgba(229,9,20,0.15);
         color: #ff5964;
         display: flex;
@@ -831,8 +816,8 @@
     }
 
     .time-chip {
-        min-width: 88px;
-        min-height: 48px;
+        min-width: 92px;
+        min-height: 50px;
         padding: 7px 10px;
         border-radius: 14px;
         color: #fff;
@@ -869,8 +854,8 @@
         }
 
     .no-showtime-box {
-        min-height: 54px;
-        padding: 13px 14px;
+        min-height: 58px;
+        padding: 14px;
         border-radius: 16px;
         color: #aaa;
         background: rgba(255,255,255,0.04);
@@ -915,6 +900,36 @@
     .seat-area {
         overflow-x: auto;
     }
+
+    .empty-step-box {
+        min-height: 260px;
+        padding: 50px 20px;
+        border-radius: 22px;
+        background: rgba(255,255,255,0.035);
+        border: 1px dashed rgba(255,255,255,0.12);
+        color: #999;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .empty-step-box .material-symbols-outlined {
+            color: #ff5964;
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+
+        .empty-step-box h5 {
+            color: #fff;
+            font-weight: 950;
+            margin-bottom: 6px;
+        }
+
+        .empty-step-box p {
+            margin: 0;
+        }
 
     .screen-wrap {
         position: relative;
@@ -1138,6 +1153,41 @@
             border: 1px dashed rgba(255, 255, 255, 0.45);
         }
 
+    .combo-coming-box {
+        padding: 22px;
+        border-radius: 22px;
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.12), transparent 34%), rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+        .combo-coming-box > span {
+            width: 58px;
+            height: 58px;
+            border-radius: 20px;
+            background: rgba(229,9,20,0.15);
+            color: #ff5964;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            flex-shrink: 0;
+        }
+
+        .combo-coming-box h5 {
+            color: #fff;
+            font-weight: 950;
+            margin-bottom: 5px;
+        }
+
+        .combo-coming-box p {
+            color: #aaa;
+            margin: 0;
+            line-height: 1.6;
+        }
+
     .booking-checkout-bar {
         position: fixed;
         left: 0;
@@ -1224,8 +1274,12 @@
         }
 
     @@media (max-width: 1199.98px) {
-        .week-date-tabs {
-            grid-template-columns: repeat(7, 110px);
+        .horizontal-date-tabs {
+            grid-template-columns: repeat(7, 120px);
+        }
+
+        .cinema-showtime-grid {
+            grid-template-columns: 1fr;
         }
     }
 
@@ -1246,10 +1300,6 @@
 
         .booking-movie-info {
             align-items: flex-start;
-        }
-
-        .booking-card.sticky-xl-top {
-            position: static !important;
         }
 
         .checkout-inner {
@@ -1296,6 +1346,10 @@
             letter-spacing: -0.04em;
         }
 
+        .horizontal-date-tabs {
+            grid-template-columns: repeat(7, 112px);
+        }
+
         .seat-map {
             min-width: 560px;
         }
@@ -1325,6 +1379,11 @@
         .checkout-btn {
             width: 100%;
         }
+
+        .combo-coming-box {
+            align-items: flex-start;
+            flex-direction: column;
+        }
     }
 </style>
 
@@ -1336,8 +1395,24 @@
         const pricePerSeat = @pricePerSeat.ToString(System.Globalization.CultureInfo.InvariantCulture);
         const currentShowtimeId = @showtimeId;
         const currentUserId = "@ViewBag.CurrentUserId";
+        const MAX_SELECTED_SEATS = 8;
+
         const $checkoutBtn = $('#checkoutBtn');
         let isSubmittingBooking = false;
+
+        function showSeatWarning(message) {
+        alert(message);
+        }
+
+        function getSelectedSeatIds() {
+        let selectedSeatIds = [];
+
+        $('.seat-checkbox:checked:not(:disabled)').each(function () {
+        selectedSeatIds.push($(this).data('seat-id'));
+        });
+
+        return selectedSeatIds;
+        }
 
         function updateBookingSummary() {
         let selectedSeatIds = [];
@@ -1358,6 +1433,78 @@
         $checkoutBtn.prop('disabled', selectedSeatIds.length === 0 || currentShowtimeId <= 0);
         }
 
+        function isCheckboxBlocked($checkbox) {
+        const seatId = $checkbox.data('seat-id');
+        const $label = $('label[for="seat-' + seatId + '"]');
+
+        return $checkbox.is(':checked') ||
+        $label.hasClass('sold') ||
+        $label.hasClass('seat-holding') ||
+        $checkbox.data('status') === 'Sold' ||
+        $checkbox.data('status') === 'Held';
+        }
+
+        function hasSingleEmptySeatGap() {
+        const rows = {};
+
+        $('.seat-checkbox').each(function () {
+        const $checkbox = $(this);
+        const seatId = $checkbox.data('seat-id');
+        const row = $checkbox.data('grid-row');
+        const col = parseInt($checkbox.data('grid-col'));
+        const rowName = $checkbox.data('row');
+        const number = $checkbox.data('number');
+
+        if (!row || !col) {
+        return;
+        }
+
+        if (!rows[row]) {
+        rows[row] = {};
+        }
+
+        rows[row][col] = {
+        checkbox: $checkbox,
+        seatId: seatId,
+        rowName: rowName,
+        number: number,
+        col: col
+        };
+        });
+
+        for (const rowKey in rows) {
+        const rowSeats = rows[rowKey];
+
+        for (const colKey in rowSeats) {
+        const col = parseInt(colKey);
+        const currentSeat = rowSeats[col];
+
+        const leftSeat = rowSeats[col - 1];
+        const rightSeat = rowSeats[col + 1];
+
+        if (!leftSeat || !rightSeat) {
+        continue;
+        }
+
+        const currentBlocked = isCheckboxBlocked(currentSeat.checkbox);
+        const leftBlocked = isCheckboxBlocked(leftSeat.checkbox);
+        const rightBlocked = isCheckboxBlocked(rightSeat.checkbox);
+
+        if (!currentBlocked && leftBlocked && rightBlocked) {
+        return {
+        invalid: true,
+        seatName: `${currentSeat.rowName}${currentSeat.number}`
+        };
+        }
+        }
+        }
+
+        return {
+        invalid: false,
+        seatName: null
+        };
+        }
+
         function markSeatHolding(seatId, message) {
         const $checkbox = $("#seat-" + seatId);
         const $seatLabel = $('label[for="seat-' + seatId + '"]');
@@ -1368,6 +1515,7 @@
 
         $checkbox.prop("checked", false);
         $checkbox.prop("disabled", true);
+        $checkbox.data("status", "Held");
 
         $seatLabel.removeClass("sold");
         $seatLabel.addClass("seat-holding");
@@ -1383,7 +1531,10 @@
         }
 
         if (!$seatLabel.hasClass("sold")) {
+        $checkbox.prop("checked", false);
         $checkbox.prop("disabled", false);
+        $checkbox.data("status", "Available");
+
         $seatLabel.removeClass("seat-holding");
         $seatLabel.removeAttr("title");
         }
@@ -1399,6 +1550,7 @@
 
         $checkbox.prop("checked", false);
         $checkbox.prop("disabled", true);
+        $checkbox.data("status", "Sold");
 
         $seatLabel.removeClass("seat-holding");
         $seatLabel.addClass("sold");
@@ -1476,10 +1628,31 @@
         const $seatLabel = $('label[for="seat-' + seatId + '"]');
 
         if ($checkbox.is(':checked')) {
+        const selectedSeatCount = getSelectedSeatIds().length;
+
+        if (selectedSeatCount > MAX_SELECTED_SEATS) {
+        $checkbox.prop('checked', false);
+        updateBookingSummary();
+
+        showSeatWarning("Bạn chỉ được chọn tối đa 8 ghế trong một lần đặt. Nếu muốn đặt vé nhóm, vui lòng liên hệ rạp để được hỗ trợ.");
+        return;
+        }
+
+        const gapCheck = hasSingleEmptySeatGap();
+
+        if (gapCheck.invalid) {
+        $checkbox.prop('checked', false);
+        updateBookingSummary();
+
+        showSeatWarning(`Không được bỏ trống 1 ghế lẻ tại vị trí ${gapCheck.seatName}. Vui lòng chọn liền ghế hoặc đổi vị trí khác.`);
+        return;
+        }
+
         if (connection.state !== signalR.HubConnectionState.Connected) {
         $checkbox.prop('checked', false);
         updateBookingSummary();
-        alert("Kết nối giữ ghế chưa sẵn sàng. Vui lòng thử lại.");
+
+        showSeatWarning("Kết nối giữ ghế chưa sẵn sàng. Vui lòng thử lại.");
         return;
         }
 
@@ -1490,9 +1663,12 @@
         if (!result || !result.success) {
         $checkbox.prop('checked', false);
         markSeatHolding(seatId, result ? result.message : "Ghế này đang được giữ.");
-        alert(result ? result.message : "Ghế này không còn khả dụng.");
+
+        showSeatWarning(result ? result.message : "Ghế này không còn khả dụng.");
         } else {
         $checkbox.prop('disabled', false);
+        $checkbox.data("status", "Available");
+
         $seatLabel.removeClass("seat-holding");
         $seatLabel.removeAttr("title");
         }
@@ -1501,12 +1677,25 @@
         })
         .catch(function (err) {
         console.error(err);
+
         $checkbox.prop('checked', false);
         $checkbox.prop('disabled', false);
+
         updateBookingSummary();
-        alert("Có lỗi khi giữ ghế. Vui lòng thử lại.");
+
+        showSeatWarning("Có lỗi khi giữ ghế. Vui lòng thử lại.");
         });
         } else {
+        const gapCheck = hasSingleEmptySeatGap();
+
+        if (gapCheck.invalid) {
+        $checkbox.prop('checked', true);
+        updateBookingSummary();
+
+        showSeatWarning(`Không được bỏ trống 1 ghế lẻ tại vị trí ${gapCheck.seatName}. Vui lòng bỏ chọn ghế ngoài cùng trước.`);
+        return;
+        }
+
         if (connection.state === signalR.HubConnectionState.Connected) {
         connection.invoke("ReleaseSeat", currentShowtimeId, seatId)
         .catch(function (err) {
@@ -1521,15 +1710,31 @@
         $('#bookingForm').on('submit', function (e) {
         updateBookingSummary();
 
+        const selectedSeatIds = getSelectedSeatIds();
+
         if (currentShowtimeId <= 0) {
         e.preventDefault();
-        alert("Vui lòng chọn suất chiếu trước.");
+        showSeatWarning("Vui lòng chọn suất chiếu trước.");
         return false;
         }
 
-        if (!$('#hiddenSeats').val()) {
+        if (selectedSeatIds.length === 0) {
         e.preventDefault();
-        alert("Vui lòng chọn ít nhất một ghế.");
+        showSeatWarning("Vui lòng chọn ít nhất một ghế.");
+        return false;
+        }
+
+        if (selectedSeatIds.length > MAX_SELECTED_SEATS) {
+        e.preventDefault();
+        showSeatWarning("Bạn chỉ được chọn tối đa 8 ghế trong một lần đặt.");
+        return false;
+        }
+
+        const gapCheck = hasSingleEmptySeatGap();
+
+        if (gapCheck.invalid) {
+        e.preventDefault();
+        showSeatWarning(`Không được bỏ trống 1 ghế lẻ tại vị trí ${gapCheck.seatName}.`);
         return false;
         }
 

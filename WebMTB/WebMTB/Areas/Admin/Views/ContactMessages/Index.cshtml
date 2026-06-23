@@ -1,0 +1,597 @@
+﻿@model IEnumerable<WebMTB.Models.ContactMessage>
+
+@{
+    ViewData["Title"] = "Liên hệ hỗ trợ";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var messages = Model?.ToList() ?? new List<WebMTB.Models.ContactMessage>();
+
+    string currentStatus = ViewBag.Status as string ?? "All";
+    string keyword = ViewBag.Keyword as string ?? "";
+
+    int total = ViewBag.Total ?? 0;
+    int newCount = ViewBag.NewCount ?? 0;
+    int processingCount = ViewBag.ProcessingCount ?? 0;
+    int doneCount = ViewBag.DoneCount ?? 0;
+}
+
+<div class="contact-admin-page">
+    <section class="contact-hero mb-4">
+        <div>
+            <div class="contact-eyebrow">
+                <span class="material-symbols-outlined">support_agent</span>
+                CineZone Support
+            </div>
+
+            <h1>Liên hệ hỗ trợ</h1>
+
+            <p>
+                Quản lý các yêu cầu hỗ trợ từ người dùng về đặt vé, thanh toán,
+                chọn ghế, khuyến mãi và góp ý hệ thống.
+            </p>
+        </div>
+    </section>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success rounded-4 fw-bold">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger rounded-4 fw-bold">
+            @TempData["Error"]
+        </div>
+    }
+
+    <section class="contact-stats-grid mb-4">
+        <a asp-action="Index" asp-route-status="All" class="contact-stat-card stat-red @(currentStatus == "All" ? "active" : "")">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">mail</span>
+            </div>
+            <div>
+                <p>Tổng liên hệ</p>
+                <h3>@total</h3>
+            </div>
+        </a>
+
+        <a asp-action="Index" asp-route-status="New" class="contact-stat-card stat-yellow @(currentStatus == "New" ? "active" : "")">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">fiber_new</span>
+            </div>
+            <div>
+                <p>Mới gửi</p>
+                <h3>@newCount</h3>
+            </div>
+        </a>
+
+        <a asp-action="Index" asp-route-status="Processing" class="contact-stat-card stat-blue @(currentStatus == "Processing" ? "active" : "")">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">pending_actions</span>
+            </div>
+            <div>
+                <p>Đang xử lý</p>
+                <h3>@processingCount</h3>
+            </div>
+        </a>
+
+        <a asp-action="Index" asp-route-status="Done" class="contact-stat-card stat-green @(currentStatus == "Done" ? "active" : "")">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">task_alt</span>
+            </div>
+            <div>
+                <p>Đã xử lý</p>
+                <h3>@doneCount</h3>
+            </div>
+        </a>
+    </section>
+
+    <section class="contact-panel">
+        <div class="contact-panel-header">
+            <div>
+                <h4>Danh sách yêu cầu hỗ trợ</h4>
+                <p>Bấm vào từng liên hệ để xem chi tiết và cập nhật trạng thái xử lý.</p>
+            </div>
+
+            <form method="get" class="contact-search-form">
+                <input type="hidden" name="status" value="@currentStatus" />
+
+                <span class="material-symbols-outlined">search</span>
+
+                <input type="text"
+                       name="keyword"
+                       value="@keyword"
+                       placeholder="Tìm tên, email, tiêu đề..." />
+
+                <button type="submit">Tìm</button>
+            </form>
+        </div>
+
+        @if (messages.Any())
+        {
+            <div class="contact-table">
+                <div class="contact-table-head">
+                    <div>Người gửi</div>
+                    <div>Tiêu đề</div>
+                    <div>Thời gian</div>
+                    <div>Trạng thái</div>
+                    <div class="text-end">Thao tác</div>
+                </div>
+
+                @foreach (var item in messages)
+                {
+                    string statusClass = item.Status switch
+                    {
+                        "New" => "new",
+                        "Processing" => "processing",
+                        "Done" => "done",
+                        _ => "new"
+                    };
+
+                    string statusText = item.Status switch
+                    {
+                        "New" => "Mới gửi",
+                        "Processing" => "Đang xử lý",
+                        "Done" => "Đã xử lý",
+                        _ => item.Status
+                    };
+
+                    <article class="contact-row">
+                        <div class="sender-cell">
+                            <div class="sender-avatar">
+                                <span class="material-symbols-outlined">person</span>
+                            </div>
+
+                            <div>
+                                <h6>@item.FullName</h6>
+                                <p>@item.Email</p>
+                            </div>
+                        </div>
+
+                        <div class="subject-cell">
+                            <strong>@item.Subject</strong>
+                            <p>@item.Message</p>
+                        </div>
+
+                        <div class="time-cell">
+                            <span>@item.CreatedAt.ToString("dd/MM/yyyy")</span>
+                            <small>@item.CreatedAt.ToString("HH:mm")</small>
+                        </div>
+
+                        <div>
+                            <span class="status-badge @statusClass">
+                                <span></span>
+                                @statusText
+                            </span>
+                        </div>
+
+                        <div class="action-cell">
+                            <a asp-action="Details"
+                               asp-route-id="@item.Id"
+                               class="btn view-btn">
+                                <span class="material-symbols-outlined">visibility</span>
+                                Xem
+                            </a>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-contact-box">
+                <div class="empty-icon">
+                    <span class="material-symbols-outlined">mark_email_unread</span>
+                </div>
+
+                <h4>Chưa có liên hệ phù hợp</h4>
+                <p>Hiện chưa có yêu cầu hỗ trợ nào theo bộ lọc bạn chọn.</p>
+            </div>
+        }
+    </section>
+</div>
+
+<style>
+    .contact-admin-page {
+        color: #fff;
+        min-height: 100vh;
+        padding: 28px;
+        background: radial-gradient(circle at 8% 0%, rgba(145, 0, 24, 0.34), transparent 30%), radial-gradient(circle at 95% 10%, rgba(229, 9, 20, 0.18), transparent 26%), linear-gradient(135deg, #08080a 0%, #101014 48%, #070708 100%);
+    }
+
+    .contact-hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 170px;
+        padding: 28px 30px;
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: radial-gradient(circle at 13% 18%, rgba(160, 0, 25, 0.46), transparent 31%), radial-gradient(circle at 92% 18%, rgba(120, 0, 20, 0.48), transparent 27%), linear-gradient(90deg, #33070f 0%, #0c0c12 42%, #090910 72%, #3b0710 100%);
+        box-shadow: 0 20px 55px rgba(0, 0, 0, 0.34);
+    }
+
+    .contact-eyebrow {
+        width: fit-content;
+        padding: 8px 14px;
+        border-radius: 999px;
+        color: #ff8b92;
+        background: rgba(229,9,20,0.18);
+        border: 1px solid rgba(229,9,20,0.34);
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 13px;
+    }
+
+    .contact-hero h1 {
+        font-size: clamp(2rem, 3.4vw, 3.4rem);
+        font-weight: 950;
+        letter-spacing: -0.055em;
+        line-height: 1;
+        margin-bottom: 10px;
+    }
+
+    .contact-hero p {
+        color: rgba(255,255,255,0.78);
+        max-width: 780px;
+        line-height: 1.55;
+        margin: 0;
+        font-size: 0.98rem;
+        font-weight: 650;
+    }
+
+    .contact-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .contact-stat-card {
+        min-height: 120px;
+        padding: 20px;
+        border-radius: 24px;
+        text-decoration: none;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: radial-gradient(circle at bottom right, rgba(229,9,20,0.16), transparent 36%), linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)), rgba(18,18,22,0.96);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: 0.18s ease;
+    }
+
+        .contact-stat-card:hover,
+        .contact-stat-card.active {
+            color: #fff;
+            transform: translateY(-3px);
+            border-color: rgba(229,9,20,0.45);
+            box-shadow: 0 18px 46px rgba(229,9,20,0.18);
+        }
+
+    .stat-blue {
+        background: radial-gradient(circle at bottom right, rgba(14,165,233,0.18), transparent 36%), linear-gradient(135deg, rgba(12,27,40,0.98), rgba(18,18,22,0.96));
+    }
+
+    .stat-yellow {
+        background: radial-gradient(circle at bottom right, rgba(255,193,7,0.20), transparent 36%), linear-gradient(135deg, rgba(42,31,12,0.98), rgba(18,18,22,0.96));
+    }
+
+    .stat-green {
+        background: radial-gradient(circle at bottom right, rgba(25,135,84,0.20), transparent 36%), linear-gradient(135deg, rgba(16,58,40,0.98), rgba(18,18,22,0.96));
+    }
+
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
+        background: rgba(229,9,20,0.16);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .contact-stat-card p {
+        color: #b9b9c1;
+        font-size: 0.76rem;
+        font-weight: 850;
+        text-transform: uppercase;
+        margin: 0 0 6px;
+    }
+
+    .contact-stat-card h3 {
+        color: #fff;
+        font-size: 1.9rem;
+        font-weight: 950;
+        margin: 0;
+    }
+
+    .contact-panel {
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.08), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015)), rgba(18,18,22,0.97);
+        box-shadow: 0 24px 68px rgba(0,0,0,0.34);
+        overflow: hidden;
+    }
+
+    .contact-panel-header {
+        padding: 22px 24px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+    }
+
+        .contact-panel-header h4 {
+            font-weight: 950;
+            margin-bottom: 4px;
+        }
+
+        .contact-panel-header p {
+            color: #999;
+            margin: 0;
+            font-size: 0.86rem;
+        }
+
+    .contact-search-form {
+        min-width: 380px;
+        min-height: 50px;
+        padding: 0 8px 0 15px;
+        border-radius: 999px;
+        background: rgba(0,0,0,0.26);
+        border: 1px solid rgba(255,255,255,0.10);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .contact-search-form span {
+            color: #ff5964;
+        }
+
+        .contact-search-form input {
+            flex: 1;
+            color: #fff;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-weight: 800;
+        }
+
+        .contact-search-form button {
+            height: 38px;
+            padding: 0 16px;
+            border-radius: 999px;
+            color: #fff;
+            border: none;
+            background: linear-gradient(135deg, #ff8b8b, #e50914);
+            font-weight: 900;
+        }
+
+    .contact-table {
+        padding: 14px;
+    }
+
+    .contact-table-head,
+    .contact-row {
+        display: grid;
+        grid-template-columns: minmax(220px, 1fr) minmax(260px, 1.3fr) 140px 150px 120px;
+        gap: 14px;
+        align-items: center;
+    }
+
+    .contact-table-head {
+        min-height: 46px;
+        padding: 0 14px;
+        color: #8f8f98;
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .contact-row {
+        min-height: 92px;
+        padding: 14px;
+        margin-bottom: 10px;
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.075);
+        background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+    }
+
+    .sender-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .sender-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        color: #ff5964;
+        background: rgba(229,9,20,0.14);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .sender-cell h6,
+    .subject-cell strong {
+        color: #fff;
+        font-weight: 950;
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    .sender-cell p,
+    .subject-cell p {
+        color: #999;
+        margin: 0;
+        font-size: 0.82rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .time-cell span {
+        display: block;
+        color: #fff;
+        font-weight: 900;
+    }
+
+    .time-cell small {
+        color: #999;
+        font-weight: 800;
+    }
+
+    .status-badge {
+        min-height: 34px;
+        padding: 0 12px;
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 950;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        white-space: nowrap;
+    }
+
+        .status-badge span {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+        }
+
+        .status-badge.new {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.13);
+            border: 1px solid rgba(255,193,7,0.20);
+        }
+
+            .status-badge.new span {
+                background: #ffc94a;
+            }
+
+        .status-badge.processing {
+            color: #38bdf8;
+            background: rgba(14,165,233,0.13);
+            border: 1px solid rgba(14,165,233,0.20);
+        }
+
+            .status-badge.processing span {
+                background: #38bdf8;
+            }
+
+        .status-badge.done {
+            color: #39e58a;
+            background: rgba(25,135,84,0.15);
+            border: 1px solid rgba(25,135,84,0.22);
+        }
+
+            .status-badge.done span {
+                background: #37d67a;
+            }
+
+    .action-cell {
+        text-align: right;
+    }
+
+    .view-btn {
+        min-height: 42px;
+        padding: 0 14px;
+        border-radius: 15px;
+        color: #fff;
+        background: rgba(255,255,255,0.075);
+        border: 1px solid rgba(255,255,255,0.11);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-weight: 900;
+        font-size: 0.82rem;
+    }
+
+        .view-btn:hover {
+            color: #fff;
+            background: rgba(229,9,20,0.18);
+            border-color: rgba(229,9,20,0.35);
+        }
+
+    .empty-contact-box {
+        padding: 80px 20px;
+        text-align: center;
+    }
+
+    .empty-icon {
+        width: 88px;
+        height: 88px;
+        margin: 0 auto 18px;
+        border-radius: 28px;
+        background: rgba(229,9,20,0.16);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .empty-icon span {
+            font-size: 52px;
+        }
+
+    .empty-contact-box h4 {
+        font-weight: 950;
+    }
+
+    .empty-contact-box p {
+        color: #999;
+        margin: 0;
+    }
+
+    @@media (max-width: 1199.98px) {
+        .contact-stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .contact-panel-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .contact-search-form {
+            min-width: 100%;
+        }
+
+        .contact-table-head {
+            display: none;
+        }
+
+        .contact-row {
+            grid-template-columns: 1fr;
+        }
+
+        .action-cell {
+            text-align: left;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .contact-admin-page {
+            padding: 18px;
+        }
+
+        .contact-stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

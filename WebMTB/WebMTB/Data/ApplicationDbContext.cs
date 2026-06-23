@@ -19,6 +19,7 @@ namespace WebMTB.Data
         public DbSet<MovieActor> MovieActors { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
+        public DbSet<ContactMessage> ContactMessages { get; set; }
 
         // --- NHÓM RẠP & SUẤT CHIẾU ---
         public DbSet<CinemaChain> CinemaChains { get; set; }
@@ -100,6 +101,7 @@ namespace WebMTB.Data
             modelBuilder.Entity<Ticket>()
                 .HasIndex(t => new { t.ShowtimeId, t.SeatId })
                 .IsUnique();
+
         }
     }
 }

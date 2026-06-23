@@ -126,7 +126,7 @@ namespace WebMTB.Areas.Identity.Pages.Account
                     Input.Email,
                     Input.Password,
                     Input.RememberMe,
-                    lockoutOnFailure: true
+                    lockoutOnFailure: false
                 );
 
                 if (result.Succeeded)

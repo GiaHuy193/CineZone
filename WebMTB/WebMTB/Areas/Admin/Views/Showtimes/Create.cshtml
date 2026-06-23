@@ -8,63 +8,613 @@
     var rooms = ViewBag.Rooms as List<WebMTB.Models.Room> ?? new List<WebMTB.Models.Room>();
 }
 
-<div class="container-fluid px-4 py-4 text-white">
-    <div class="mb-4">
-        <h2 class="fw-bold mb-1">Tạo suất chiếu</h2>
-        <p class="text-secondary mb-0">Chọn phim, phòng chiếu, thời gian và giá vé.</p>
+<div class="showtime-create-page">
+    <div class="showtime-hero mb-4">
+        <div>
+            <div class="page-eyebrow">
+                <span class="material-symbols-outlined">schedule</span>
+                Showtime Manager
+            </div>
+
+            <h1>Tạo suất chiếu</h1>
+            <p>
+                Thiết lập lịch chiếu cho phim, chọn phòng chiếu, thời gian bắt đầu và giá vé cơ bản.
+            </p>
+        </div>
+
+        <a asp-action="Index" class="btn back-btn">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Quay lại
+        </a>
     </div>
 
-    <div class="card bg-dark border-secondary rounded-4 p-4">
-        <form asp-action="Create" method="post">
-            @Html.AntiForgeryToken()
+    <div class="row g-4">
+        <div class="col-xl-8">
+            <div class="form-panel">
+                <div class="form-panel-header">
+                    <div>
+                        <h4>Thông tin suất chiếu</h4>
+                        <p>Nhập đầy đủ thông tin để tạo lịch chiếu mới cho hệ thống CineZone.</p>
+                    </div>
 
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <span class="material-symbols-outlined">movie_filter</span>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="MovieId" class="form-label fw-bold">Phim</label>
-                <select asp-for="MovieId" class="form-select bg-black text-white border-secondary">
-                    <option value="">-- Chọn phim --</option>
-                    @foreach (var movie in movies)
-                    {
-                        <option value="@movie.Id">@movie.Title</option>
-                    }
-                </select>
-                <span asp-validation-for="MovieId" class="text-danger small"></span>
+                <form asp-action="Create" method="post" class="showtime-form">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                    <div class="form-section">
+                        <div class="section-title">
+                            <span class="material-symbols-outlined">movie</span>
+                            <div>
+                                <h5>Phim & phòng chiếu</h5>
+                                <p>Chọn phim và phòng chiếu tương ứng.</p>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-lg-6">
+                                <label asp-for="MovieId" class="form-label cz-label">
+                                    Phim
+                                </label>
+
+                                <select asp-for="MovieId" class="form-select cz-input">
+                                    <option value="">-- Chọn phim --</option>
+
+                                    @foreach (var movie in movies)
+                                    {
+                                        <option value="@movie.Id">@movie.Title</option>
+                                    }
+                                </select>
+
+                                <span asp-validation-for="MovieId" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label asp-for="RoomId" class="form-label cz-label">
+                                    Phòng chiếu
+                                </label>
+
+                                <select asp-for="RoomId" class="form-select cz-input">
+                                    <option value="">-- Chọn phòng --</option>
+
+                                    @foreach (var room in rooms)
+                                    {
+                                        <option value="@room.Id">@room.Name</option>
+                                    }
+                                </select>
+
+                                <span asp-validation-for="RoomId" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">
+                            <span class="material-symbols-outlined">event</span>
+                            <div>
+                                <h5>Thời gian & giá vé</h5>
+                                <p>Thiết lập thời gian bắt đầu và giá vé cơ bản cho suất chiếu.</p>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-lg-6">
+                                <label asp-for="StartTime" class="form-label cz-label">
+                                    Thời gian chiếu
+                                </label>
+
+                                <input asp-for="StartTime"
+                                       type="datetime-local"
+                                       class="form-control cz-input" />
+
+                                <span asp-validation-for="StartTime" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label asp-for="BasePrice" class="form-label cz-label">
+                                    Giá vé cơ bản
+                                </label>
+
+                                <div class="price-input-wrap">
+                                    <input asp-for="BasePrice"
+                                           type="number"
+                                           min="0"
+                                           step="1000"
+                                           class="form-control cz-input price-input"
+                                           placeholder="Ví dụ: 95000" />
+
+                                    <span>VNĐ</span>
+                                </div>
+
+                                <span asp-validation-for="BasePrice" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="holiday-box">
+                        <div class="form-check">
+                            <input asp-for="IsHoliday" class="form-check-input" />
+                            <label asp-for="IsHoliday" class="form-check-label">
+                                Suất chiếu ngày lễ
+                            </label>
+                        </div>
+
+                        <p>
+                            Đánh dấu nếu suất chiếu thuộc ngày lễ hoặc ngày có phụ thu đặc biệt.
+                        </p>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn save-btn">
+                            <span class="material-symbols-outlined">save</span>
+                            Lưu suất chiếu
+                        </button>
+
+                        <a asp-action="Index" class="btn cancel-btn">
+                            <span class="material-symbols-outlined">close</span>
+                            Hủy
+                        </a>
+                    </div>
+                </form>
             </div>
+        </div>
 
-            <div class="mb-3">
-                <label asp-for="RoomId" class="form-label fw-bold">Phòng chiếu</label>
-                <select asp-for="RoomId" class="form-select bg-black text-white border-secondary">
-                    <option value="">-- Chọn phòng --</option>
-                    @foreach (var room in rooms)
-                    {
-                        <option value="@room.Id">@room.Name</option>
-                    }
-                </select>
-                <span asp-validation-for="RoomId" class="text-danger small"></span>
-            </div>
+        <div class="col-xl-4">
+            <div class="side-panel">
+                <div class="side-icon">
+                    <span class="material-symbols-outlined">theaters</span>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="StartTime" class="form-label fw-bold">Thời gian chiếu</label>
-                <input asp-for="StartTime" type="datetime-local" class="form-control bg-black text-white border-secondary" />
-                <span asp-validation-for="StartTime" class="text-danger small"></span>
-            </div>
+                <h4>Lưu ý khi tạo suất chiếu</h4>
 
-            <div class="mb-3">
-                <label asp-for="BasePrice" class="form-label fw-bold">Giá vé</label>
-                <input asp-for="BasePrice" type="number" class="form-control bg-black text-white border-secondary" />
-                <span asp-validation-for="BasePrice" class="text-danger small"></span>
-            </div>
+                <div class="guide-list">
+                    <div class="guide-item">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <p>Chọn đúng phim cần mở lịch chiếu.</p>
+                    </div>
 
-            <div class="form-check mb-4">
-                <input asp-for="IsHoliday" class="form-check-input" />
-                <label asp-for="IsHoliday" class="form-check-label">Suất chiếu ngày lễ</label>
-            </div>
+                    <div class="guide-item">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <p>Chọn phòng đã có sơ đồ ghế để người dùng đặt vé.</p>
+                    </div>
 
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">Lưu suất chiếu</button>
-                <a asp-action="Index" class="btn btn-outline-light rounded-pill px-4">Quay lại</a>
+                    <div class="guide-item">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <p>Thời gian chiếu nên tránh trùng với suất chiếu khác cùng phòng.</p>
+                    </div>
+
+                    <div class="guide-item">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <p>Giá vé là giá cơ bản, có thể cộng thêm phụ thu VIP hoặc ghế đôi sau.</p>
+                    </div>
+                </div>
+
+                <div class="mini-warning">
+                    <span class="material-symbols-outlined">info</span>
+                    <p>
+                        Nếu chưa thấy phòng chiếu, hãy tạo rạp và phòng chiếu trước trong khu vực quản trị.
+                    </p>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
+
+<style>
+    .showtime-create-page {
+        min-height: 100vh;
+        padding: 28px;
+        color: #fff;
+        background: radial-gradient(circle at 10% 0%, rgba(229, 9, 20, 0.24), transparent 30%), radial-gradient(circle at 90% 10%, rgba(229, 9, 20, 0.10), transparent 26%), linear-gradient(135deg, #08080a 0%, #121217 55%, #08080a 100%);
+    }
+
+    .showtime-hero {
+        min-height: 220px;
+        padding: 34px;
+        border-radius: 32px;
+        background: radial-gradient(circle at 12% 20%, rgba(150, 0, 22, 0.42), transparent 30%), radial-gradient(circle at 95% 20%, rgba(125, 0, 18, 0.45), transparent 24%), linear-gradient(90deg, #2a070d 0%, #0b0b12 40%, #090910 70%, #3a0710 100%);
+        border: 1px solid rgba(255,255,255,0.09);
+        box-shadow: 0 24px 70px rgba(0,0,0,0.36);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 22px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .showtime-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 42px 42px;
+            opacity: 0.18;
+            pointer-events: none;
+        }
+
+        .showtime-hero > div,
+        .showtime-hero > a {
+            position: relative;
+            z-index: 2;
+        }
+
+    .page-eyebrow {
+        width: fit-content;
+        padding: 9px 15px;
+        border-radius: 999px;
+        color: #ff8b92;
+        background: rgba(229,9,20,0.17);
+        border: 1px solid rgba(229,9,20,0.32);
+        font-size: 0.78rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 16px;
+    }
+
+    .showtime-hero h1 {
+        max-width: 760px;
+        font-size: clamp(2.3rem, 5vw, 4.5rem);
+        font-weight: 950;
+        letter-spacing: -0.065em;
+        line-height: 0.95;
+        margin-bottom: 14px;
+    }
+
+    .showtime-hero p {
+        color: #d2d2da;
+        max-width: 760px;
+        margin: 0;
+        line-height: 1.65;
+        font-weight: 650;
+    }
+
+    .back-btn {
+        min-height: 46px;
+        padding: 0 18px;
+        border-radius: 999px;
+        color: #fff;
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.14);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+        .back-btn:hover {
+            color: #fff;
+            background: rgba(229,9,20,0.22);
+            border-color: rgba(229,9,20,0.36);
+        }
+
+    .form-panel,
+    .side-panel {
+        border-radius: 28px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015)), rgba(18,18,22,0.96);
+        border: 1px solid rgba(255,255,255,0.09);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.32);
+        overflow: hidden;
+    }
+
+    .form-panel-header {
+        padding: 24px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.12), transparent 34%), rgba(255,255,255,0.025);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+    }
+
+        .form-panel-header h4 {
+            color: #fff;
+            font-weight: 950;
+            margin-bottom: 5px;
+        }
+
+        .form-panel-header p {
+            color: #a5a5ad;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .form-panel-header > span {
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            color: #ff5964;
+            background: rgba(229,9,20,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+    .showtime-form {
+        padding: 24px;
+    }
+
+    .form-section {
+        padding: 20px;
+        border-radius: 22px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.075);
+        margin-bottom: 18px;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+        .section-title > span {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            color: #ff5964;
+            background: rgba(229,9,20,0.14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-title h5 {
+            color: #fff;
+            font-weight: 950;
+            margin-bottom: 3px;
+        }
+
+        .section-title p {
+            color: #9b9ba3;
+            font-size: 0.86rem;
+            margin: 0;
+        }
+
+    .cz-label {
+        color: #c9c9d1;
+        font-size: 0.8rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
+
+    .cz-input {
+        min-height: 50px;
+        border-radius: 15px;
+        color: #fff !important;
+        background: rgba(255,255,255,0.075) !important;
+        border: 1px solid rgba(255,255,255,0.13) !important;
+        font-weight: 800;
+        box-shadow: none !important;
+    }
+
+        .cz-input:focus {
+            border-color: rgba(229,9,20,0.7) !important;
+            box-shadow: 0 0 0 4px rgba(229,9,20,0.13) !important;
+        }
+
+        .cz-input option {
+            color: #fff;
+            background: #151519;
+        }
+
+    .price-input-wrap {
+        position: relative;
+    }
+
+    .price-input {
+        padding-right: 72px;
+    }
+
+    .price-input-wrap span {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ff5964;
+        font-weight: 950;
+        font-size: 0.82rem;
+        pointer-events: none;
+    }
+
+    .holiday-box {
+        padding: 18px 20px;
+        border-radius: 20px;
+        background: rgba(255,193,7,0.08);
+        border: 1px solid rgba(255,193,7,0.16);
+        margin-bottom: 22px;
+    }
+
+        .holiday-box .form-check-input {
+            background-color: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.25);
+            box-shadow: none;
+        }
+
+            .holiday-box .form-check-input:checked {
+                background-color: #e50914;
+                border-color: #e50914;
+            }
+
+        .holiday-box .form-check-label {
+            color: #fff;
+            font-weight: 900;
+        }
+
+        .holiday-box p {
+            color: #d0c39a;
+            margin: 8px 0 0 28px;
+            font-size: 0.86rem;
+            line-height: 1.55;
+        }
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .save-btn,
+    .cancel-btn {
+        min-height: 48px;
+        padding: 0 22px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 950;
+        white-space: nowrap;
+    }
+
+    .save-btn {
+        color: #fff;
+        border: none;
+        background: linear-gradient(135deg, #ff8b8b, #e50914);
+        box-shadow: 0 14px 34px rgba(229,9,20,0.32);
+    }
+
+        .save-btn:hover {
+            color: #fff;
+            background: linear-gradient(135deg, #ff9d9d, #ff111d);
+        }
+
+    .cancel-btn {
+        color: #fff;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+    }
+
+        .cancel-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.11);
+        }
+
+    .side-panel {
+        padding: 26px;
+        position: sticky;
+        top: 24px;
+    }
+
+    .side-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 24px;
+        color: #ff5964;
+        background: radial-gradient(circle at top left, rgba(229,9,20,0.35), transparent 42%), rgba(229,9,20,0.12);
+        border: 1px solid rgba(229,9,20,0.22);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 18px;
+    }
+
+        .side-icon span {
+            font-size: 42px;
+        }
+
+    .side-panel h4 {
+        color: #fff;
+        font-weight: 950;
+        margin-bottom: 18px;
+    }
+
+    .guide-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .guide-item {
+        padding: 14px;
+        border-radius: 17px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.075);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+        .guide-item span {
+            color: #37d67a;
+            font-size: 20px;
+            margin-top: 1px;
+            flex-shrink: 0;
+        }
+
+        .guide-item p {
+            color: #c5c5cc;
+            margin: 0;
+            line-height: 1.55;
+            font-size: 0.88rem;
+            font-weight: 650;
+        }
+
+    .mini-warning {
+        margin-top: 18px;
+        padding: 15px;
+        border-radius: 17px;
+        background: rgba(255,193,7,0.08);
+        border: 1px solid rgba(255,193,7,0.16);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+        .mini-warning span {
+            color: #ffc94a;
+            flex-shrink: 0;
+        }
+
+        .mini-warning p {
+            color: #d8cda6;
+            margin: 0;
+            line-height: 1.55;
+            font-size: 0.86rem;
+        }
+
+    @@media (max-width: 991.98px) {
+        .showtime-create-page {
+            padding: 18px;
+        }
+
+        .showtime-hero {
+            flex-direction: column;
+            padding: 26px;
+        }
+
+        .back-btn,
+        .save-btn,
+        .cancel-btn {
+            width: 100%;
+        }
+
+        .side-panel {
+            position: static;
+        }
+
+        .form-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

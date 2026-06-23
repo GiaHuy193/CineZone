@@ -941,4 +941,339 @@
             flex: 1;
         }
     }
+
+    /* ================================
+       CINEZONE COLOR UPGRADE
+    ================================ */
+
+    .showtime-admin-page {
+        color: #fff;
+        min-height: 100vh;
+        padding: 28px;
+        background:
+            radial-gradient(circle at 8% 0%, rgba(145, 0, 24, 0.34), transparent 30%),
+            radial-gradient(circle at 95% 10%, rgba(229, 9, 20, 0.18), transparent 26%),
+            radial-gradient(circle at 45% 100%, rgba(255, 89, 100, 0.07), transparent 34%),
+            linear-gradient(135deg, #08080a 0%, #101014 48%, #070708 100%);
+    }
+
+    /* HERO */
+    .showtime-hero {
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background:
+            radial-gradient(circle at 13% 18%, rgba(160, 0, 25, 0.48), transparent 31%),
+            radial-gradient(circle at 92% 18%, rgba(120, 0, 20, 0.50), transparent 27%),
+            linear-gradient(90deg, #33070f 0%, #0c0c12 42%, #090910 72%, #3b0710 100%);
+        box-shadow:
+            0 24px 70px rgba(0, 0, 0, 0.40),
+            inset 0 1px 0 rgba(255, 255, 255, 0.035);
+    }
+
+    .showtime-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+        background-size: 42px 42px;
+        opacity: 0.18;
+        pointer-events: none;
+    }
+
+    .showtime-eyebrow {
+        width: fit-content;
+        padding: 9px 15px;
+        border-radius: 999px;
+        color: #ff8b92;
+        background: rgba(229, 9, 20, 0.18);
+        border: 1px solid rgba(229, 9, 20, 0.34);
+        box-shadow: 0 10px 26px rgba(229, 9, 20, 0.12);
+    }
+
+    .showtime-hero h1 {
+        color: #fff;
+        text-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+    }
+
+    .showtime-hero p {
+        color: rgba(255, 255, 255, 0.78);
+    }
+
+    /* BUTTON */
+    .create-showtime-btn {
+        background: linear-gradient(135deg, #ff8b8b 0%, #f4212d 45%, #b80012 100%);
+        box-shadow:
+            0 16px 36px rgba(229, 9, 20, 0.34),
+            inset 0 1px 0 rgba(255,255,255,0.22);
+    }
+
+    .create-showtime-btn:hover {
+        background: linear-gradient(135deg, #ffa1a1 0%, #ff1d2b 52%, #d00016 100%);
+        box-shadow: 0 20px 48px rgba(229, 9, 20, 0.44);
+    }
+
+    /* STAT CARDS */
+    .showtime-stat-card {
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background:
+            radial-gradient(circle at bottom right, rgba(229, 9, 20, 0.16), transparent 36%),
+            linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
+            rgba(18, 18, 22, 0.96);
+        box-shadow: 0 18px 46px rgba(0, 0, 0, 0.30);
+    }
+
+    .showtime-stat-card:nth-child(1) {
+        background:
+            radial-gradient(circle at bottom right, rgba(229, 9, 20, 0.24), transparent 36%),
+            linear-gradient(135deg, rgba(44, 8, 14, 0.98), rgba(18,18,22,0.96));
+    }
+
+    .showtime-stat-card:nth-child(2) {
+        background:
+            radial-gradient(circle at bottom right, rgba(147, 51, 234, 0.18), transparent 36%),
+            linear-gradient(135deg, rgba(27, 18, 42, 0.98), rgba(18,18,22,0.96));
+    }
+
+    .showtime-stat-card:nth-child(3) {
+        background:
+            radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.17), transparent 36%),
+            linear-gradient(135deg, rgba(12, 27, 40, 0.98), rgba(18,18,22,0.96));
+    }
+
+    .showtime-stat-card:nth-child(4) {
+        background:
+            radial-gradient(circle at bottom right, rgba(255, 193, 7, 0.20), transparent 36%),
+            linear-gradient(135deg, rgba(42, 31, 12, 0.98), rgba(18,18,22,0.96));
+    }
+
+    .showtime-stat-card.highlight {
+        border-left: none;
+    }
+
+    .showtime-stat-card.highlight::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 5px;
+        background: linear-gradient(180deg, #ff8b8b, #e50914);
+    }
+
+    .showtime-stat-card > span {
+        color: #ff5964;
+    }
+
+    .showtime-stat-card:nth-child(2) > span {
+        color: #c084fc;
+    }
+
+    .showtime-stat-card:nth-child(3) > span {
+        color: #38bdf8;
+    }
+
+    .showtime-stat-card:nth-child(4) > span {
+        color: #ffc94a;
+    }
+
+    .showtime-stat-card p {
+        color: #b9b9c1;
+    }
+
+    .showtime-stat-card h3 {
+        color: #fff;
+    }
+
+    /* PANELS */
+    .side-panel,
+    .showtime-panel {
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background:
+            radial-gradient(circle at top right, rgba(229, 9, 20, 0.08), transparent 30%),
+            linear-gradient(135deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015)),
+            rgba(18, 18, 22, 0.97);
+        box-shadow: 0 24px 68px rgba(0, 0, 0, 0.34);
+    }
+
+    .side-panel-header,
+    .showtime-panel-header {
+        background:
+            linear-gradient(135deg, rgba(255,255,255,0.060), rgba(255,255,255,0.018)),
+            rgba(10, 10, 12, 0.45);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .side-panel-header > span,
+    .showtime-panel-header > span {
+        color: #ff5964;
+    }
+
+    /* TODAY LIST */
+    .today-item {
+        background:
+            linear-gradient(135deg, rgba(255,255,255,0.060), rgba(255,255,255,0.025));
+        border: 1px solid rgba(255,255,255,0.075);
+    }
+
+    .today-item:hover {
+        background:
+            linear-gradient(135deg, rgba(229,9,20,0.13), rgba(255,255,255,0.035));
+        border-color: rgba(229,9,20,0.24);
+    }
+
+    .today-time {
+        background: linear-gradient(135deg, rgba(229,9,20,0.34), rgba(110,0,14,0.48));
+        border: 1px solid rgba(229,9,20,0.32);
+        color: #fff;
+    }
+
+    /* QUICK INFO */
+    .quick-info-list > div {
+        background:
+            linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+        border: 1px solid rgba(255,255,255,0.075);
+    }
+
+    .quick-info-list > div:hover {
+        background:
+            linear-gradient(135deg, rgba(229,9,20,0.13), rgba(255,255,255,0.025));
+        border-color: rgba(229,9,20,0.24);
+    }
+
+    .quick-info-list > div > span {
+        color: #ff5964;
+    }
+
+    /* TIMELINE */
+    .timeline-header {
+        background:
+            linear-gradient(135deg, rgba(229,9,20,0.10), rgba(255,255,255,0.025));
+    }
+
+    .room-head {
+        color: #fff;
+        background:
+            linear-gradient(135deg, rgba(229,9,20,0.30), rgba(105,9,18,0.46));
+    }
+
+    .hour-head {
+        color: #b8b8c0;
+    }
+
+    .timeline-row {
+        border-bottom: 1px solid rgba(255,255,255,0.065);
+    }
+
+    .room-cell {
+        background:
+            linear-gradient(135deg, rgba(255,255,255,0.050), rgba(255,255,255,0.018));
+    }
+
+    .timeline-track {
+        background:
+            repeating-linear-gradient(
+                90deg,
+                rgba(255,255,255,0.045) 0,
+                rgba(255,255,255,0.045) 1px,
+                transparent 1px,
+                transparent 80px
+            ),
+            linear-gradient(180deg, rgba(255,255,255,0.018), transparent);
+    }
+
+    .timeline-block {
+        background:
+            radial-gradient(circle at top right, rgba(229,9,20,0.18), transparent 34%),
+            linear-gradient(135deg, rgba(255,255,255,0.090), rgba(255,255,255,0.045));
+        border-left: 4px solid #ff5964;
+        border-top: 1px solid rgba(255,255,255,0.10);
+        border-right: 1px solid rgba(255,255,255,0.08);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .timeline-block:hover {
+        background:
+            radial-gradient(circle at top right, rgba(229,9,20,0.28), transparent 34%),
+            linear-gradient(135deg, rgba(255,255,255,0.13), rgba(255,255,255,0.055));
+    }
+
+    .timeline-block.holiday {
+        border-left-color: #ffc94a;
+        background:
+            radial-gradient(circle at right, rgba(255,201,74,0.19), transparent 35%),
+            linear-gradient(135deg, rgba(255,255,255,0.090), rgba(255,255,255,0.040));
+    }
+
+    /* SHOWTIME LIST CARD */
+    .showtime-card {
+        background:
+            linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.020));
+        border: 1px solid rgba(255,255,255,0.080);
+    }
+
+    .showtime-card:hover {
+        background:
+            radial-gradient(circle at right, rgba(229,9,20,0.13), transparent 34%),
+            linear-gradient(135deg, rgba(255,255,255,0.075), rgba(255,255,255,0.030));
+        border-color: rgba(229,9,20,0.22);
+        box-shadow: 0 18px 44px rgba(0,0,0,0.26);
+    }
+
+    .movie-icon {
+        background:
+            radial-gradient(circle at top left, rgba(229,9,20,0.34), transparent 42%),
+            rgba(229,9,20,0.14);
+        color: #ff5964;
+        border: 1px solid rgba(229,9,20,0.22);
+    }
+
+    /* BADGES */
+    .status-badge.upcoming {
+        color: #39e58a;
+        background: rgba(25,135,84,0.16);
+        border: 1px solid rgba(25,135,84,0.22);
+    }
+
+    .status-badge.past {
+        color: #a9a9b2;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.09);
+    }
+
+    .holiday-badge {
+        color: #ffc94a;
+        background: rgba(255,193,7,0.14);
+        border: 1px solid rgba(255,193,7,0.20);
+    }
+
+    /* ACTION BUTTONS */
+    .action-btn {
+        color: #ddd;
+        background: rgba(255,255,255,0.060);
+        border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .edit-btn:hover {
+        color: #fff;
+        background: rgba(255,193,7,0.20);
+        border-color: rgba(255,193,7,0.40);
+    }
+
+    .delete-btn:hover {
+        color: #fff;
+        background: rgba(229,9,20,0.24);
+        border-color: rgba(229,9,20,0.42);
+    }
+
+    /* EMPTY */
+    .empty-showtime,
+    .empty-side {
+        background:
+            radial-gradient(circle at top, rgba(229,9,20,0.08), transparent 32%);
+    }
+
+    .empty-showtime > span,
+    .empty-side > span {
+        color: #ff5964;
+    }
+
 </style>

@@ -1,0 +1,317 @@
+﻿@model WebMTB.Models.ContactMessage
+
+@{
+    ViewData["Title"] = "Xóa liên hệ";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="delete-contact-page">
+    <section class="delete-hero mb-4">
+        <div>
+            <div class="delete-eyebrow">
+                <span class="material-symbols-outlined">warning</span>
+                Delete Support Message
+            </div>
+
+            <h1>Xóa liên hệ</h1>
+            <p>Bạn đang chuẩn bị xóa yêu cầu hỗ trợ này khỏi hệ thống.</p>
+        </div>
+
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn back-btn">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Quay lại
+        </a>
+    </section>
+
+    <section class="delete-panel">
+        <div class="delete-warning">
+            <div class="warning-icon">
+                <span class="material-symbols-outlined">delete_forever</span>
+            </div>
+
+            <div>
+                <h4>Bạn có chắc muốn xóa liên hệ này không?</h4>
+                <p>
+                    Thao tác này sẽ xóa nội dung liên hệ khỏi database.
+                    Sau khi xóa, bạn không thể xem lại yêu cầu này trong trang admin.
+                </p>
+            </div>
+        </div>
+
+        <div class="delete-info-grid">
+            <div class="info-card">
+                <small>Người gửi</small>
+                <strong>@Model.FullName</strong>
+                <p>@Model.Email</p>
+            </div>
+
+            <div class="info-card">
+                <small>Thời gian gửi</small>
+                <strong>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</strong>
+            </div>
+        </div>
+
+        <div class="message-card">
+            <small>Tiêu đề</small>
+            <h5>@Model.Subject</h5>
+
+            <small class="mt-3">Nội dung</small>
+            <p>@Model.Message</p>
+        </div>
+
+        <form asp-area="Admin"
+              asp-controller="ContactMessages"
+              asp-action="Delete"
+              asp-route-id="@Model.Id"
+              method="post"
+              class="delete-actions">
+            @Html.AntiForgeryToken()
+
+            <button type="submit" class="btn confirm-delete-btn">
+                <span class="material-symbols-outlined">delete</span>
+                Xác nhận xóa
+            </button>
+
+            <a asp-action="Details"
+               asp-route-id="@Model.Id"
+               class="btn cancel-btn">
+                Hủy
+            </a>
+        </form>
+    </section>
+</div>
+
+<style>
+    .delete-contact-page {
+        color: #fff;
+        min-height: 100vh;
+        padding: 28px;
+        background: radial-gradient(circle at 8% 0%, rgba(145, 0, 24, 0.34), transparent 30%), radial-gradient(circle at 95% 10%, rgba(229, 9, 20, 0.18), transparent 26%), linear-gradient(135deg, #08080a 0%, #101014 48%, #070708 100%);
+    }
+
+    .delete-hero {
+        min-height: 170px;
+        padding: 28px 30px;
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: radial-gradient(circle at 13% 18%, rgba(160, 0, 25, 0.46), transparent 31%), radial-gradient(circle at 92% 18%, rgba(120, 0, 20, 0.48), transparent 27%), linear-gradient(90deg, #33070f 0%, #0c0c12 42%, #090910 72%, #3b0710 100%);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 20px 55px rgba(0, 0, 0, 0.34);
+    }
+
+    .delete-eyebrow {
+        width: fit-content;
+        padding: 8px 14px;
+        border-radius: 999px;
+        color: #ff8b92;
+        background: rgba(229,9,20,0.18);
+        border: 1px solid rgba(229,9,20,0.34);
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 13px;
+    }
+
+    .delete-hero h1 {
+        font-size: clamp(2rem, 3.4vw, 3.4rem);
+        font-weight: 950;
+        letter-spacing: -0.055em;
+        line-height: 1;
+        margin-bottom: 10px;
+    }
+
+    .delete-hero p {
+        color: rgba(255,255,255,0.78);
+        margin: 0;
+        font-weight: 650;
+    }
+
+    .back-btn {
+        min-height: 48px;
+        padding: 0 22px;
+        border-radius: 999px;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.07);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 950;
+        white-space: nowrap;
+    }
+
+        .back-btn:hover {
+            color: #fff;
+            background: rgba(229,9,20,0.18);
+        }
+
+    .delete-panel {
+        padding: 24px;
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.08), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015)), rgba(18,18,22,0.97);
+        box-shadow: 0 24px 68px rgba(0,0,0,0.34);
+    }
+
+    .delete-warning {
+        padding: 22px;
+        margin-bottom: 18px;
+        border-radius: 24px;
+        border: 1px solid rgba(229,9,20,0.24);
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.18), transparent 34%), rgba(229,9,20,0.08);
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .warning-icon {
+        width: 62px;
+        height: 62px;
+        border-radius: 20px;
+        color: #ff5964;
+        background: rgba(229,9,20,0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .warning-icon span {
+            font-size: 38px;
+        }
+
+    .delete-warning h4 {
+        font-weight: 950;
+        margin-bottom: 6px;
+    }
+
+    .delete-warning p {
+        color: #bbb;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .delete-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 260px;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .info-card,
+    .message-card {
+        padding: 18px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(0,0,0,0.20);
+    }
+
+        .info-card small,
+        .message-card small {
+            display: block;
+            color: #999;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            margin-bottom: 8px;
+        }
+
+        .info-card strong {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 950;
+        }
+
+        .info-card p {
+            color: #999;
+            margin: 4px 0 0;
+        }
+
+        .message-card h5 {
+            font-weight: 950;
+            margin-bottom: 0;
+        }
+
+        .message-card p {
+            color: #ddd;
+            line-height: 1.8;
+            margin: 0;
+            white-space: pre-line;
+        }
+
+    .delete-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .confirm-delete-btn,
+    .cancel-btn {
+        min-height: 46px;
+        padding: 0 20px;
+        border-radius: 999px;
+        font-weight: 950;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+    .confirm-delete-btn {
+        color: #fff;
+        border: 1px solid rgba(229,9,20,0.42);
+        background: linear-gradient(135deg, #ff5964, #e50914);
+        box-shadow: 0 16px 36px rgba(229,9,20,0.28);
+    }
+
+    .cancel-btn {
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.07);
+    }
+
+        .confirm-delete-btn:hover,
+        .cancel-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    @@media (max-width: 767.98px) {
+        .delete-contact-page {
+            padding: 18px;
+        }
+
+        .delete-hero {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .back-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .delete-warning {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .delete-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .confirm-delete-btn,
+        .cancel-btn {
+            width: 100%;
+        }
+    }
+</style>

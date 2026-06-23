@@ -609,7 +609,7 @@
 
                         <div>
                             <strong>Hotline</strong>
-                            <small>1900 9999</small>
+                            <small>0776 683 204</small>
                         </div>
                     </div>
 
@@ -618,7 +618,7 @@
 
                         <div>
                             <strong>Email</strong>
-                            <small>support@cinezone.vn</small>
+                            <small>maidoangiahuy2004@gmail.com</small>
                         </div>
                     </div>
 
@@ -627,40 +627,64 @@
 
                         <div>
                             <strong>Địa chỉ</strong>
-                            <small>TP. Hồ Chí Minh, Việt Nam</small>
+                            <small>141 - 145 Điện Biên Phủ, Phường 15, Quận Bình Thạnh, TP.HCM</small>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <form class="cz-contact-form">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success rounded-4 fw-bold mb-3">
+                    @TempData["Success"]
+                </div>
+            }
+
+            <form asp-controller="Contact"
+                  asp-action="Index"
+                  method="post"
+                  class="cz-contact-form"
+                  id="homeContactForm">
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="returnUrl" value="/#contact" />
+
                 <div class="row g-3">
                     <div class="col-md-6">
                         <input type="text"
+                               name="FullName"
                                class="form-control cz-contact-input"
-                               placeholder="Họ và tên" />
+                               placeholder="Họ và tên"
+                               required />
                     </div>
 
                     <div class="col-md-6">
                         <input type="email"
+                               name="Email"
                                class="form-control cz-contact-input"
-                               placeholder="Email" />
+                               placeholder="Email"
+                               required />
                     </div>
 
                     <div class="col-12">
                         <input type="text"
+                               name="Subject"
                                class="form-control cz-contact-input"
-                               placeholder="Tiêu đề cần hỗ trợ" />
+                               placeholder="Tiêu đề cần hỗ trợ"
+                               value="Hỗ trợ đặt vé"
+                               required />
                     </div>
 
                     <div class="col-12">
-                        <textarea class="form-control cz-contact-input"
+                        <textarea name="Message"
+                                  class="form-control cz-contact-input"
                                   rows="4"
-                                  placeholder="Nội dung liên hệ"></textarea>
+                                  placeholder="Nội dung liên hệ"
+                                  required></textarea>
                     </div>
 
                     <div class="col-12">
-                        <button type="button" class="cz-contact-btn">
+                        <button type="submit" class="cz-contact-btn" id="homeContactSubmitBtn">
                             Gửi liên hệ
                         </button>
                     </div>
@@ -2460,6 +2484,20 @@
                         });
                     }
                 });
+            });
+        });
+
+            document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("homeContactForm");
+            const submitBtn = document.getElementById("homeContactSubmitBtn");
+
+            if (!form || !submitBtn) {
+                return;
+            }
+
+            form.addEventListener("submit", function () {
+                submitBtn.disabled = true;
+                submitBtn.innerText = "Đang gửi...";
             });
         });
     </script>

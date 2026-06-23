@@ -7,6 +7,7 @@
     var rooms = Model?.ToList() ?? new List<WebMTB.Models.Room>();
 
     int totalRooms = rooms.Count;
+
     int totalCinemas = rooms
         .Where(r => r.Cinema != null)
         .Select(r => r.Cinema!.Id)
@@ -15,7 +16,10 @@
 
     int totalSeats = rooms.Sum(r => r.Seats?.Count ?? 0);
 
+    int roomsWithoutSeats = rooms.Count(r => (r.Seats?.Count ?? 0) == 0);
+
     var firstCinema = rooms.FirstOrDefault(r => r.Cinema != null)?.Cinema;
+
     string firstMapQuery = firstCinema != null
         ? Uri.EscapeDataString($"{firstCinema.Name} {firstCinema.Address}")
         : Uri.EscapeDataString("Ho Chi Minh City Vietnam");
@@ -24,26 +28,34 @@
         .GroupBy(r => r.Cinema?.Name ?? "Chưa có rạp")
         .OrderBy(g => g.Key)
         .ToList();
+
+    Func<string, string> makeKey = value =>
+        (value ?? "unknown")
+            .Replace(" ", "-")
+            .Replace(".", "")
+            .Replace(",", "")
+            .Replace("/", "-")
+            .Replace("(", "")
+            .Replace(")", "")
+            .ToLowerInvariant();
 }
 
 <div class="room-admin-page">
     <div class="room-hero mb-4">
-        <div>
+        <div class="hero-content">
             <div class="room-eyebrow">
                 <span class="material-symbols-outlined">meeting_room</span>
                 CineZone Admin
             </div>
 
             <h1>Quản lý phòng chiếu</h1>
+
             <p>
-                Tạo phòng, theo dõi sức chứa, quản lý rạp liên kết và thiết kế sơ đồ ghế cho từng phòng chiếu.
+                Theo dõi toàn bộ phòng chiếu theo từng rạp, kiểm tra sức chứa,
+                trạng thái ghế và truy cập nhanh vào sơ đồ ghế.
             </p>
         </div>
 
-        <a asp-action="Create" class="btn create-room-btn">
-            <span class="material-symbols-outlined">add</span>
-            Tạo phòng
-        </a>
     </div>
 
     @if (TempData["Success"] != null)
@@ -63,218 +75,335 @@
     }
 
     <div class="room-stats-grid mb-4">
-        <div class="room-stat-card highlight">
-            <span class="material-symbols-outlined">meeting_room</span>
-            <p>Tổng phòng</p>
-            <h3>@totalRooms</h3>
+        <div class="room-stat-card stat-red">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">meeting_room</span>
+            </div>
+            <div>
+                <p>Tổng phòng</p>
+                <h3>@totalRooms</h3>
+            </div>
         </div>
 
-        <div class="room-stat-card">
-            <span class="material-symbols-outlined">apartment</span>
-            <p>Cụm rạp</p>
-            <h3>@totalCinemas</h3>
+        <div class="room-stat-card stat-purple">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">apartment</span>
+            </div>
+            <div>
+                <p>Cụm rạp</p>
+                <h3>@totalCinemas</h3>
+            </div>
         </div>
 
-        <div class="room-stat-card">
-            <span class="material-symbols-outlined">event_seat</span>
-            <p>Tổng ghế</p>
-            <h3>@totalSeats</h3>
+        <div class="room-stat-card stat-blue">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">event_seat</span>
+            </div>
+            <div>
+                <p>Tổng ghế</p>
+                <h3>@totalSeats</h3>
+            </div>
         </div>
 
-        <div class="room-stat-card active">
-            <span class="material-symbols-outlined">verified</span>
-            <p>Trạng thái</p>
-            <h3>Active</h3>
+        <div class="room-stat-card stat-yellow">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">warning</span>
+            </div>
+            <div>
+                <p>Chưa có ghế</p>
+                <h3>@roomsWithoutSeats</h3>
+            </div>
         </div>
     </div>
 
-    <div class="room-layout">
-        <aside class="room-sidebar">
-            <div class="side-panel mb-4">
-                <div class="side-panel-header">
-                    <div>
-                        <h5>Lọc theo rạp</h5>
-                        <p>Chọn nhanh cụm rạp để xem phòng.</p>
-                    </div>
-                    <span class="material-symbols-outlined">filter_list</span>
+    <div class="room-toolbar mb-4">
+        <div class="search-box">
+            <span class="material-symbols-outlined">search</span>
+            <input type="text"
+                   id="roomSearchInput"
+                   placeholder="Tìm phòng, rạp hoặc địa chỉ..." />
+        </div>
+
+        <div class="cinema-dropdown" id="cinemaDropdown">
+            <button type="button"
+                    class="cinema-dropdown-btn"
+                    id="cinemaDropdownBtn"
+                    aria-expanded="false">
+                <div class="cinema-select-icon">
+                    <span class="material-symbols-outlined">apartment</span>
                 </div>
 
-                <div class="cinema-filter-list">
-                    <button type="button" class="cinema-filter active" data-cinema="all">
-                        <span>Tất cả rạp</span>
-                        <span class="material-symbols-outlined">radio_button_checked</span>
+                <div class="cinema-select-text">
+                    <label>Lọc theo rạp</label>
+                    <strong id="selectedCinemaText">Tất cả rạp</strong>
+                    <small id="selectedCinemaCount">@totalRooms phòng</small>
+                </div>
+
+                <span class="material-symbols-outlined dropdown-arrow">expand_more</span>
+            </button>
+
+            <div class="cinema-dropdown-menu" id="cinemaDropdownMenu">
+                <button type="button"
+                        class="cinema-option active"
+                        data-cinema="all"
+                        data-label="Tất cả rạp"
+                        data-count="@totalRooms phòng">
+                    <span class="material-symbols-outlined">apps</span>
+                    <div>
+                        <strong>Tất cả rạp</strong>
+                        <small>@totalRooms phòng chiếu</small>
+                    </div>
+                </button>
+
+                @foreach (var group in groupedRooms)
+                {
+                    string cinemaKey = makeKey(group.Key);
+                    int groupSeatCount = group.Sum(r => r.Seats?.Count ?? 0);
+
+                    <button type="button"
+                            class="cinema-option"
+                            data-cinema="@cinemaKey"
+                            data-label="@group.Key"
+                            data-count="@group.Count() phòng">
+                        <span class="material-symbols-outlined">apartment</span>
+                        <div>
+                            <strong>@group.Key</strong>
+                            <small>@group.Count() phòng · @groupSeatCount ghế</small>
+                        </div>
                     </button>
-
-                    @foreach (var group in groupedRooms)
-                    {
-                        string cinemaKey = group.Key.Replace(" ", "-").Replace(".", "").Replace(",", "").ToLower();
-
-                        <button type="button" class="cinema-filter" data-cinema="@cinemaKey">
-                            <span>@group.Key</span>
-                            <span class="material-symbols-outlined">radio_button_unchecked</span>
-                        </button>
-                    }
-                </div>
-            </div>
-
-            <div class="map-panel">
-                <div class="side-panel-header">
-                    <div>
-                        <h5>Bản đồ rạp</h5>
-                        <p>Bấm phòng để cập nhật vị trí rạp.</p>
-                    </div>
-                    <span class="material-symbols-outlined">map</span>
-                </div>
-
-                <div class="map-frame">
-                    <iframe id="roomCinemaMap"
-                            src="https://www.google.com/maps?q=@firstMapQuery&output=embed"
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
-                </div>
-
-                <a id="openRoomMapLink"
-                   href="https://www.google.com/maps/search/?api=1&query=@firstMapQuery"
-                   target="_blank"
-                   class="btn open-map-btn">
-                    <span class="material-symbols-outlined">open_in_new</span>
-                    Mở Google Maps
-                </a>
-            </div>
-        </aside>
-
-        <main class="room-main">
-            <div class="room-panel">
-                <div class="room-panel-header">
-                    <div>
-                        <h4>Danh sách phòng chiếu</h4>
-                        <p>Tạo ghế hoặc chỉnh sơ đồ ghế cho từng phòng chiếu.</p>
-                    </div>
-
-                    <span class="material-symbols-outlined">theaters</span>
-                </div>
-
-                @if (rooms.Any())
-                {
-                    <div class="room-group-list">
-                        @foreach (var group in groupedRooms)
-                        {
-                            string cinemaKey = group.Key.Replace(" ", "-").Replace(".", "").Replace(",", "").ToLower();
-                            var cinema = group.FirstOrDefault()?.Cinema;
-                            string mapQuery = cinema != null
-                                ? Uri.EscapeDataString($"{cinema.Name} {cinema.Address}")
-                                : Uri.EscapeDataString(group.Key);
-
-                            <section class="room-group" data-cinema-group="@cinemaKey">
-                                <div class="group-title">
-                                    <h5>@group.Key</h5>
-                                    <div></div>
-                                    <span>@group.Count() phòng</span>
-                                </div>
-
-                                <div class="room-card-grid">
-                                    @foreach (var item in group.OrderBy(r => r.Name))
-                                    {
-                                        int seatCount = item.Seats?.Count ?? 0;
-                                        string roomType = seatCount >= 150 ? "IMAX" : seatCount >= 80 ? "Standard" : "Mini";
-                                        string roomClass = seatCount >= 150 ? "imax" : seatCount >= 80 ? "standard" : "mini";
-
-                                        <article class="room-card @roomClass">
-                                            <div class="room-image">
-                                                <div class="room-overlay"></div>
-
-                                                <div class="room-badge">
-                                                    @roomType
-                                                </div>
-
-                                                <div class="room-status">
-                                                    <span></span>
-                                                    Active
-                                                </div>
-                                            </div>
-
-                                            <div class="room-content">
-                                                <div class="room-title-row">
-                                                    <div>
-                                                        <h5>@item.Name</h5>
-                                                        <p>@(item.Cinema?.Name ?? "Chưa có rạp")</p>
-                                                    </div>
-
-                                                    <button type="button"
-                                                            class="map-pin-btn"
-                                                            data-map-query="@mapQuery"
-                                                            title="Xem vị trí rạp">
-                                                        <span class="material-symbols-outlined">location_on</span>
-                                                    </button>
-                                                </div>
-
-                                                <div class="room-info-grid">
-                                                    <div>
-                                                        <span class="material-symbols-outlined">event_seat</span>
-                                                        <div>
-                                                            <small>Sức chứa</small>
-                                                            <strong>@seatCount ghế</strong>
-                                                        </div>
-                                                    </div>
-
-                                                    <div>
-                                                        <span class="material-symbols-outlined">apartment</span>
-                                                        <div>
-                                                            <small>Rạp</small>
-                                                            <strong>@(item.Cinema?.Name ?? "N/A")</strong>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="room-actions">
-                                                    <a asp-action="Details"
-                                                       asp-route-id="@item.Id"
-                                                       class="btn configure-btn">
-                                                        <span class="material-symbols-outlined">event_seat</span>
-                                                        Chi tiết / Tạo ghế
-                                                    </a>
-
-                                                    <a asp-action="Edit"
-                                                       asp-route-id="@item.Id"
-                                                       class="btn icon-action-btn"
-                                                       title="Sửa phòng">
-                                                        <span class="material-symbols-outlined">edit</span>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </article>
-                                    }
-
-                                    <a asp-action="Create" class="add-room-card">
-                                        <div>
-                                            <span class="material-symbols-outlined">add</span>
-                                        </div>
-                                        <p>Tạo phòng mới</p>
-                                    </a>
-                                </div>
-                            </section>
-                        }
-                    </div>
                 }
-                else
+            </div>
+        </div>
+
+        <a asp-action="Create" class="btn create-room-btn toolbar-create-btn">
+            <span class="material-symbols-outlined">add</span>
+            Tạo phòng mới
+        </a>
+    </div>
+
+    <div class="map-strip mb-4" id="roomMapSection">
+        <div class="map-info">
+            <div class="map-icon">
+                <span class="material-symbols-outlined">map</span>
+            </div>
+
+            <div>
+                <h5>Bản đồ rạp</h5>
+                <p>Bấm biểu tượng vị trí ở từng rạp hoặc phòng, hệ thống sẽ tự kéo lên bản đồ.</p>
+            </div>
+        </div>
+
+        <div class="map-frame" id="mapFrameBox">
+            <div class="map-loader" id="mapLoader">
+                <span class="material-symbols-outlined">progress_activity</span>
+                Đang tải bản đồ...
+            </div>
+
+            <iframe id="roomCinemaMap"
+                    src="https://www.google.com/maps?q=@firstMapQuery&output=embed"
+                    loading="lazy"
+                    allowfullscreen
+                    referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+
+        <a id="openRoomMapLink"
+           href="https://www.google.com/maps/search/?api=1&query=@firstMapQuery"
+           target="_blank"
+           class="btn open-map-btn">
+            <span class="material-symbols-outlined">open_in_new</span>
+            Mở Maps
+        </a>
+    </div>
+
+    <div class="room-panel">
+        <div class="room-panel-header">
+            <div>
+                <h4>Danh sách phòng chiếu</h4>
+                <p>Danh sách được gom theo rạp để admin dễ kiểm tra khi một rạp có nhiều phòng.</p>
+            </div>
+
+            <span class="material-symbols-outlined">theaters</span>
+        </div>
+
+        @if (rooms.Any())
+        {
+            <div class="room-group-list">
+                @for (int groupIndex = 0; groupIndex < groupedRooms.Count; groupIndex++)
                 {
-                    <div class="empty-room-box">
-                        <div class="empty-icon">
-                            <span class="material-symbols-outlined">meeting_room</span>
+                    var group = groupedRooms[groupIndex];
+
+                    string cinemaKey = makeKey(group.Key);
+                    string themeClass = $"theme-{groupIndex % 5}";
+
+                    var cinema = group.FirstOrDefault()?.Cinema;
+                    string cinemaAddress = cinema?.Address ?? "Chưa cập nhật địa chỉ";
+
+                    string mapQuery = cinema != null
+                        ? Uri.EscapeDataString($"{cinema.Name} {cinema.Address}")
+                        : Uri.EscapeDataString(group.Key);
+
+                    int groupSeatCount = group.Sum(r => r.Seats?.Count ?? 0);
+                    int groupRoomCount = group.Count();
+
+                    <section class="room-group @themeClass" data-cinema-group="@cinemaKey">
+                        <div class="cinema-group-header">
+                            <div class="cinema-main-info">
+                                <div class="cinema-logo">
+                                    <span class="material-symbols-outlined">apartment</span>
+                                </div>
+
+                                <div>
+                                    <div class="cinema-title-line">
+                                        <span class="cinema-tag">Rạp chiếu</span>
+                                        <h5>@group.Key</h5>
+                                    </div>
+
+                                    <p>@cinemaAddress</p>
+                                </div>
+                            </div>
+
+                            <div class="cinema-summary">
+                                <span>
+                                    <strong>@groupRoomCount</strong>
+                                    phòng
+                                </span>
+
+                                <span>
+                                    <strong>@groupSeatCount</strong>
+                                    ghế
+                                </span>
+
+                                <button type="button"
+                                        class="map-pin-btn"
+                                        data-map-query="@mapQuery"
+                                        title="Xem vị trí rạp">
+                                    <span class="material-symbols-outlined">location_on</span>
+                                </button>
+                            </div>
                         </div>
 
-                        <h4>Chưa có phòng chiếu nào</h4>
-                        <p>Hãy tạo phòng chiếu trước, sau đó sinh ghế và thiết kế sơ đồ ghế.</p>
+                        <div class="room-table">
+                            <div class="room-table-head">
+                                <div>Phòng chiếu</div>
+                                <div>Loại phòng</div>
+                                <div>Sức chứa</div>
+                                <div>Trạng thái</div>
+                                <div class="text-end">Thao tác</div>
+                            </div>
 
-                        <a asp-action="Create" class="btn create-room-btn">
-                            <span class="material-symbols-outlined">add</span>
-                            Tạo phòng đầu tiên
-                        </a>
-                    </div>
+                            @foreach (var item in group.OrderBy(r => r.Name))
+                            {
+                                int seatCount = item.Seats?.Count ?? 0;
+
+                                string roomType = seatCount >= 150
+                                    ? "IMAX"
+                                    : seatCount >= 80
+                                        ? "Standard"
+                                        : seatCount > 0
+                                            ? "Mini"
+                                            : "Chưa có ghế";
+
+                                string roomClass = seatCount >= 150
+                                    ? "imax"
+                                    : seatCount >= 80
+                                        ? "standard"
+                                        : seatCount > 0
+                                            ? "mini"
+                                            : "empty";
+
+                                string statusText = seatCount > 0 ? "Đã cấu hình ghế" : "Cần tạo ghế";
+                                string statusClass = seatCount > 0 ? "active" : "warning";
+
+                                string searchText =
+                                    $"{item.Name} {item.Cinema?.Name} {item.Cinema?.Address} {roomType}"
+                                        .ToLowerInvariant();
+
+                                <article class="room-row" data-search="@searchText">
+                                    <div class="room-name-cell">
+                                        <div class="room-mini-icon @roomClass">
+                                            <span class="material-symbols-outlined">meeting_room</span>
+                                        </div>
+
+                                        <div>
+                                            <h6>@item.Name</h6>
+                                            <p>@(item.Cinema?.Name ?? "Chưa có rạp")</p>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <span class="room-type-badge @roomClass">
+                                            @roomType
+                                        </span>
+                                    </div>
+
+                                    <div class="capacity-cell">
+                                        <span class="material-symbols-outlined">event_seat</span>
+                                        <strong>@seatCount</strong>
+                                        <small>ghế</small>
+                                    </div>
+
+                                    <div>
+                                        <span class="room-status-badge @statusClass">
+                                            <span></span>
+                                            @statusText
+                                        </span>
+                                    </div>
+
+                                    <div class="room-actions">
+                                        <a asp-action="Details"
+                                           asp-route-id="@item.Id"
+                                           class="btn configure-btn">
+                                            <span class="material-symbols-outlined">event_seat</span>
+                                            Sơ đồ ghế
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="btn icon-action-btn"
+                                           title="Sửa phòng">
+                                            <span class="material-symbols-outlined">edit</span>
+                                        </a>
+
+                                        <button type="button"
+                                                class="btn icon-action-btn map-row-btn map-pin-btn"
+                                                data-map-query="@mapQuery"
+                                                title="Xem vị trí rạp">
+                                            <span class="material-symbols-outlined">location_on</span>
+                                        </button>
+                                    </div>
+                                </article>
+                            }
+                        </div>
+                    </section>
                 }
             </div>
-        </main>
+
+            <div id="noRoomResult" class="empty-room-box d-none">
+                <div class="empty-icon">
+                    <span class="material-symbols-outlined">search_off</span>
+                </div>
+
+                <h4>Không tìm thấy phòng phù hợp</h4>
+                <p>Thử đổi từ khóa tìm kiếm hoặc chọn lại bộ lọc rạp.</p>
+            </div>
+        }
+        else
+        {
+            <div class="empty-room-box">
+                <div class="empty-icon">
+                    <span class="material-symbols-outlined">meeting_room</span>
+                </div>
+
+                <h4>Chưa có phòng chiếu nào</h4>
+                <p>Hãy tạo phòng chiếu trước, sau đó sinh ghế và thiết kế sơ đồ ghế.</p>
+
+                <a asp-action="Create" class="btn create-room-btn">
+                    <span class="material-symbols-outlined">add</span>
+                    Tạo phòng đầu tiên
+                </a>
+            </div>
+        }
     </div>
 </div>
 
@@ -283,48 +412,74 @@
         color: #fff;
         min-height: 100vh;
         padding: 28px;
-        background: radial-gradient(circle at 5% 5%, rgba(229, 9, 20, 0.16), transparent 26%), radial-gradient(circle at 95% 15%, rgba(255,255,255,0.05), transparent 24%), #101012;
+        background: radial-gradient(circle at 8% 0%, rgba(145, 0, 24, 0.34), transparent 30%), radial-gradient(circle at 95% 10%, rgba(229, 9, 20, 0.18), transparent 26%), radial-gradient(circle at 45% 100%, rgba(255, 89, 100, 0.07), transparent 34%), linear-gradient(135deg, #08080a 0%, #101014 48%, #070708 100%);
     }
 
     .room-hero {
         position: relative;
         overflow: hidden;
-        padding: 30px;
-        border-radius: 30px;
+        min-height: 170px;
+        padding: 28px 30px;
+        border-radius: 28px;
         border: 1px solid rgba(255,255,255,0.09);
-        background: linear-gradient(90deg, rgba(0,0,0,0.84), rgba(0,0,0,0.48)), radial-gradient(circle at top right, rgba(229,9,20,0.35), transparent 34%), linear-gradient(135deg, #1b1b20, #09090b);
-        box-shadow: 0 22px 60px rgba(0,0,0,0.35);
+        background: radial-gradient(circle at 13% 18%, rgba(160, 0, 25, 0.46), transparent 31%), radial-gradient(circle at 92% 18%, rgba(120, 0, 20, 0.48), transparent 27%), linear-gradient(90deg, #33070f 0%, #0c0c12 42%, #090910 72%, #3b0710 100%);
+        box-shadow: 0 20px 55px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255,255,255,0.035);
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
         gap: 22px;
     }
 
+        .room-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 42px 42px;
+            opacity: 0.18;
+            pointer-events: none;
+        }
+
+    .hero-content,
+    .hero-create-btn {
+        position: relative;
+        z-index: 2;
+    }
+
     .room-eyebrow {
-        color: #ff5964;
-        font-size: 0.78rem;
+        width: fit-content;
+        padding: 8px 14px;
+        border-radius: 999px;
+        color: #ff8b92;
+        background: rgba(229,9,20,0.18);
+        border: 1px solid rgba(229,9,20,0.34);
+        box-shadow: 0 10px 26px rgba(229,9,20,0.12);
+        font-size: 0.72rem;
         font-weight: 950;
         text-transform: uppercase;
-        letter-spacing: 1.4px;
+        letter-spacing: 1.2px;
         display: flex;
         align-items: center;
         gap: 7px;
-        margin-bottom: 12px;
+        margin-bottom: 13px;
     }
 
     .room-hero h1 {
-        font-size: clamp(2.2rem, 5vw, 4.1rem);
+        font-size: clamp(2rem, 3.4vw, 3.4rem);
         font-weight: 950;
-        letter-spacing: -0.065em;
+        letter-spacing: -0.055em;
         line-height: 1;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
+        text-shadow: 0 12px 28px rgba(0,0,0,0.32);
     }
 
     .room-hero p {
-        color: #aaa;
-        max-width: 780px;
-        line-height: 1.7;
+        color: rgba(255,255,255,0.78);
+        max-width: 760px;
+        line-height: 1.55;
         margin: 0;
+        font-size: 0.98rem;
+        font-weight: 650;
     }
 
     .create-room-btn {
@@ -333,8 +488,8 @@
         border-radius: 999px;
         color: #fff;
         border: none;
-        background: linear-gradient(135deg, #ff8a85 0%, #e50914 60%, #a9050d 100%);
-        box-shadow: 0 14px 32px rgba(229,9,20,0.28);
+        background: linear-gradient(135deg, #ff8b8b 0%, #f4212d 45%, #b80012 100%);
+        box-shadow: 0 16px 36px rgba(229,9,20,0.34), inset 0 1px 0 rgba(255,255,255,0.22);
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -346,7 +501,8 @@
         .create-room-btn:hover {
             color: #fff;
             transform: translateY(-2px);
-            box-shadow: 0 18px 42px rgba(229,9,20,0.38);
+            background: linear-gradient(135deg, #ffa1a1 0%, #ff1d2b 52%, #d00016 100%);
+            box-shadow: 0 20px 48px rgba(229,9,20,0.44);
         }
 
     .admin-alert {
@@ -367,159 +523,359 @@
     .room-stat-card {
         position: relative;
         overflow: hidden;
+        min-height: 128px;
         padding: 20px;
         border-radius: 24px;
         border: 1px solid rgba(255,255,255,0.09);
-        background: rgba(22,22,27,0.92);
+        background: radial-gradient(circle at bottom right, rgba(229,9,20,0.16), transparent 36%), linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)), rgba(18,18,22,0.96);
+        box-shadow: 0 18px 46px rgba(0,0,0,0.30);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+        .room-stat-card.stat-purple {
+            background: radial-gradient(circle at bottom right, rgba(147,51,234,0.20), transparent 36%), linear-gradient(135deg, rgba(27,18,42,0.98), rgba(18,18,22,0.96));
+        }
+
+        .room-stat-card.stat-blue {
+            background: radial-gradient(circle at bottom right, rgba(14,165,233,0.18), transparent 36%), linear-gradient(135deg, rgba(12,27,40,0.98), rgba(18,18,22,0.96));
+        }
+
+        .room-stat-card.stat-yellow {
+            background: radial-gradient(circle at bottom right, rgba(255,193,7,0.20), transparent 36%), linear-gradient(135deg, rgba(42,31,12,0.98), rgba(18,18,22,0.96));
+        }
+
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
+        background: rgba(229,9,20,0.16);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .stat-purple .stat-icon {
+        color: #c084fc;
+        background: rgba(147,51,234,0.16);
+    }
+
+    .stat-blue .stat-icon {
+        color: #38bdf8;
+        background: rgba(14,165,233,0.14);
+    }
+
+    .stat-yellow .stat-icon {
+        color: #ffc94a;
+        background: rgba(255,193,7,0.13);
+    }
+
+    .stat-icon span {
+        font-size: 32px;
+    }
+
+    .room-stat-card p {
+        color: #b9b9c1;
+        font-size: 0.76rem;
+        font-weight: 850;
+        text-transform: uppercase;
+        margin: 0 0 6px;
+    }
+
+    .room-stat-card h3 {
+        color: #fff;
+        font-size: 1.9rem;
+        font-weight: 950;
+        margin: 0;
+    }
+
+    .room-toolbar {
+        padding: 16px;
+        border-radius: 26px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.10), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.050), rgba(255,255,255,0.018)), rgba(18,18,22,0.96);
         box-shadow: 0 18px 46px rgba(0,0,0,0.26);
-    }
-
-        .room-stat-card.highlight {
-            border-left: 4px solid #e50914;
-        }
-
-        .room-stat-card::after {
-            content: "";
-            position: absolute;
-            right: -34px;
-            top: -34px;
-            width: 96px;
-            height: 96px;
-            border-radius: 999px;
-            background: rgba(229,9,20,0.10);
-        }
-
-        .room-stat-card > span {
-            color: #ff5964;
-            font-size: 32px;
-            margin-bottom: 12px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .room-stat-card p {
-            color: #aaa;
-            font-size: 0.76rem;
-            font-weight: 850;
-            text-transform: uppercase;
-            margin: 0 0 6px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .room-stat-card h3 {
-            font-size: 1.9rem;
-            font-weight: 950;
-            margin: 0;
-            position: relative;
-            z-index: 2;
-        }
-
-        .room-stat-card.active h3 {
-            color: #37d67a;
-            font-size: 1.45rem;
-        }
-
-    .room-layout {
         display: grid;
-        grid-template-columns: 310px minmax(0, 1fr);
-        gap: 22px;
-        align-items: start;
+        grid-template-columns: minmax(260px, 1fr) minmax(280px, 420px) auto;
+        gap: 14px;
+        align-items: center;
     }
 
-    .room-sidebar {
-        position: sticky;
-        top: 90px;
+    .search-box {
+        min-height: 54px;
+        padding: 0 16px;
+        border-radius: 18px;
+        background: rgba(0,0,0,0.26);
+        border: 1px solid rgba(255,255,255,0.10);
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
-    .side-panel,
-    .map-panel,
-    .room-panel {
+        .search-box span {
+            color: #ff5964;
+        }
+
+        .search-box input {
+            width: 100%;
+            color: #fff;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-weight: 850;
+        }
+
+            .search-box input::placeholder {
+                color: #777;
+            }
+
+    .cinema-dropdown {
+        position: relative;
+        z-index: 20;
+    }
+
+    .cinema-dropdown-btn {
+        width: 100%;
+        min-height: 58px;
+        padding: 8px 14px;
+        border-radius: 20px;
+        border: 1px solid rgba(229,9,20,0.28);
+        color: #fff;
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.20), transparent 35%), linear-gradient(135deg, rgba(229,9,20,0.17), rgba(255,255,255,0.045)), rgba(0,0,0,0.24);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
+        cursor: pointer;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+        .cinema-dropdown-btn:hover,
+        .cinema-dropdown.open .cinema-dropdown-btn {
+            border-color: rgba(229,9,20,0.52);
+            box-shadow: 0 12px 26px rgba(229,9,20,0.16);
+        }
+
+    .cinema-select-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 15px;
+        background: rgba(229,9,20,0.18);
+        color: #ff5964;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .cinema-select-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+        .cinema-select-text label {
+            display: block;
+            color: #a7a7af;
+            font-size: 0.68rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 2px;
+        }
+
+        .cinema-select-text strong {
+            display: block;
+            color: #fff;
+            font-size: 0.96rem;
+            font-weight: 950;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cinema-select-text small {
+            display: block;
+            color: #ffadb3;
+            font-size: 0.72rem;
+            font-weight: 850;
+            margin-top: 1px;
+        }
+
+    .dropdown-arrow {
+        color: #ff9ca3;
+        transition: transform 0.18s ease;
+    }
+
+    .cinema-dropdown.open .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+
+    .cinema-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        right: 0;
+        max-height: 320px;
+        overflow-y: auto;
+        padding: 10px;
+        border-radius: 22px;
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.12), transparent 32%), rgba(16,16,20,0.98);
+        border: 1px solid rgba(255,255,255,0.10);
+        box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+        display: none;
+    }
+
+    .cinema-dropdown.open .cinema-dropdown-menu {
+        display: block;
+    }
+
+    .cinema-option {
+        width: 100%;
+        min-height: 58px;
+        padding: 10px 12px;
+        border-radius: 16px;
+        border: 1px solid transparent;
+        color: #ddd;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        text-align: left;
+        cursor: pointer;
+    }
+
+        .cinema-option:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        .cinema-option.active {
+            color: #fff;
+            background: rgba(229,9,20,0.18);
+            border-color: rgba(229,9,20,0.34);
+        }
+
+        .cinema-option > span {
+            width: 36px;
+            height: 36px;
+            border-radius: 13px;
+            color: #ff5964;
+            background: rgba(229,9,20,0.14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .cinema-option strong {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 950;
+            line-height: 1.25;
+        }
+
+        .cinema-option small {
+            display: block;
+            color: #999;
+            font-size: 0.74rem;
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+    .toolbar-create-btn {
+        min-width: 160px;
+        min-height: 58px;
+    }
+
+    .map-strip {
         border-radius: 28px;
         border: 1px solid rgba(255,255,255,0.09);
-        background: rgba(18,18,22,0.94);
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.08), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015)), rgba(18,18,22,0.96);
         box-shadow: 0 22px 60px rgba(0,0,0,0.30);
         overflow: hidden;
+        display: grid;
+        grid-template-columns: 320px minmax(0, 1fr) 150px;
+        align-items: stretch;
+        scroll-margin-top: 95px;
     }
 
-    .side-panel-header,
-    .room-panel-header {
-        padding: 20px;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-        background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+    .map-info {
+        padding: 22px;
         display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
         gap: 14px;
     }
 
-        .side-panel-header h5,
-        .room-panel-header h4 {
-            font-weight: 950;
-            margin-bottom: 4px;
-        }
-
-        .side-panel-header p,
-        .room-panel-header p {
-            color: #999;
-            margin: 0;
-            font-size: 0.86rem;
-        }
-
-        .side-panel-header > span,
-        .room-panel-header > span {
-            color: #ff5964;
-            font-size: 30px;
-        }
-
-    .cinema-filter-list {
-        padding: 14px;
-    }
-
-    .cinema-filter {
-        width: 100%;
-        min-height: 48px;
-        padding: 0 14px;
-        margin-bottom: 8px;
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 16px;
-        background: rgba(255,255,255,0.05);
-        color: #ccc;
+    .map-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 18px;
+        background: rgba(229,9,20,0.16);
+        color: #ff5964;
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        font-weight: 850;
-        text-align: left;
+        justify-content: center;
+        flex-shrink: 0;
     }
 
-        .cinema-filter.active {
-            color: #fff;
-            background: rgba(229,9,20,0.18);
-            border-color: rgba(229,9,20,0.42);
+        .map-icon span {
+            font-size: 32px;
         }
 
-        .cinema-filter span:last-child {
-            color: #ff5964;
-            font-size: 20px;
-        }
+    .map-info h5 {
+        font-weight: 950;
+        margin-bottom: 4px;
+    }
+
+    .map-info p {
+        color: #999;
+        margin: 0;
+        font-size: 0.86rem;
+        line-height: 1.5;
+    }
 
     .map-frame {
-        width: 100%;
-        height: 250px;
+        position: relative;
+        min-height: 180px;
         background: #222;
+        overflow: hidden;
+        overscroll-behavior: contain;
     }
 
         .map-frame iframe {
             width: 100%;
             height: 100%;
+            min-height: 180px;
             border: 0;
-            filter: grayscale(0.25) contrast(1.08) brightness(0.9);
+            filter: grayscale(0.22) contrast(1.08) brightness(0.88);
+            pointer-events: auto !important;
+        }
+
+    .map-loader {
+        position: absolute;
+        inset: 0;
+        z-index: 6;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #fff;
+        background: rgba(0,0,0,0.52);
+        font-weight: 900;
+        pointer-events: none;
+    }
+
+        .map-loader.active {
+            display: flex;
         }
 
     .open-map-btn {
-        margin: 14px;
-        width: calc(100% - 28px);
-        border-radius: 999px;
+        margin: 18px;
+        border-radius: 18px;
         color: #fff;
         background: rgba(255,255,255,0.07);
         border: 1px solid rgba(255,255,255,0.12);
@@ -528,208 +884,411 @@
         justify-content: center;
         gap: 7px;
         font-weight: 900;
+        align-self: center;
     }
 
         .open-map-btn:hover {
             color: #fff;
-            background: rgba(255,255,255,0.13);
+            background: rgba(229,9,20,0.18);
+            border-color: rgba(229,9,20,0.32);
         }
+
+    .room-panel {
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.08), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015)), rgba(18,18,22,0.97);
+        box-shadow: 0 24px 68px rgba(0,0,0,0.34);
+        overflow: hidden;
+    }
 
     .room-panel-header {
         padding: 22px 24px;
-    }
-
-    .room-group-list {
-        padding: 22px;
-        display: flex;
-        flex-direction: column;
-        gap: 38px;
-    }
-
-    .group-title {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        margin-bottom: 18px;
-    }
-
-        .group-title h5 {
-            font-size: 1.25rem;
-            font-weight: 950;
-            margin: 0;
-        }
-
-        .group-title div {
-            height: 1px;
-            flex: 1;
-            background: linear-gradient(90deg, rgba(255,255,255,0.18), transparent);
-        }
-
-        .group-title span {
-            color: #999;
-            font-size: 0.75rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.7px;
-        }
-
-    .room-card-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 18px;
-    }
-
-    .room-card {
-        overflow: hidden;
-        border-radius: 24px;
-        border: 1px solid rgba(255,255,255,0.09);
-        background: rgba(255,255,255,0.045);
-        box-shadow: 0 18px 46px rgba(0,0,0,0.24);
-        transition: all 0.2s ease;
-    }
-
-        .room-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(229,9,20,0.26);
-            background: rgba(255,255,255,0.065);
-        }
-
-    .room-image {
-        position: relative;
-        height: 165px;
-        background: linear-gradient(135deg, rgba(0,0,0,0.16), rgba(0,0,0,0.72)), url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1000&q=80') center/cover;
-    }
-
-    .room-card.imax .room-image {
-        background: linear-gradient(135deg, rgba(0,0,0,0.16), rgba(0,0,0,0.72)), url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1000&q=80') center/cover;
-    }
-
-    .room-card.mini .room-image {
-        background: linear-gradient(135deg, rgba(0,0,0,0.16), rgba(0,0,0,0.72)), url('https://images.unsplash.com/photo-1608170825938-a8ea0305d46c?auto=format&fit=crop&w=1000&q=80') center/cover;
-    }
-
-    .room-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(180deg, transparent 25%, rgba(0,0,0,0.75)), radial-gradient(circle at top right, rgba(229,9,20,0.24), transparent 36%);
-    }
-
-    .room-badge {
-        position: absolute;
-        top: 14px;
-        left: 14px;
-        padding: 5px 10px;
-        border-radius: 999px;
-        color: #fff;
-        background: rgba(229,9,20,0.88);
-        font-size: 0.68rem;
-        font-weight: 950;
-        text-transform: uppercase;
-    }
-
-    .room-status {
-        position: absolute;
-        left: 14px;
-        bottom: 14px;
-        color: #fff;
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        font-size: 0.78rem;
-        font-weight: 900;
-    }
-
-        .room-status span {
-            width: 8px;
-            height: 8px;
-            border-radius: 999px;
-            background: #37d67a;
-            box-shadow: 0 0 14px rgba(55,214,122,0.75);
-        }
-
-    .room-content {
-        padding: 18px;
-    }
-
-    .room-title-row {
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(135deg, rgba(255,255,255,0.060), rgba(255,255,255,0.018)), rgba(10,10,12,0.45);
         display: flex;
         justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 14px;
+        align-items: flex-start;
+        gap: 14px;
     }
 
-        .room-title-row h5 {
+        .room-panel-header h4 {
             font-weight: 950;
             margin-bottom: 4px;
         }
 
-        .room-title-row p {
+        .room-panel-header p {
             color: #999;
-            font-size: 0.84rem;
             margin: 0;
+            font-size: 0.86rem;
+        }
+
+        .room-panel-header > span {
+            color: #ff5964;
+            font-size: 30px;
+        }
+
+    .room-group-list {
+        padding: 26px;
+        display: flex;
+        flex-direction: column;
+        gap: 34px;
+    }
+
+    .room-group {
+        border-radius: 26px;
+        background: rgba(255,255,255,0.030);
+        border: 1px solid rgba(255,255,255,0.075);
+        overflow: hidden;
+        box-shadow: 0 18px 42px rgba(0,0,0,0.22);
+    }
+
+    .cinema-group-header {
+        padding: 21px;
+        border-bottom: 1px solid rgba(255,255,255,0.075);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .room-group.theme-0 .cinema-group-header {
+        background: radial-gradient(circle at right, rgba(229,9,20,0.24), transparent 35%), linear-gradient(135deg, rgba(92,8,18,0.90), rgba(30,30,35,0.88));
+    }
+
+    .room-group.theme-1 .cinema-group-header {
+        background: radial-gradient(circle at right, rgba(147,51,234,0.23), transparent 35%), linear-gradient(135deg, rgba(47,24,74,0.90), rgba(30,30,35,0.88));
+    }
+
+    .room-group.theme-2 .cinema-group-header {
+        background: radial-gradient(circle at right, rgba(14,165,233,0.22), transparent 35%), linear-gradient(135deg, rgba(15,47,65,0.90), rgba(30,30,35,0.88));
+    }
+
+    .room-group.theme-3 .cinema-group-header {
+        background: radial-gradient(circle at right, rgba(255,193,7,0.22), transparent 35%), linear-gradient(135deg, rgba(74,48,12,0.90), rgba(30,30,35,0.88));
+    }
+
+    .room-group.theme-4 .cinema-group-header {
+        background: radial-gradient(circle at right, rgba(25,135,84,0.22), transparent 35%), linear-gradient(135deg, rgba(16,58,40,0.90), rgba(30,30,35,0.88));
+    }
+
+    .cinema-main-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        min-width: 0;
+    }
+
+    .cinema-logo {
+        width: 56px;
+        height: 56px;
+        border-radius: 19px;
+        background: rgba(255,255,255,0.10);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        border: 1px solid rgba(255,255,255,0.12);
+    }
+
+        .cinema-logo span {
+            font-size: 32px;
+        }
+
+    .cinema-title-line {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-bottom: 5px;
+    }
+
+    .cinema-tag {
+        min-height: 24px;
+        padding: 0 9px;
+        border-radius: 999px;
+        color: #fff;
+        background: rgba(255,255,255,0.11);
+        border: 1px solid rgba(255,255,255,0.11);
+        font-size: 0.66rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .cinema-main-info h5 {
+        font-size: 1.22rem;
+        font-weight: 950;
+        margin: 0;
+        letter-spacing: -0.02em;
+    }
+
+    .cinema-main-info p {
+        color: rgba(255,255,255,0.68);
+        margin: 0;
+        font-size: 0.86rem;
+        line-height: 1.45;
+    }
+
+    .cinema-summary {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        white-space: nowrap;
+    }
+
+        .cinema-summary > span {
+            min-height: 42px;
+            padding: 0 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.10);
+            border: 1px solid rgba(255,255,255,0.11);
+            color: rgba(255,255,255,0.70);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 850;
+        }
+
+        .cinema-summary strong {
+            color: #fff;
+            font-weight: 950;
         }
 
     .map-pin-btn {
-        width: 38px;
-        height: 38px;
-        border-radius: 13px;
+        width: 42px;
+        height: 42px;
+        border-radius: 15px;
         border: 1px solid rgba(255,255,255,0.12);
         color: #ff5964;
         background: rgba(229,9,20,0.12);
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
     }
 
         .map-pin-btn:hover {
-            background: rgba(229,9,20,0.22);
+            color: #fff;
+            background: rgba(229,9,20,0.25);
+            border-color: rgba(229,9,20,0.42);
         }
 
-    .room-info-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 9px;
-        margin-bottom: 16px;
+    .room-table {
+        padding: 14px;
+        background: rgba(0,0,0,0.12);
     }
 
-        .room-info-grid > div {
-            padding: 11px;
-            border-radius: 16px;
-            background: rgba(0,0,0,0.20);
-            border: 1px solid rgba(255,255,255,0.065);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+    .room-table-head,
+    .room-row {
+        display: grid;
+        grid-template-columns: minmax(220px, 1.25fr) 140px 130px 165px 270px;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .room-table-head {
+        min-height: 42px;
+        padding: 0 14px;
+        color: #8f8f98;
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .room-row {
+        min-height: 86px;
+        padding: 13px 14px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+        border: 1px solid rgba(255,255,255,0.075);
+        margin-bottom: 10px;
+        transition: all 0.18s ease;
+    }
+
+        .room-row:hover {
+            transform: translateY(-2px);
+            background: radial-gradient(circle at right, rgba(229,9,20,0.13), transparent 34%), linear-gradient(135deg, rgba(255,255,255,0.075), rgba(255,255,255,0.030));
+            border-color: rgba(229,9,20,0.22);
+            box-shadow: 0 18px 44px rgba(0,0,0,0.26);
         }
 
-            .room-info-grid > div > span {
-                color: #ff5964;
-                font-size: 24px;
+    .room-name-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .room-mini-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        background: rgba(229,9,20,0.14);
+        color: #ff5964;
+        border: 1px solid rgba(229,9,20,0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .room-mini-icon.imax {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.13);
+            border-color: rgba(255,193,7,0.20);
+        }
+
+        .room-mini-icon.standard {
+            color: #38bdf8;
+            background: rgba(14,165,233,0.13);
+            border-color: rgba(14,165,233,0.20);
+        }
+
+        .room-mini-icon.mini {
+            color: #c084fc;
+            background: rgba(147,51,234,0.13);
+            border-color: rgba(147,51,234,0.20);
+        }
+
+        .room-mini-icon.empty {
+            color: #ff5964;
+            background: rgba(229,9,20,0.14);
+        }
+
+        .room-mini-icon span {
+            font-size: 28px;
+        }
+
+    .room-name-cell h6 {
+        font-weight: 950;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .room-name-cell p {
+        color: #999;
+        margin: 0;
+        font-size: 0.82rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .room-type-badge {
+        min-height: 34px;
+        padding: 0 12px;
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 950;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+        .room-type-badge.imax {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.13);
+            border: 1px solid rgba(255,193,7,0.22);
+        }
+
+        .room-type-badge.standard {
+            color: #38bdf8;
+            background: rgba(14,165,233,0.13);
+            border: 1px solid rgba(14,165,233,0.22);
+        }
+
+        .room-type-badge.mini {
+            color: #c084fc;
+            background: rgba(147,51,234,0.13);
+            border: 1px solid rgba(147,51,234,0.22);
+        }
+
+        .room-type-badge.empty {
+            color: #ff9ca3;
+            background: rgba(229,9,20,0.13);
+            border: 1px solid rgba(229,9,20,0.22);
+        }
+
+    .capacity-cell {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #ddd;
+        font-weight: 850;
+    }
+
+        .capacity-cell .material-symbols-outlined {
+            color: #ff5964;
+            font-size: 22px;
+        }
+
+        .capacity-cell strong {
+            color: #fff;
+            font-weight: 950;
+        }
+
+        .capacity-cell small {
+            color: #999;
+            font-weight: 800;
+        }
+
+    .room-status-badge {
+        min-height: 34px;
+        padding: 0 12px;
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 950;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        white-space: nowrap;
+    }
+
+        .room-status-badge span {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+        }
+
+        .room-status-badge.active {
+            color: #39e58a;
+            background: rgba(25,135,84,0.15);
+            border: 1px solid rgba(25,135,84,0.22);
+        }
+
+            .room-status-badge.active span {
+                background: #37d67a;
+                box-shadow: 0 0 12px rgba(55,214,122,0.7);
             }
 
-        .room-info-grid small {
-            display: block;
-            color: #888;
-            font-size: 0.72rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin-bottom: 2px;
+        .room-status-badge.warning {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.13);
+            border: 1px solid rgba(255,193,7,0.20);
         }
 
-        .room-info-grid strong {
-            color: #fff;
-            font-size: 0.86rem;
-            font-weight: 900;
-        }
+            .room-status-badge.warning span {
+                background: #ffc94a;
+                box-shadow: 0 0 12px rgba(255,201,74,0.6);
+            }
 
     .room-actions {
         display: flex;
+        align-items: center;
+        justify-content: flex-end;
         gap: 8px;
     }
 
     .configure-btn {
-        flex: 1;
+        min-height: 42px;
+        padding: 0 14px;
         border-radius: 15px;
         color: #fff;
         background: rgba(255,255,255,0.075);
@@ -740,6 +1299,7 @@
         gap: 7px;
         font-weight: 900;
         font-size: 0.82rem;
+        white-space: nowrap;
     }
 
         .configure-btn:hover {
@@ -750,6 +1310,7 @@
 
     .icon-action-btn {
         width: 42px;
+        height: 42px;
         border-radius: 15px;
         color: #ddd;
         background: rgba(255,255,255,0.075);
@@ -765,47 +1326,10 @@
             border-color: rgba(255,193,7,0.35);
         }
 
-    .add-room-card {
-        min-height: 355px;
-        border-radius: 24px;
-        border: 2px dashed rgba(255,255,255,0.14);
-        color: #aaa;
-        background: rgba(255,255,255,0.025);
-        text-decoration: none;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        transition: all 0.2s ease;
+    .map-row-btn:hover {
+        background: rgba(229,9,20,0.20);
+        border-color: rgba(229,9,20,0.38);
     }
-
-        .add-room-card div {
-            width: 58px;
-            height: 58px;
-            border-radius: 999px;
-            color: #ff5964;
-            background: rgba(229,9,20,0.16);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .add-room-card span {
-            font-size: 34px;
-        }
-
-        .add-room-card p {
-            font-weight: 900;
-            margin: 0;
-        }
-
-        .add-room-card:hover {
-            color: #fff;
-            border-color: rgba(229,9,20,0.45);
-            background: rgba(229,9,20,0.06);
-            transform: translateY(-4px);
-        }
 
     .empty-room-box {
         padding: 70px 20px;
@@ -838,25 +1362,49 @@
     }
 
     @@media (max-width: 1399.98px) {
-        .room-card-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+        .room-table-head,
+        .room-row {
+            grid-template-columns: minmax(220px, 1.35fr) 130px 115px 155px 230px;
+        }
+
+        .configure-btn {
+            padding: 0 12px;
         }
     }
 
     @@media (max-width: 1199.98px) {
-        .room-layout {
+        .room-stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .room-toolbar {
             grid-template-columns: 1fr;
         }
 
-        .room-sidebar {
-            position: static;
-            display: grid;
-            grid-template-columns: 320px minmax(0, 1fr);
-            gap: 20px;
+        .toolbar-create-btn {
+            width: 100%;
         }
 
-        .room-stats-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+        .map-strip {
+            grid-template-columns: 1fr;
+        }
+
+        .open-map-btn {
+            width: calc(100% - 36px);
+        }
+
+        .room-table-head {
+            display: none;
+        }
+
+        .room-row {
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .room-actions {
+            grid-column: 1 / -1;
+            justify-content: flex-start;
         }
     }
 
@@ -867,10 +1415,16 @@
 
         .room-hero {
             flex-direction: column;
+            align-items: flex-start;
+            min-height: auto;
             padding: 24px;
         }
 
-        .create-room-btn {
+            .room-hero h1 {
+                font-size: 2.4rem;
+            }
+
+        .hero-create-btn {
             width: 100%;
         }
 
@@ -878,16 +1432,36 @@
             grid-template-columns: 1fr;
         }
 
-        .room-sidebar {
-            grid-template-columns: 1fr;
-        }
-
-        .room-card-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .room-panel-header {
+        .cinema-group-header {
+            flex-direction: column;
             align-items: flex-start;
+        }
+
+        .cinema-summary {
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .room-row {
+            grid-template-columns: 1fr;
+        }
+
+        .room-actions {
+            flex-wrap: wrap;
+        }
+
+        .configure-btn {
+            flex: 1 1 100%;
+        }
+
+        .icon-action-btn {
+            flex: 1;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .cinema-select-text strong {
+            font-size: 0.88rem;
         }
     }
 </style>
@@ -896,58 +1470,160 @@
     document.addEventListener("DOMContentLoaded", function () {
         const mapFrame = document.getElementById("roomCinemaMap");
         const openMapLink = document.getElementById("openRoomMapLink");
+        const searchInput = document.getElementById("roomSearchInput");
+        const noRoomResult = document.getElementById("noRoomResult");
+
+        const dropdown = document.getElementById("cinemaDropdown");
+        const dropdownBtn = document.getElementById("cinemaDropdownBtn");
+        const selectedCinemaText = document.getElementById("selectedCinemaText");
+        const selectedCinemaCount = document.getElementById("selectedCinemaCount");
+
+        const mapLoader = document.getElementById("mapLoader");
+        const mapSection = document.getElementById("roomMapSection");
+
+        let activeCinema = "all";
+        let currentMapQuery = "@firstMapQuery";
+
+        function scrollToMapSection() {
+            if (!mapSection) {
+                return;
+            }
+
+            const adminOffset = 90;
+            const targetTop = mapSection.getBoundingClientRect().top + window.pageYOffset - adminOffset;
+
+            window.scrollTo({
+                top: targetTop,
+                behavior: "smooth"
+            });
+        }
+
+        function buildMapUrl(query) {
+            return `https://www.google.com/maps?q=${query}&output=embed`;
+        }
+
+        function updateMap(query) {
+            if (!query || !mapFrame) {
+                scrollToMapSection();
+                return;
+            }
+
+            if (openMapLink) {
+                openMapLink.href = `https://www.google.com/maps/search/?api=1&query=${query}`;
+            }
+
+            scrollToMapSection();
+
+            if (query === currentMapQuery) {
+                return;
+            }
+
+            currentMapQuery = query;
+
+            if (mapLoader) {
+                mapLoader.classList.add("active");
+            }
+
+            mapFrame.src = buildMapUrl(query);
+        }
+
+        if (mapFrame) {
+            mapFrame.addEventListener("load", function () {
+                if (mapLoader) {
+                    mapLoader.classList.remove("active");
+                }
+            });
+        }
+
+        function applyFilters() {
+            const keyword = (searchInput?.value || "").trim().toLowerCase();
+            let visibleRoomCount = 0;
+
+            document.querySelectorAll(".room-group").forEach(group => {
+                const groupCinema = group.getAttribute("data-cinema-group");
+                const matchCinema = activeCinema === "all" || groupCinema === activeCinema;
+
+                let groupHasVisibleRoom = false;
+
+                group.querySelectorAll(".room-row").forEach(row => {
+                    const searchText = row.getAttribute("data-search") || "";
+                    const matchKeyword = !keyword || searchText.includes(keyword);
+
+                    const isVisible = matchCinema && matchKeyword;
+
+                    row.style.display = isVisible ? "" : "none";
+
+                    if (isVisible) {
+                        groupHasVisibleRoom = true;
+                        visibleRoomCount++;
+                    }
+                });
+
+                group.style.display = groupHasVisibleRoom ? "" : "none";
+            });
+
+            if (noRoomResult) {
+                noRoomResult.classList.toggle("d-none", visibleRoomCount > 0);
+            }
+        }
+
+        if (dropdown && dropdownBtn) {
+            dropdownBtn.addEventListener("click", function () {
+                const isOpen = dropdown.classList.toggle("open");
+                dropdownBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            });
+
+            document.querySelectorAll(".cinema-option").forEach(option => {
+                option.addEventListener("click", function () {
+                    activeCinema = this.getAttribute("data-cinema") || "all";
+
+                    document.querySelectorAll(".cinema-option").forEach(btn => {
+                        btn.classList.remove("active");
+                    });
+
+                    this.classList.add("active");
+
+                    if (selectedCinemaText) {
+                        selectedCinemaText.textContent = this.getAttribute("data-label") || "Tất cả rạp";
+                    }
+
+                    if (selectedCinemaCount) {
+                        selectedCinemaCount.textContent = this.getAttribute("data-count") || "";
+                    }
+
+                    dropdown.classList.remove("open");
+                    dropdownBtn.setAttribute("aria-expanded", "false");
+
+                    applyFilters();
+                });
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!dropdown.contains(event.target)) {
+                    dropdown.classList.remove("open");
+                    dropdownBtn.setAttribute("aria-expanded", "false");
+                }
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape") {
+                    dropdown.classList.remove("open");
+                    dropdownBtn.setAttribute("aria-expanded", "false");
+                }
+            });
+        }
 
         document.querySelectorAll(".map-pin-btn").forEach(button => {
             button.addEventListener("click", function () {
                 const query = this.getAttribute("data-map-query");
-
-                if (!query || !mapFrame) {
-                    return;
-                }
-
-                mapFrame.src = `https://www.google.com/maps?q=${query}&output=embed`;
-
-                if (openMapLink) {
-                    openMapLink.href = `https://www.google.com/maps/search/?api=1&query=${query}`;
-                }
-
-                document.querySelector(".map-panel")?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
-                });
+                updateMap(query);
             });
         });
 
-        document.querySelectorAll(".cinema-filter").forEach(button => {
-            button.addEventListener("click", function () {
-                const cinema = this.getAttribute("data-cinema");
+        if (searchInput) {
+            searchInput.addEventListener("input", applyFilters);
+        }
 
-                document.querySelectorAll(".cinema-filter").forEach(btn => {
-                    btn.classList.remove("active");
-
-                    const icon = btn.querySelector(".material-symbols-outlined");
-                    if (icon) {
-                        icon.textContent = "radio_button_unchecked";
-                    }
-                });
-
-                this.classList.add("active");
-
-                const activeIcon = this.querySelector(".material-symbols-outlined");
-                if (activeIcon) {
-                    activeIcon.textContent = "radio_button_checked";
-                }
-
-                document.querySelectorAll(".room-group").forEach(group => {
-                    const groupCinema = group.getAttribute("data-cinema-group");
-
-                    if (cinema === "all" || groupCinema === cinema) {
-                        group.style.display = "";
-                    } else {
-                        group.style.display = "none";
-                    }
-                });
-            });
-        });
+        applyFilters();
     });
 </script>

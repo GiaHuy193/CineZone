@@ -20,7 +20,7 @@ namespace WebMTB.Controllers
         private readonly IHubContext<TicketHub> _ticketHub;
         private readonly PayPalService _payPalService;
 
-        private const int HoldMinutes = 5;
+        private const int HoldMinutes = 4;
 
         public BookingsController(
             ApplicationDbContext context,
@@ -511,6 +511,25 @@ namespace WebMTB.Controllers
                 });
             }
 
+            var singleGapSeat = await FindSingleEmptySeatGapAsync(
+                showtime.RoomId,
+                showtimeId,
+                seatIds,
+                userId,
+                now
+            );
+
+            if (!string.IsNullOrWhiteSpace(singleGapSeat))
+            {
+                TempData["Error"] = $"Không được bỏ trống 1 ghế lẻ tại vị trí {singleGapSeat}. Vui lòng chọn liền ghế hoặc đổi vị trí khác.";
+                return RedirectToAction(nameof(Create), new
+                {
+                    movieId,
+                    showtimeId,
+                    selectedDate = selectedDateText
+                });
+            }
+
             using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
@@ -981,6 +1000,8 @@ namespace WebMTB.Controllers
                 return BadRequest("Chỉ vé đã thanh toán thành công mới có mã QR.");
             }
 
+
+
             string token = GenerateTicketToken(booking);
 
             string verifyUrl = Url.Action(
@@ -1068,6 +1089,96 @@ namespace WebMTB.Controllers
             {
                 await ExpireBookingAsync(booking);
             }
+        }
+
+        private async Task<string?> FindSingleEmptySeatGapAsync(
+    int roomId,
+    int showtimeId,
+    List<int> selectedSeatIds,
+    string currentUserId,
+    DateTime now)
+        {
+            var seats = await _context.Seats
+                .Where(s => s.RoomId == roomId)
+                .Select(s => new
+                {
+                    s.Id,
+                    s.Row,
+                    s.Number,
+                    s.GridRow,
+                    s.GridColumn
+                })
+                .ToListAsync();
+
+            var soldSeatIds = await _context.Tickets
+                .Where(t =>
+                    t.ShowtimeId == showtimeId &&
+                    t.Booking != null &&
+                    t.Booking.Status == "Completed")
+                .Select(t => t.SeatId)
+                .ToListAsync();
+
+            var pendingSeatIds = await _context.Tickets
+                .Where(t =>
+                    t.ShowtimeId == showtimeId &&
+                    t.Booking != null &&
+                    t.Booking.Status == "Pending" &&
+                    t.Booking.ExpiresAt != null &&
+                    t.Booking.ExpiresAt > now)
+                .Select(t => t.SeatId)
+                .ToListAsync();
+
+            var heldByOtherSeatIds = await _context.SeatHolds
+                .Where(h =>
+                    h.ShowtimeId == showtimeId &&
+                    h.ExpiresAt > now &&
+                    h.UserId != currentUserId)
+                .Select(h => h.SeatId)
+                .ToListAsync();
+
+            var blockedSeatIds = soldSeatIds
+                .Union(pendingSeatIds)
+                .Union(heldByOtherSeatIds)
+                .Union(selectedSeatIds)
+                .ToHashSet();
+
+            var rowGroups = seats
+                .Where(s => s.GridRow > 0 && s.GridColumn > 0)
+                .GroupBy(s => s.GridRow)
+                .OrderBy(g => g.Key);
+
+            foreach (var rowGroup in rowGroups)
+            {
+                var seatsByColumn = rowGroup.ToDictionary(s => s.GridColumn, s => s);
+
+                foreach (var seat in rowGroup.OrderBy(s => s.GridColumn))
+                {
+                    if (blockedSeatIds.Contains(seat.Id))
+                    {
+                        continue;
+                    }
+
+                    if (!seatsByColumn.TryGetValue(seat.GridColumn - 1, out var leftSeat))
+                    {
+                        continue;
+                    }
+
+                    if (!seatsByColumn.TryGetValue(seat.GridColumn + 1, out var rightSeat))
+                    {
+                        continue;
+                    }
+
+                    bool leftBlocked = blockedSeatIds.Contains(leftSeat.Id);
+                    bool rightBlocked = blockedSeatIds.Contains(rightSeat.Id);
+
+                    if (leftBlocked && rightBlocked)
+                    {
+                        return $"{seat.Row}{seat.Number}";
+                    }
+                }
+            }
+
+            return null;
         }
 
         private async Task<BookingReleaseInfo> ExpireBookingAsync(Booking booking)

@@ -1,0 +1,402 @@
+﻿@model WebMTB.Models.ContactMessage
+
+@{
+    ViewData["Title"] = "Chi tiết liên hệ";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    string statusText = Model.Status switch
+    {
+        "New" => "Mới gửi",
+        "Processing" => "Đang xử lý",
+        "Done" => "Đã xử lý",
+        _ => Model.Status
+    };
+
+    string statusClass = Model.Status switch
+    {
+        "New" => "new",
+        "Processing" => "processing",
+        "Done" => "done",
+        _ => "new"
+    };
+}
+
+<div class="contact-detail-page">
+    <section class="detail-hero mb-4">
+        <div>
+            <div class="detail-eyebrow">
+                <span class="material-symbols-outlined">mark_email_read</span>
+                Support Detail
+            </div>
+
+            <h1>Chi tiết liên hệ</h1>
+            <p>Xem nội dung người dùng gửi và cập nhật trạng thái xử lý.</p>
+        </div>
+
+        <a asp-action="Index" class="btn back-btn">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Quay lại
+        </a>
+    </section>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success rounded-4 fw-bold">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger rounded-4 fw-bold">
+            @TempData["Error"]
+        </div>
+    }
+
+    <section class="detail-panel">
+        <div class="detail-header">
+            <div class="sender-avatar">
+                <span class="material-symbols-outlined">person</span>
+            </div>
+
+            <div>
+                <h4>@Model.FullName</h4>
+                <p>@Model.Email</p>
+            </div>
+
+            <span class="status-badge @statusClass">
+                <span></span>
+                @statusText
+            </span>
+        </div>
+
+        <div class="detail-body">
+            <div class="info-grid">
+                <div class="info-card">
+                    <small>Tiêu đề</small>
+                    <strong>@Model.Subject</strong>
+                </div>
+
+                <div class="info-card">
+                    <small>Thời gian gửi</small>
+                    <strong>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</strong>
+                </div>
+            </div>
+
+            <div class="message-box">
+                <small>Nội dung liên hệ</small>
+                <p>@Model.Message</p>
+            </div>
+
+            <div class="detail-actions">
+                <form asp-area="Admin"
+                      asp-controller="ContactMessages"
+                      asp-action="UpdateStatus"
+                      asp-route-id="@Model.Id"
+                      method="post">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="status" value="Processing" />
+
+                    <button type="submit" class="btn status-btn processing-btn">
+                        <span class="material-symbols-outlined">pending_actions</span>
+                        Đang xử lý
+                    </button>
+                </form>
+
+                <form asp-area="Admin"
+                      asp-controller="ContactMessages"
+                      asp-action="UpdateStatus"
+                      asp-route-id="@Model.Id"
+                      method="post">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="status" value="Done" />
+
+                    <button type="submit" class="btn status-btn done-btn">
+                        <span class="material-symbols-outlined">task_alt</span>
+                        Đã xử lý
+                    </button>
+                </form>
+
+                <a asp-area="Admin"
+                   asp-controller="ContactMessages"
+                   asp-action="Delete"
+                   asp-route-id="@Model.Id"
+                   class="btn status-btn delete-btn">
+                    <span class="material-symbols-outlined">delete</span>
+                    Xóa liên hệ
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .contact-detail-page {
+        color: #fff;
+        min-height: 100vh;
+        padding: 28px;
+        background: radial-gradient(circle at 8% 0%, rgba(145, 0, 24, 0.34), transparent 30%), radial-gradient(circle at 95% 10%, rgba(229, 9, 20, 0.18), transparent 26%), linear-gradient(135deg, #08080a 0%, #101014 48%, #070708 100%);
+    }
+
+    .detail-hero {
+        min-height: 170px;
+        padding: 28px 30px;
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: radial-gradient(circle at 13% 18%, rgba(160, 0, 25, 0.46), transparent 31%), radial-gradient(circle at 92% 18%, rgba(120, 0, 20, 0.48), transparent 27%), linear-gradient(90deg, #33070f 0%, #0c0c12 42%, #090910 72%, #3b0710 100%);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 20px 55px rgba(0, 0, 0, 0.34);
+    }
+
+    .detail-eyebrow {
+        width: fit-content;
+        padding: 8px 14px;
+        border-radius: 999px;
+        color: #ff8b92;
+        background: rgba(229,9,20,0.18);
+        border: 1px solid rgba(229,9,20,0.34);
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 13px;
+    }
+
+    .detail-hero h1 {
+        font-size: clamp(2rem, 3.4vw, 3.4rem);
+        font-weight: 950;
+        letter-spacing: -0.055em;
+        line-height: 1;
+        margin-bottom: 10px;
+    }
+
+    .detail-hero p {
+        color: rgba(255,255,255,0.78);
+        margin: 0;
+        font-weight: 650;
+    }
+
+    .back-btn {
+        min-height: 48px;
+        padding: 0 22px;
+        border-radius: 999px;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.07);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 950;
+        white-space: nowrap;
+    }
+
+        .back-btn:hover {
+            color: #fff;
+            background: rgba(229,9,20,0.18);
+        }
+
+    .detail-panel {
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: radial-gradient(circle at top right, rgba(229,9,20,0.08), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015)), rgba(18,18,22,0.97);
+        box-shadow: 0 24px 68px rgba(0,0,0,0.34);
+        overflow: hidden;
+    }
+
+    .detail-header {
+        padding: 24px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .sender-avatar {
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+        color: #ff5964;
+        background: rgba(229,9,20,0.14);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .detail-header h4 {
+        font-weight: 950;
+        margin-bottom: 3px;
+    }
+
+    .detail-header p {
+        color: #999;
+        margin: 0;
+    }
+
+    .status-badge {
+        margin-left: auto;
+        min-height: 36px;
+        padding: 0 13px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 950;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        white-space: nowrap;
+    }
+
+        .status-badge span {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+        }
+
+        .status-badge.new {
+            color: #ffc94a;
+            background: rgba(255,193,7,0.13);
+            border: 1px solid rgba(255,193,7,0.20);
+        }
+
+            .status-badge.new span {
+                background: #ffc94a;
+            }
+
+        .status-badge.processing {
+            color: #38bdf8;
+            background: rgba(14,165,233,0.13);
+            border: 1px solid rgba(14,165,233,0.20);
+        }
+
+            .status-badge.processing span {
+                background: #38bdf8;
+            }
+
+        .status-badge.done {
+            color: #39e58a;
+            background: rgba(25,135,84,0.15);
+            border: 1px solid rgba(25,135,84,0.22);
+        }
+
+            .status-badge.done span {
+                background: #37d67a;
+            }
+
+    .detail-body {
+        padding: 24px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 260px;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .info-card,
+    .message-box {
+        padding: 18px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(0,0,0,0.20);
+    }
+
+        .info-card small,
+        .message-box small {
+            display: block;
+            color: #999;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            margin-bottom: 8px;
+        }
+
+        .info-card strong {
+            font-size: 1rem;
+            font-weight: 950;
+        }
+
+        .message-box p {
+            color: #ddd;
+            line-height: 1.8;
+            margin: 0;
+            white-space: pre-line;
+        }
+
+    .detail-actions {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .status-btn {
+        min-height: 44px;
+        padding: 0 18px;
+        border-radius: 999px;
+        color: #fff;
+        font-weight: 950;
+        border: 1px solid rgba(255,255,255,0.10);
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        text-decoration: none;
+    }
+
+    .processing-btn {
+        background: rgba(14,165,233,0.16);
+        color: #38bdf8;
+    }
+
+    .done-btn {
+        background: rgba(25,135,84,0.18);
+        color: #39e58a;
+    }
+
+    .delete-btn {
+        background: rgba(229,9,20,0.18);
+        color: #ff5964;
+    }
+
+    .status-btn:hover {
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    @@media (max-width: 767.98px) {
+        .contact-detail-page {
+            padding: 18px;
+        }
+
+        .detail-hero {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .back-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .detail-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .status-badge {
+            margin-left: 0;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

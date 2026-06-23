@@ -1,4 +1,6 @@
-﻿@{
+﻿@model WebMTB.Controllers.ContactInputModel
+
+@{
     ViewData["Title"] = "Liên hệ";
 }
 
@@ -9,9 +11,22 @@
                 <span class="material-symbols-outlined">support_agent</span>
                 Contact CineZone
             </span>
+
             <h1>Liên hệ hỗ trợ</h1>
-            <p>Cần hỗ trợ đặt vé, thanh toán, chọn ghế hoặc ưu đãi? CineZone luôn sẵn sàng hỗ trợ bạn.</p>
+
+            <p>
+                Cần hỗ trợ đặt vé, thanh toán, chọn ghế hoặc ưu đãi?
+                CineZone luôn sẵn sàng hỗ trợ bạn.
+            </p>
         </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success rounded-4 mb-4 fw-bold">
+                <span class="material-symbols-outlined align-middle me-1">check_circle</span>
+                @TempData["Success"]
+            </div>
+        }
 
         <div class="cz-contact-layout">
             <div class="cz-contact-list">
@@ -41,28 +56,78 @@
             </div>
 
             <div class="cz-form-box">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <input class="form-control cz-form-control" placeholder="Họ và tên" />
-                    </div>
+                <form asp-controller="Contact"
+                      asp-action="Index"
+                      method="post"
+                      id="contactForm">
 
-                    <div class="col-md-6">
-                        <input class="form-control cz-form-control" placeholder="Email" />
-                    </div>
+                    @Html.AntiForgeryToken()
 
-                    <div class="col-12">
-                        <input class="form-control cz-form-control" placeholder="Tiêu đề cần hỗ trợ" />
-                    </div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
 
-                    <div class="col-12">
-                        <textarea class="form-control cz-form-control" rows="5" placeholder="Nội dung liên hệ"></textarea>
-                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <input asp-for="FullName"
+                                   class="form-control cz-form-control"
+                                   placeholder="Họ và tên" />
 
-                    <div class="col-12">
-                        <button type="button" class="cz-submit-btn">Gửi liên hệ</button>
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <input asp-for="Email"
+                                   class="form-control cz-form-control"
+                                   placeholder="Email" />
+
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <input asp-for="Subject"
+                                   class="form-control cz-form-control"
+                                   placeholder="Tiêu đề cần hỗ trợ" />
+
+                            <span asp-validation-for="Subject" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <textarea asp-for="Message"
+                                      class="form-control cz-form-control"
+                                      rows="5"
+                                      placeholder="Nội dung liên hệ"></textarea>
+
+                            <span asp-validation-for="Message" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <button type="submit" class="cz-submit-btn" id="contactSubmitBtn">
+                                Gửi liên hệ
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("contactForm");
+            const submitBtn = document.getElementById("contactSubmitBtn");
+
+            if (!form || !submitBtn) {
+                return;
+            }
+
+            form.addEventListener("submit", function () {
+                submitBtn.disabled = true;
+                submitBtn.innerText = "Đang gửi...";
+                submitBtn.classList.add("disabled");
+            });
+        });
+    </script>
+}

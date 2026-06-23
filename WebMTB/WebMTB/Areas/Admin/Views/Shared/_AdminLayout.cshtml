@@ -345,6 +345,14 @@
                     </a>
                 </li>
 
+                @* Liên hệ hỗ trợ *@
+                <li class="@(currentController == "ContactMessages" ? "active" : "")">
+                    <a asp-area="Admin" asp-controller="ContactMessages" asp-action="Index">
+                        <span class="material-symbols-outlined">support_agent</span>
+                        <span class="menu-text">Liên hệ hỗ trợ</span>
+                    </a>
+                </li>
+
                 @* Nếu bạn chưa có Admin/UsersController thì tạm comment mục này *@
                 <li class="@(currentController == "Users" ? "active" : "")">
                     <a asp-area="Admin" asp-controller="Users" asp-action="Index">

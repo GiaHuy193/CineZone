@@ -301,3 +301,4 @@ C:\Users\HUY\Desktop\WebMTB\WebMTB\WebMTB\bin\Debug\net8.0\ExcelNumberFormat.dll
 C:\Users\HUY\Desktop\WebMTB\WebMTB\WebMTB\bin\Debug\net8.0\RBush.dll
 C:\Users\HUY\Desktop\WebMTB\WebMTB\WebMTB\bin\Debug\net8.0\SixLabors.Fonts.dll
 C:\Users\HUY\Desktop\WebMTB\WebMTB\WebMTB\bin\Debug\net8.0\System.IO.Packaging.dll
+C:\Users\HUY\Desktop\WebMTB\WebMTB\WebMTB\obj\Debug\net8.0\WebMTB.sourcelink.json

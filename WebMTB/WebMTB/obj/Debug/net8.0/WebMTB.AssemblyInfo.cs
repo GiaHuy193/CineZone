@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WebMTB")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7257755bf19ab0a648d776e14d550acb4ebe9960")]
 [assembly: System.Reflection.AssemblyProductAttribute("WebMTB")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WebMTB")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
